@@ -8,6 +8,7 @@ import SmoothScroll from '@/components/providers/SmoothScroll';
 import Cursor from '@/components/ui/Cursor';
 import Grain from '@/components/ui/Grain';
 import Preloader from '@/components/ui/Preloader';
+import Field from '@/components/field/Field';
 import '../globals.css';
 
 const archivo = Archivo({
@@ -47,6 +48,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${archivo.variable} ${spaceMono.variable}`}>
       <body className="font-sans antialiased">
+        <Field />
         <NextIntlClientProvider messages={messages}>
           <SmoothScroll>{children}</SmoothScroll>
         </NextIntlClientProvider>

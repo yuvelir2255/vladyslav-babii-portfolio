@@ -10,7 +10,7 @@ export default async function Home({
   const t = await getTranslations('Hero');
 
   return (
-    <main className="grid min-h-dvh place-items-center">
+    <main className="relative z-10 grid min-h-dvh place-items-center">
       <div className="text-center">
         <h1 className="font-sans text-5xl font-bold tracking-tight">
           {t('name')}
