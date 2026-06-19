@@ -4,5 +4,11 @@
     "name": "Vladyslav Babii",
     "role": "Розробник — Telegram Mini Apps, сайти та AI-продукти",
     "scroll": "Прокрутіть, щоб дослідити"
+  },
+  "Manifesto": {
+    "buildWord": "BUILD",
+    "buildText": "Я не просто пишу код. Я створюю продукти, якими користуються. Не демо — речі, що приймають реальні замовлення.",
+    "craftWord": "CRAFT",
+    "craftStack": "React · TypeScript · Next.js · GSAP · WebGL · Supabase · OpenAI · Telegram"
   }
 }
