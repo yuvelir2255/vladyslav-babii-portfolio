@@ -1,20 +1,21 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Renderer, Camera, Geometry, Program, Mesh } from 'ogl';
+import { Renderer, Camera, Transform, Geometry, Program, Mesh } from 'ogl';
 
 /**
- * WebGL particle dune field (the site's signature backdrop).
- * A grid of glowing points displaced by layered simplex noise into drifting
- * dunes that recede to a horizon, rendered additively over the dark page.
- * Fixed, behind all content.
+ * WebGL particle field (the site's signature backdrop):
+ *  - a grid of glowing points displaced by layered simplex noise into drifting
+ *    dunes that recede to a horizon, and
+ *  - a twinkling starfield above the horizon.
+ * The whole scene parallaxes gently toward the cursor. Fixed, behind all content.
  *
- * Stage 1: dunes + slow drift. Cursor reaction, scroll-camera, stars and
- * word-morph land in later iterations. Honors reduced-motion (single static
- * frame) and pauses when the tab is hidden.
+ * Honors reduced-motion (single static frame, no drift/twinkle/parallax) and
+ * pauses when the tab is hidden. uScroll flows the terrain toward the camera on
+ * page scroll (inert until scrollable sections exist).
  */
 
-const vertex = /* glsl */ `
+const duneVertex = /* glsl */ `
   precision highp float;
 
   attribute vec2 aPos;          // grid coords: x in [-9,9], z in [5,-30]
@@ -74,13 +75,47 @@ const vertex = /* glsl */ `
   }
 `;
 
-const fragment = /* glsl */ `
+const duneFragment = /* glsl */ `
   precision highp float;
   varying float vBright;
   void main(){
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
     float a = smoothstep(0.5, 0.0, d) * (0.12 + vBright * 0.95);
+    if (a < 0.01) discard;
+    gl_FragColor = vec4(vec3(1.0), a);
+  }
+`;
+
+const starVertex = /* glsl */ `
+  precision highp float;
+
+  attribute vec3 aPos;
+  attribute vec2 aSeed;         // x: twinkle phase, y: base size
+
+  uniform mat4 modelViewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform float uTime;
+  uniform float uDpr;
+
+  varying float vTw;
+
+  void main(){
+    float tw = 0.6 + 0.4 * sin(uTime * (0.5 + aSeed.x * 1.6) + aSeed.x * 6.2831);
+    vTw = tw;
+    vec4 mv = modelViewMatrix * vec4(aPos, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = max(aSeed.y * uDpr, 1.4);
+  }
+`;
+
+const starFragment = /* glsl */ `
+  precision highp float;
+  varying float vTw;
+  void main(){
+    vec2 uv = gl_PointCoord - 0.5;
+    float d = length(uv);
+    float a = smoothstep(0.5, 0.0, d) * vTw * 0.9;
     if (a < 0.01) discard;
     gl_FragColor = vec4(vec3(1.0), a);
   }
@@ -108,27 +143,29 @@ export default function Field() {
     gl.clearColor(0, 0, 0, 0);
 
     const camera = new Camera(gl, { fov: 50, near: 0.1, far: 200 });
-    camera.position.set(0, 0.75, 5.5);
+    const baseY = 0.75;
+    camera.position.set(0, baseY, 5.5);
     camera.lookAt([0, 0.15, -12]);
 
-    // point grid: wide in x, receding far in -z (all in front of the camera)
+    const scene = new Transform();
+
+    // --- dunes: point grid, wide in x, receding far in -z (all in front) ---
     const NX = 220;
     const NZ = 220;
-    const data = new Float32Array(NX * NZ * 2);
+    const dunes = new Float32Array(NX * NZ * 2);
     let k = 0;
     for (let j = 0; j < NZ; j++) {
       const z = 5 - (j / (NZ - 1)) * 35; // 5 (near) -> -30 (far)
       for (let i = 0; i < NX; i++) {
         const x = -9 + (i / (NX - 1)) * 18; // -9 -> 9
-        data[k++] = x;
-        data[k++] = z;
+        dunes[k++] = x;
+        dunes[k++] = z;
       }
     }
-
-    const geometry = new Geometry(gl, { aPos: { size: 2, data } });
-    const program = new Program(gl, {
-      vertex,
-      fragment,
+    const duneGeometry = new Geometry(gl, { aPos: { size: 2, data: dunes } });
+    const duneProgram = new Program(gl, {
+      vertex: duneVertex,
+      fragment: duneFragment,
       uniforms: {
         uTime: { value: 0 },
         uScroll: { value: 0 },
@@ -139,16 +176,75 @@ export default function Field() {
       depthTest: false,
       depthWrite: false,
     });
-    program.setBlendFunc(gl.SRC_ALPHA, gl.ONE); // additive glow
+    duneProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE); // additive glow
+    const duneMesh = new Mesh(gl, {
+      geometry: duneGeometry,
+      program: duneProgram,
+      mode: gl.POINTS,
+    });
+    duneMesh.setParent(scene);
 
-    const mesh = new Mesh(gl, { geometry, program, mode: gl.POINTS });
+    // --- stars: scattered above the horizon, far back, gently twinkling ---
+    const NSTARS = 900;
+    const starPos = new Float32Array(NSTARS * 3);
+    const starSeed = new Float32Array(NSTARS * 2);
+    for (let i = 0; i < NSTARS; i++) {
+      starPos[i * 3] = (Math.random() - 0.5) * 64; // x: -32 -> 32
+      starPos[i * 3 + 1] = 2.5 + Math.random() * 13; // y: sky above the horizon
+      starPos[i * 3 + 2] = -8 - Math.random() * 32; // z: far back
+      starSeed[i * 2] = Math.random(); // phase
+      starSeed[i * 2 + 1] = 1.4 + Math.random() * 2.4; // size
+    }
+    const starGeometry = new Geometry(gl, {
+      aPos: { size: 3, data: starPos },
+      aSeed: { size: 2, data: starSeed },
+    });
+    const starProgram = new Program(gl, {
+      vertex: starVertex,
+      fragment: starFragment,
+      uniforms: {
+        uTime: { value: 0 },
+        uDpr: { value: dpr },
+      },
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+    starProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
+    const starMesh = new Mesh(gl, {
+      geometry: starGeometry,
+      program: starProgram,
+      mode: gl.POINTS,
+    });
+    starMesh.setParent(scene);
+
+    // --- cursor parallax (smoothed) ---
+    let targetX = 0;
+    let targetY = 0;
+    let curX = 0;
+    let curY = 0;
+    const onPointer = (e: PointerEvent) => {
+      targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      targetY = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+
+    const applyCamera = () => {
+      camera.position.x = curX * 0.6;
+      camera.position.y = baseY - curY * 0.25;
+      camera.lookAt([0, 0.15, -12]);
+    };
+
+    const renderOnce = () => {
+      applyCamera();
+      renderer.render({ scene, camera });
+    };
 
     const resize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       renderer.setSize(w, h);
       camera.perspective({ aspect: w / h });
-      if (reduce) renderer.render({ scene: mesh, camera });
+      if (reduce) renderOnce();
     };
     resize();
     window.addEventListener('resize', resize);
@@ -156,34 +252,54 @@ export default function Field() {
     let raf = 0;
     let running = true;
     const start = performance.now();
+
     const render = (now: number) => {
-      program.uniforms.uTime.value = (now - start) / 1000;
-      renderer.render({ scene: mesh, camera });
+      const t = (now - start) / 1000;
+      duneProgram.uniforms.uTime.value = t;
+      starProgram.uniforms.uTime.value = t;
+      curX += (targetX - curX) * 0.04;
+      curY += (targetY - curY) * 0.04;
+      applyCamera();
+      renderer.render({ scene, camera });
       if (running) raf = requestAnimationFrame(render);
     };
 
     if (reduce) {
-      renderer.render({ scene: mesh, camera });
+      renderOnce();
     } else {
+      window.addEventListener('pointermove', onPointer, { passive: true });
+      const onScroll = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        duneProgram.uniforms.uScroll.value = max > 0 ? window.scrollY / max : 0;
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
       raf = requestAnimationFrame(render);
-    }
 
-    const onVisibility = () => {
-      if (document.hidden) {
+      const onVisibility = () => {
+        if (document.hidden) {
+          running = false;
+          cancelAnimationFrame(raf);
+        } else if (!running) {
+          running = true;
+          raf = requestAnimationFrame(render);
+        }
+      };
+      document.addEventListener('visibilitychange', onVisibility);
+
+      return () => {
         running = false;
         cancelAnimationFrame(raf);
-      } else if (!reduce && !running) {
-        running = true;
-        raf = requestAnimationFrame(render);
-      }
-    };
-    document.addEventListener('visibilitychange', onVisibility);
+        window.removeEventListener('resize', resize);
+        window.removeEventListener('pointermove', onPointer);
+        window.removeEventListener('scroll', onScroll);
+        document.removeEventListener('visibilitychange', onVisibility);
+      };
+    }
 
     return () => {
       running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
-      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 
