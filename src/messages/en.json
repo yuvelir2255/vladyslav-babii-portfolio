@@ -50,7 +50,9 @@
     "features": "Highlights",
     "comingSoon": "Coming soon",
     "moreSoon": "More projects landing here soon.",
-    "preview": "Screenshots coming"
+    "preview": "Screenshots coming",
+    "openApp": "Open in Telegram",
+    "webDemo": "Web demo"
   },
   "Contact": {
     "title": "Let's talk.",

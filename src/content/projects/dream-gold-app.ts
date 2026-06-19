@@ -9,9 +9,14 @@ export const dreamGoldApp: Project = {
   links: [
     {
       label: 'Open in Telegram',
+      labelKey: 'openApp',
       href: 'https://t.me/dreamgold_jewelry_bot/shop',
     },
-    { label: 'Web demo', href: 'https://dreamgold-jewelry.vercel.app' },
+    {
+      label: 'Web demo',
+      labelKey: 'webDemo',
+      href: 'https://dreamgold-jewelry.vercel.app',
+    },
   ],
   media: [
     {

@@ -50,7 +50,9 @@
     "features": "Ключове",
     "comingSoon": "Скоро",
     "moreSoon": "Скоро тут з'являться нові проєкти.",
-    "preview": "Скоро скриншоти"
+    "preview": "Скоро скриншоти",
+    "openApp": "Відкрити в Telegram",
+    "webDemo": "Веб-демо"
   },
   "Contact": {
     "title": "Поговорімо.",

@@ -11,7 +11,10 @@ export interface ProjectMedia {
 }
 
 export interface ProjectLink {
+  /** Fallback label (used when no localized `labelKey` is provided). */
   label: string;
+  /** Optional key in the `Work` message namespace for a localized label. */
+  labelKey?: string;
   href: string;
 }
 

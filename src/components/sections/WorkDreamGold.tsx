@@ -69,7 +69,7 @@ export default async function WorkDreamGold() {
                     : 'text-dim hover:text-fg rounded-full border border-white/15 px-5 py-2.5 text-sm transition-colors'
                 }
               >
-                {l.label}
+                {l.labelKey ? t(l.labelKey) : l.label}
               </a>
             ))}
           </Reveal>
