@@ -3,83 +3,95 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Custom cursor: a trailing ring + instant dot, magnetic on interactive
- * elements. Driven by rAF + refs (never React state) so it stays smooth.
- * Fine-pointer only (hidden on touch). Honors reduced-motion (no trail).
+ * Comet cursor (aboutluca-style): a bright head at the pointer trailing a soft
+ * white glow that fades like a shooting star. Drawn on an additive 2D canvas
+ * (no React state). Fine-pointer only; under reduced-motion the native cursor
+ * is kept (no trail, no hiding).
  */
 export default function Cursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return;
-    const reduce = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
-    const dot = dotRef.current;
-    const ring = ringRef.current;
-    if (!dot || !ring) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
 
     document.documentElement.classList.add('has-custom-cursor');
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    let w = 0;
+    let h = 0;
+    const resize = () => {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = `${w}px`;
+      canvas.style.height = `${h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    window.addEventListener('resize', resize);
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;
-    let rx = mx;
-    let ry = my;
-    let scale = 1;
-    let targetScale = 1;
+    let x = mx;
+    let y = my;
     let raf = 0;
 
     const onMove = (e: PointerEvent) => {
       mx = e.clientX;
       my = e.clientY;
-      dot.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%)`;
-      if (reduce) {
-        ring.style.transform = `translate3d(${mx}px, ${my}px, 0) translate(-50%, -50%) scale(${targetScale})`;
-      }
     };
-
-    const onOver = (e: PointerEvent) => {
-      const el = e.target as HTMLElement | null;
-      targetScale = el?.closest(
-        'a, button, [data-cursor], input, textarea, label',
-      )
-        ? 1.9
-        : 1;
-    };
-
-    const loop = () => {
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      scale += (targetScale - scale) * 0.18;
-      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%) scale(${scale})`;
-      raf = requestAnimationFrame(loop);
-    };
-
     window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerover', onOver);
-    if (!reduce) raf = requestAnimationFrame(loop);
+
+    const draw = () => {
+      x += (mx - x) * 0.16;
+      y += (my - y) * 0.16;
+
+      // fade the previous trail a little (keeps the canvas transparent)
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, w, h);
+
+      // additive glow head (trails as it lags behind the pointer)
+      ctx.globalCompositeOperation = 'lighter';
+      const r = 9;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+      g.addColorStop(0.35, 'rgba(255, 255, 255, 0.3)');
+      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      // crisp bright core at the actual pointer (the comet head)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.beginPath();
+      ctx.arc(mx, my, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerover', onOver);
       document.documentElement.classList.remove('has-custom-cursor');
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={ringRef}
-        aria-hidden
-        className="border-fg/40 pointer-events-none fixed top-0 left-0 z-[100] h-8 w-8 rounded-full border mix-blend-difference"
-      />
-      <div
-        ref={dotRef}
-        aria-hidden
-        className="bg-fg pointer-events-none fixed top-0 left-0 z-[100] h-1 w-1 rounded-full mix-blend-difference"
-      />
-    </>
+    <canvas
+      ref={canvasRef}
+      aria-hidden
+      className="pointer-events-none fixed inset-0 z-[100]"
+    />
   );
 }
