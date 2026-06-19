@@ -5,12 +5,8 @@ import { useEffect, useRef } from 'react';
 /**
  * Comet cursor (aboutluca-style): a bright glowing orb at the pointer trailing a
  * soft white tail that fades like a shooting star. Drawn on an additive 2D canvas
- * (no React state). Fine-pointer only.
- *
- * - Motion allowed  -> orb at the real pointer + a fading comet trail behind it.
- * - Reduced motion  -> the same orb, tracking the pointer crisply, but NO trail
- *   (just a custom cursor, no lingering animation). It is still shown so the
- *   owner always sees a cursor even with Windows animations off.
+ * (no React state). Fine-pointer only. Runs regardless of prefers-reduced-motion
+ * (project decision: full motion for everyone, like aboutluca).
  */
 export default function Cursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,10 +17,6 @@ export default function Cursor() {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
-
-    const reduce = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
 
     document.documentElement.classList.add('has-custom-cursor');
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -74,27 +66,15 @@ export default function Cursor() {
       ctx.fill();
     };
 
-    let draw: (() => void) | null = null;
-
-    if (reduce) {
-      // crisp orb tracking the pointer 1:1, cleared each frame (no trail)
-      draw = () => {
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, w, h);
-        if (visible) drawHead(mx, my);
-        raf = requestAnimationFrame(draw!);
-      };
-    } else {
-      // comet: fade the previous frame a little, redraw the orb at the pointer;
-      // the fade leaves a soft tail behind as the pointer moves
-      draw = () => {
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
-        ctx.fillRect(0, 0, w, h);
-        if (visible) drawHead(mx, my);
-        raf = requestAnimationFrame(draw!);
-      };
-    }
+    // comet: fade the previous frame a little, redraw the orb at the pointer;
+    // the fade leaves a soft tail behind as the pointer moves
+    const draw = () => {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(0, 0, w, h);
+      if (visible) drawHead(mx, my);
+      raf = requestAnimationFrame(draw);
+    };
 
     raf = requestAnimationFrame(draw);
 

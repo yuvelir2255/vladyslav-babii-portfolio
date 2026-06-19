@@ -5,8 +5,7 @@ import { gsap, useGSAP } from '@/lib/gsap';
 
 /**
  * Cinematic intro: two hairlines grow from the centre under "LOADING", then
- * the whole curtain fades to reveal the page. Plays once on mount; collapses
- * instantly under reduced-motion.
+ * the whole curtain fades to reveal the page. Plays once on mount.
  */
 export default function Preloader() {
   const root = useRef<HTMLDivElement>(null);
@@ -16,10 +15,6 @@ export default function Preloader() {
       const hide = () => {
         if (root.current) root.current.style.display = 'none';
       };
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        gsap.set(root.current, { autoAlpha: 0, onComplete: hide });
-        return;
-      }
       gsap
         .timeline()
         .fromTo(

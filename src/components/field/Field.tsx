@@ -10,9 +10,9 @@ import { Renderer, Camera, Transform, Geometry, Program, Mesh } from 'ogl';
  *  - a twinkling starfield above the horizon.
  * The whole scene parallaxes gently toward the cursor. Fixed, behind all content.
  *
- * Honors reduced-motion (single static frame, no drift/twinkle/parallax) and
- * pauses when the tab is hidden. uScroll flows the terrain toward the camera on
- * page scroll (inert until scrollable sections exist).
+ * Pauses when the tab is hidden. uScroll flows the terrain toward the camera on
+ * page scroll. Runs regardless of prefers-reduced-motion (project decision: full
+ * motion for everyone, like aboutluca).
  */
 
 const duneVertex = /* glsl */ `
@@ -128,9 +128,6 @@ export default function Field() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const reduce = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const renderer = new Renderer({
@@ -234,20 +231,21 @@ export default function Field() {
       camera.lookAt([0, 0.15, -12]);
     };
 
-    const renderOnce = () => {
-      applyCamera();
-      renderer.render({ scene, camera });
-    };
-
     const resize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       renderer.setSize(w, h);
       camera.perspective({ aspect: w / h });
-      if (reduce) renderOnce();
     };
     resize();
     window.addEventListener('resize', resize);
+
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      duneProgram.uniforms.uScroll.value = max > 0 ? window.scrollY / max : 0;
+    };
+    window.addEventListener('pointermove', onPointer, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     let raf = 0;
     let running = true;
@@ -263,43 +261,26 @@ export default function Field() {
       renderer.render({ scene, camera });
       if (running) raf = requestAnimationFrame(render);
     };
+    raf = requestAnimationFrame(render);
 
-    if (reduce) {
-      renderOnce();
-    } else {
-      window.addEventListener('pointermove', onPointer, { passive: true });
-      const onScroll = () => {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        duneProgram.uniforms.uScroll.value = max > 0 ? window.scrollY / max : 0;
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      raf = requestAnimationFrame(render);
-
-      const onVisibility = () => {
-        if (document.hidden) {
-          running = false;
-          cancelAnimationFrame(raf);
-        } else if (!running) {
-          running = true;
-          raf = requestAnimationFrame(render);
-        }
-      };
-      document.addEventListener('visibilitychange', onVisibility);
-
-      return () => {
+    const onVisibility = () => {
+      if (document.hidden) {
         running = false;
         cancelAnimationFrame(raf);
-        window.removeEventListener('resize', resize);
-        window.removeEventListener('pointermove', onPointer);
-        window.removeEventListener('scroll', onScroll);
-        document.removeEventListener('visibilitychange', onVisibility);
-      };
-    }
+      } else if (!running) {
+        running = true;
+        raf = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
       running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVisibility);
     };
   }, []);
 

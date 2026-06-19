@@ -14,10 +14,10 @@ const CARDS = [
 ] as const;
 
 /**
- * "What I do" cards. Default (SSR / no-JS / reduced-motion): a clean vertical
- * list of glass cards. With motion: the list becomes a pinned, centered stack
- * where cards zoom in one after another as you scroll — the current fades out as
- * the next arrives (Luca-style). GSAP reverts the inline layout on cleanup.
+ * "What I do" cards. Default (SSR / no-JS): a clean vertical list of glass
+ * cards. With JS the list becomes a pinned, centered stack where cards zoom in
+ * one after another as you scroll — the current fades out as the next arrives
+ * (Luca-style). GSAP reverts the inline layout on cleanup.
  */
 export default function WhatIDo() {
   const t = useTranslations('WhatIDo');
@@ -26,7 +26,6 @@ export default function WhatIDo() {
 
   useGSAP(
     () => {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const wrap = cardsRef.current;
       if (!wrap) return;
 

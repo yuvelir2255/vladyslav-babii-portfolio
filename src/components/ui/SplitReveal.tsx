@@ -20,8 +20,7 @@ interface SplitRevealProps {
 
 /**
  * Reveals text word by word: each word rises from behind a masked line and
- * fades in, staggered. SSR-safe (plain text without JS) and skipped under
- * reduced-motion, where the text is simply shown.
+ * fades in, staggered. SSR-safe — plain, visible text without JS.
  */
 export default function SplitReveal({
   text,
@@ -39,7 +38,6 @@ export default function SplitReveal({
     () => {
       const el = ref.current;
       if (!el) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       const split = new SplitText(el, {
         type: 'lines,words',

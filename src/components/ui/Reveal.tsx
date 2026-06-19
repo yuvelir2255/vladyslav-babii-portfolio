@@ -17,8 +17,8 @@ interface RevealProps {
 }
 
 /**
- * Reveals a block (fade + rise) when scrolled into view. SSR-safe and skipped
- * under reduced-motion (content shown as-is).
+ * Reveals a block (fade + rise) when scrolled into view. SSR-safe — content is
+ * visible without JS.
  */
 export default function Reveal({
   children,
@@ -37,7 +37,6 @@ export default function Reveal({
     () => {
       const el = ref.current;
       if (!el) return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
       gsap.from(el, {
         opacity: 0,

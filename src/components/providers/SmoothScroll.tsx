@@ -6,7 +6,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
 
 /**
  * Smooth scroll (Lenis) wired into the GSAP ticker so ScrollTrigger stays in
- * sync. Disabled when the user prefers reduced motion (native scroll instead).
+ * sync. Runs for everyone (project decision: full motion like aboutluca).
  */
 export default function SmoothScroll({
   children,
@@ -14,8 +14,6 @@ export default function SmoothScroll({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
     const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
 

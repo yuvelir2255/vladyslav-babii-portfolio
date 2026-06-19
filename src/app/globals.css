@@ -60,10 +60,8 @@ html.lenis body {
 }
 
 /* Hero scroll cue: a dot travelling down a hairline. Motion only. */
-@media (prefers-reduced-motion: no-preference) {
-  .scroll-cue-dot {
-    animation: scroll-cue 1.8s ease-in-out infinite;
-  }
+.scroll-cue-dot {
+  animation: scroll-cue 1.8s ease-in-out infinite;
 }
 @keyframes scroll-cue {
   0% {
