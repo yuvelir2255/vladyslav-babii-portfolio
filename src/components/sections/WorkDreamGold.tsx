@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getLocale, getTranslations } from 'next-intl/server';
 import Reveal from '@/components/ui/Reveal';
 import TiltCard from '@/components/ui/TiltCard';
@@ -78,19 +79,18 @@ export default async function WorkDreamGold() {
           </p>
         </div>
 
-        {/* phone screenshots (placeholders until photos arrive) */}
+        {/* phone screenshots */}
         <div className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-4 lg:mx-0 lg:justify-end lg:overflow-visible lg:px-0">
           {app.media.map((m) => (
             <TiltCard key={m.src} className="shrink-0">
-              <div className="grid aspect-[9/19] w-[clamp(140px,40vw,180px)] place-items-center overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.04] backdrop-blur-md">
-                <div className="text-center">
-                  <span className="block font-sans text-sm font-semibold tracking-tight">
-                    Dream Gold
-                  </span>
-                  <span className="text-faint mt-1 block font-mono text-[9px] tracking-[0.2em] uppercase">
-                    {t('preview')}
-                  </span>
-                </div>
+              <div className="relative aspect-[9/19] w-[clamp(140px,40vw,180px)] overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.04]">
+                <Image
+                  src={m.src}
+                  alt={m.alt}
+                  fill
+                  sizes="(max-width: 1024px) 40vw, 180px"
+                  className="object-cover"
+                />
               </div>
             </TiltCard>
           ))}
