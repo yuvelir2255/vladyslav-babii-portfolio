@@ -1,9 +1,7 @@
-import Image from 'next/image';
 import { getLocale, getTranslations } from 'next-intl/server';
 import Reveal from '@/components/ui/Reveal';
 import Magnetic from '@/components/ui/Magnetic';
-import StaggerReveal from '@/components/ui/StaggerReveal';
-import TiltCard from '@/components/ui/TiltCard';
+import CasePhones from '@/components/ui/CasePhones';
 import { dreamGoldApp, dreamGoldSite } from '@/content/projects';
 import type { Locale } from '@/content/projects/types';
 
@@ -24,7 +22,7 @@ export default async function WorkDreamGold() {
     <section id="work" className="legible relative z-10 px-6 py-28 md:px-12">
       <Reveal
         as="p"
-        className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase"
+        className="text-accent-design font-mono text-[11px] tracking-[0.3em] uppercase"
       >
         {t('label')}
       </Reveal>
@@ -46,12 +44,12 @@ export default async function WorkDreamGold() {
             {appCopy.summary}
           </Reveal>
 
-          <Reveal as="ul" delay={0.14} className="mt-8 space-y-2.5">
+          <Reveal as="ul" delay={0.14} className="mt-8 space-y-3">
             {appCopy.features.map((f) => (
               <li key={f} className="flex items-center gap-3 text-sm">
                 <span
                   aria-hidden
-                  className="bg-accent-tg h-1.5 w-1.5 shrink-0 rounded-full"
+                  className="bg-accent-design h-1.5 w-1.5 shrink-0 rounded-full"
                 />
                 <span className="text-dim">{f}</span>
               </li>
@@ -83,21 +81,7 @@ export default async function WorkDreamGold() {
         </div>
 
         {/* phone screenshots */}
-        <StaggerReveal className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-4 lg:mx-0 lg:justify-end lg:overflow-visible lg:px-0">
-          {app.media.map((m) => (
-            <TiltCard key={m.src} className="shrink-0">
-              <div className="relative aspect-[9/19] w-[clamp(140px,40vw,180px)] overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.04]">
-                <Image
-                  src={m.src}
-                  alt={m.alt}
-                  fill
-                  sizes="(max-width: 1024px) 40vw, 180px"
-                  className="object-cover"
-                />
-              </div>
-            </TiltCard>
-          ))}
-        </StaggerReveal>
+        <CasePhones media={app.media} />
       </div>
 
       {/* coming-soon site + more-projects slot */}
