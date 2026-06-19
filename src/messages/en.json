@@ -10,5 +10,11 @@
     "buildText": "I don't just write code. I build products people use. Not demos — things that take real orders.",
     "craftWord": "CRAFT",
     "craftStack": "React · TypeScript · Next.js · GSAP · WebGL · Supabase · OpenAI · Telegram"
+  },
+  "About": {
+    "label": "About",
+    "p1": "Nineteen. From Kharkiv, building in Warsaw.",
+    "p2": "A month into development I designed, built and launched a real AI product — not a demo, a tool a business uses every day to take orders.",
+    "p3": "Before code I ran my own projects and shipped. I read a build like an owner: from the first pixel to the bottom line. Whatever I start, I take to the finish."
   }
 }
