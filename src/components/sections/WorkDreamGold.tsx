@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { getLocale, getTranslations } from 'next-intl/server';
 import Reveal from '@/components/ui/Reveal';
+import Magnetic from '@/components/ui/Magnetic';
 import StaggerReveal from '@/components/ui/StaggerReveal';
 import TiltCard from '@/components/ui/TiltCard';
 import { dreamGoldApp, dreamGoldSite } from '@/content/projects';
@@ -59,19 +60,20 @@ export default async function WorkDreamGold() {
 
           <Reveal as="div" delay={0.2} className="mt-9 flex flex-wrap gap-3">
             {app.links.map((l, i) => (
-              <a
-                key={l.href}
-                href={l.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                className={
-                  i === 0
-                    ? 'bg-fg text-bg rounded-full px-5 py-2.5 text-sm font-medium transition-transform hover:-translate-y-0.5'
-                    : 'text-dim hover:text-fg rounded-full border border-white/15 px-5 py-2.5 text-sm transition-colors'
-                }
-              >
-                {l.labelKey ? t(l.labelKey) : l.label}
-              </a>
+              <Magnetic key={l.href}>
+                <a
+                  href={l.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className={
+                    i === 0
+                      ? 'bg-fg text-bg inline-flex items-center rounded-full px-5 py-2.5 text-sm font-medium transition-transform active:scale-95'
+                      : 'text-dim hover:text-fg inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm transition active:scale-95'
+                  }
+                >
+                  {l.labelKey ? t(l.labelKey) : l.label}
+                </a>
+              </Magnetic>
             ))}
           </Reveal>
 

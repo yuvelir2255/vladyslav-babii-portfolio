@@ -47,12 +47,31 @@ export default function Cursor() {
     };
     window.addEventListener('pointermove', onMove, { passive: true });
 
-    // glowing orb (soft additive halo + crisp bright core) at (cx, cy)
-    const drawHead = (cx: number, cy: number) => {
+    // grow / form a ring over interactive elements (affordance + delight)
+    const INTERACTIVE = 'a, button, input, textarea, label, [data-cursor]';
+    let hoverTarget = 0;
+    let grow = 0;
+    const onOver = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      if (t?.closest?.(INTERACTIVE)) hoverTarget = 1;
+    };
+    const onOut = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      const rel = e.relatedTarget as Element | null;
+      if (t?.closest?.(INTERACTIVE) && !rel?.closest?.(INTERACTIVE)) {
+        hoverTarget = 0;
+      }
+    };
+    window.addEventListener('pointerover', onOver, { passive: true });
+    window.addEventListener('pointerout', onOut, { passive: true });
+
+    // glowing orb at (cx, cy); `g0` (0..1) swells the halo and forms a ring
+    // when hovering interactive elements
+    const drawHead = (cx: number, cy: number, g0: number) => {
       ctx.globalCompositeOperation = 'lighter';
-      const r = 16;
+      const r = 16 + g0 * 18;
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-      g.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+      g.addColorStop(0, `rgba(255, 255, 255, ${0.6 + g0 * 0.15})`);
       g.addColorStop(0.4, 'rgba(255, 255, 255, 0.2)');
       g.addColorStop(1, 'rgba(255, 255, 255, 0)');
       ctx.fillStyle = g;
@@ -60,10 +79,18 @@ export default function Cursor() {
       ctx.arc(cx, cy, r, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.95 - g0 * 0.45})`;
       ctx.beginPath();
       ctx.arc(cx, cy, 2.6, 0, Math.PI * 2);
       ctx.fill();
+
+      if (g0 > 0.01) {
+        ctx.strokeStyle = `rgba(255, 255, 255, ${g0 * 0.5})`;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 12 + g0 * 16, 0, Math.PI * 2);
+        ctx.stroke();
+      }
     };
 
     // comet: fade the previous frame a little, redraw the orb at the pointer;
@@ -72,7 +99,8 @@ export default function Cursor() {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
       ctx.fillRect(0, 0, w, h);
-      if (visible) drawHead(mx, my);
+      grow += (hoverTarget - grow) * 0.15;
+      if (visible) drawHead(mx, my, grow);
       raf = requestAnimationFrame(draw);
     };
 
@@ -82,6 +110,8 @@ export default function Cursor() {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerover', onOver);
+      window.removeEventListener('pointerout', onOut);
       document.documentElement.classList.remove('has-custom-cursor');
     };
   }, []);

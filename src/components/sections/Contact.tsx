@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import SocialLinks from '@/components/ui/SocialLinks';
+import Magnetic from '@/components/ui/Magnetic';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -150,13 +151,15 @@ export default function Contact() {
           />
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
-            <button
-              type="submit"
-              disabled={status === 'submitting'}
-              className="bg-fg text-bg rounded-full px-6 py-3 text-sm font-medium transition-transform hover:-translate-y-0.5 disabled:opacity-60"
-            >
-              {status === 'submitting' ? t('sending') : t('submit')}
-            </button>
+            <Magnetic>
+              <button
+                type="submit"
+                disabled={status === 'submitting'}
+                className="bg-fg text-bg rounded-full px-6 py-3 text-sm font-medium transition-transform active:scale-95 disabled:opacity-60"
+              >
+                {status === 'submitting' ? t('sending') : t('submit')}
+              </button>
+            </Magnetic>
             {status === 'success' && (
               <p role="status" className="text-accent-auto text-sm">
                 {t('success')}
