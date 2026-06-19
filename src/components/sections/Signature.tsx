@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import SplitReveal from '@/components/ui/SplitReveal';
+import SignatureLine from '@/components/ui/SignatureLine';
 
 /**
  * Closing signature line — a centered statement that bridges the manifesto/about
@@ -13,10 +13,8 @@ export default async function Signature() {
       id="signature"
       className="legible relative z-10 flex min-h-[100dvh] items-center justify-center px-6 text-center"
     >
-      <SplitReveal
-        as="h2"
+      <SignatureLine
         text={t('line')}
-        total={0.7}
         className="font-sans text-[clamp(2.5rem,9vw,7rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
       />
     </section>

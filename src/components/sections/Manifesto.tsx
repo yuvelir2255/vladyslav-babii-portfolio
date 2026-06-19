@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import SplitReveal from '@/components/ui/SplitReveal';
+import ClipReveal from '@/components/ui/ClipReveal';
 
 /**
  * Manifesto in two movements over the field:
@@ -14,8 +15,9 @@ export default async function Manifesto() {
   return (
     <section id="manifesto" className="legible relative z-10">
       <div className="flex min-h-[100dvh] flex-col justify-center gap-8 px-6 md:px-12">
-        <SplitReveal
+        <ClipReveal
           as="h2"
+          from="left"
           text={t('buildWord')}
           className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-bold tracking-[-0.04em]"
         />
@@ -28,8 +30,9 @@ export default async function Manifesto() {
       </div>
 
       <div className="flex min-h-[100dvh] flex-col justify-center gap-10 px-6 md:px-12">
-        <SplitReveal
+        <ClipReveal
           as="h2"
+          from="right"
           text={t('craftWord')}
           className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-bold tracking-[-0.04em]"
         />

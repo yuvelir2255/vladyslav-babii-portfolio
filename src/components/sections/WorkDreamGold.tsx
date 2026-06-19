@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { getLocale, getTranslations } from 'next-intl/server';
 import Reveal from '@/components/ui/Reveal';
+import StaggerReveal from '@/components/ui/StaggerReveal';
 import TiltCard from '@/components/ui/TiltCard';
 import { dreamGoldApp, dreamGoldSite } from '@/content/projects';
 import type { Locale } from '@/content/projects/types';
@@ -80,7 +81,7 @@ export default async function WorkDreamGold() {
         </div>
 
         {/* phone screenshots */}
-        <div className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-4 lg:mx-0 lg:justify-end lg:overflow-visible lg:px-0">
+        <StaggerReveal className="-mx-6 flex gap-5 overflow-x-auto px-6 pb-4 lg:mx-0 lg:justify-end lg:overflow-visible lg:px-0">
           {app.media.map((m) => (
             <TiltCard key={m.src} className="shrink-0">
               <div className="relative aspect-[9/19] w-[clamp(140px,40vw,180px)] overflow-hidden rounded-[1.8rem] border border-white/10 bg-white/[0.04]">
@@ -94,7 +95,7 @@ export default async function WorkDreamGold() {
               </div>
             </TiltCard>
           ))}
-        </div>
+        </StaggerReveal>
       </div>
 
       {/* coming-soon site + more-projects slot */}

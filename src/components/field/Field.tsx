@@ -26,6 +26,7 @@ const duneVertex = /* glsl */ `
   uniform float uScroll;
   uniform float uDpr;
   uniform float uSize;
+  uniform float uEnergy;
 
   varying float vBright;
 
@@ -65,7 +66,7 @@ const duneVertex = /* glsl */ `
     h       += snoise(vec2(aPos.x * 0.45, z * 0.45 - t)) * 0.28;
     h       += snoise(vec2(aPos.x * 1.10, z * 1.10 - t)) * 0.12;
 
-    vec3 pos = vec3(aPos.x, h * 0.9, aPos.y);
+    vec3 pos = vec3(aPos.x, h * 0.9 * (1.0 + uEnergy * 0.18), aPos.y);
 
     vBright = smoothstep(-0.3, 0.7, h);
 
@@ -78,12 +79,15 @@ const duneVertex = /* glsl */ `
 const duneFragment = /* glsl */ `
   precision highp float;
   varying float vBright;
+  uniform float uEnergy;
+  uniform vec3 uTint;
   void main(){
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
     float a = smoothstep(0.5, 0.0, d) * (0.12 + vBright * 0.95);
+    a *= 1.0 + uEnergy * 0.6;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(vec3(1.0), a);
+    gl_FragColor = vec4(uTint, a);
   }
 `;
 
@@ -112,12 +116,13 @@ const starVertex = /* glsl */ `
 const starFragment = /* glsl */ `
   precision highp float;
   varying float vTw;
+  uniform vec3 uTint;
   void main(){
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
     float a = smoothstep(0.5, 0.0, d) * vTw * 0.9;
     if (a < 0.01) discard;
-    gl_FragColor = vec4(vec3(1.0), a);
+    gl_FragColor = vec4(uTint, a);
   }
 `;
 
@@ -171,6 +176,8 @@ export default function Field() {
         uScroll: { value: 0 },
         uDpr: { value: dpr },
         uSize: { value: 18 },
+        uEnergy: { value: 0 },
+        uTint: { value: [1, 1, 1] },
       },
       transparent: true,
       depthTest: false,
@@ -205,6 +212,7 @@ export default function Field() {
       uniforms: {
         uTime: { value: 0 },
         uDpr: { value: dpr },
+        uTint: { value: [1, 1, 1] },
       },
       transparent: true,
       depthTest: false,
@@ -223,6 +231,9 @@ export default function Field() {
     let targetY = 0;
     let curX = 0;
     let curY = 0;
+    let energy = 0;
+    let targetEnergy = 0;
+    let lastScrollY = window.scrollY;
     const onPointer = (e: PointerEvent) => {
       targetX = (e.clientX / window.innerWidth) * 2 - 1;
       targetY = (e.clientY / window.innerHeight) * 2 - 1;
@@ -244,8 +255,17 @@ export default function Field() {
     window.addEventListener('resize', resize);
 
     const onScroll = () => {
+      const y = window.scrollY;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      duneProgram.uniforms.uScroll.value = max > 0 ? window.scrollY / max : 0;
+      const sp = max > 0 ? y / max : 0;
+      duneProgram.uniforms.uScroll.value = sp;
+      // mood: the field drifts gently cooler as you descend the page
+      const tint = [1 - sp * 0.3, 1 - sp * 0.18, 1];
+      duneProgram.uniforms.uTint.value = tint;
+      starProgram.uniforms.uTint.value = tint;
+      // scroll velocity feeds the field's energy (brighter/taller dunes)
+      targetEnergy = Math.min(Math.abs(y - lastScrollY) / 50, 1);
+      lastScrollY = y;
     };
     window.addEventListener('pointermove', onPointer, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -260,6 +280,9 @@ export default function Field() {
       starProgram.uniforms.uTime.value = t;
       curX += (targetX - curX) * 0.04;
       curY += (targetY - curY) * 0.04;
+      energy += (targetEnergy - energy) * 0.08;
+      targetEnergy *= 0.9;
+      duneProgram.uniforms.uEnergy.value = energy;
       applyCamera();
       renderer.render({ scene, camera });
       if (running) raf = requestAnimationFrame(render);

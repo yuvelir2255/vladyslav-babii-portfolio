@@ -51,6 +51,7 @@ export default function WhatIDo() {
           start: 'top top',
           end: `+=${cards.length * 90}%`,
           pin: true,
+          pinType: 'transform',
           scrub: 1,
         },
       });

@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import SplitReveal from '@/components/ui/SplitReveal';
+import HeroName from '@/components/ui/HeroName';
 import LangSwitcher from '@/components/ui/LangSwitcher';
 import SocialLinks from '@/components/ui/SocialLinks';
 import ScrollCue from '@/components/ui/ScrollCue';
@@ -26,18 +27,16 @@ export default async function Hero() {
       </div>
 
       <div className="max-w-4xl">
-        <SplitReveal
-          as="h1"
+        <HeroName
           text={t('name')}
-          scroll={false}
-          delay={1.35}
+          delay={1.5}
           className="font-sans text-[clamp(2.75rem,11vw,8rem)] leading-[1.05] font-semibold tracking-[-0.03em]"
         />
         <SplitReveal
           as="p"
           text={t('role')}
           scroll={false}
-          delay={1.65}
+          delay={2.7}
           total={0.5}
           className="text-dim mt-5 max-w-xl font-mono text-sm leading-relaxed tracking-wide md:text-base"
         />
