@@ -1,4 +1,5 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
+import Hero from '@/components/sections/Hero';
 
 export default async function Home({
   params,
@@ -7,18 +8,10 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('Hero');
 
   return (
-    <main className="relative z-10 grid min-h-dvh place-items-center">
-      <div className="text-center">
-        <h1 className="font-sans text-5xl font-bold tracking-tight">
-          {t('name')}
-        </h1>
-        <p className="text-faint mt-3 font-mono text-sm tracking-widest uppercase">
-          {t('tagline')}
-        </p>
-      </div>
+    <main className="relative">
+      <Hero />
     </main>
   );
 }

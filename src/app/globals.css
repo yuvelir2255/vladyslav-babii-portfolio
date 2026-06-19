@@ -45,3 +45,39 @@ html.lenis body {
 .has-custom-cursor * {
   cursor: none;
 }
+
+/* SplitText word-by-word reveal: lines mask the words rising from below.
+   Bottom padding (with compensating negative margin) keeps descenders from
+   being clipped by the mask. Only present in motion mode (SplitText is skipped
+   under reduced-motion, leaving plain, fully visible text). */
+.split-line {
+  overflow: hidden;
+  padding-bottom: 0.15em;
+  margin-bottom: -0.15em;
+}
+.split-word {
+  will-change: transform;
+}
+
+/* Hero scroll cue: a dot travelling down a hairline. Motion only. */
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue-dot {
+    animation: scroll-cue 1.8s ease-in-out infinite;
+  }
+}
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(266%);
+    opacity: 0;
+  }
+}

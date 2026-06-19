@@ -1,6 +1,8 @@
 {
   "Hero": {
+    "available": "Available for work",
     "name": "Vladyslav Babii",
-    "tagline": "Developer"
+    "role": "Developer — Telegram Mini Apps, websites & AI products",
+    "scroll": "Scroll to explore"
   }
 }
