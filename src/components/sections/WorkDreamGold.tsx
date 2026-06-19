@@ -19,7 +19,7 @@ export default async function WorkDreamGold() {
   const siteCopy = dreamGoldSite.copy[locale];
 
   return (
-    <section id="work" className="relative z-10 px-6 py-28 md:px-12">
+    <section id="work" className="legible relative z-10 px-6 py-28 md:px-12">
       <Reveal
         as="p"
         className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase"

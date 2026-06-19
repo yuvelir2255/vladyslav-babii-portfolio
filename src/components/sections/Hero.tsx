@@ -13,7 +13,7 @@ export default async function Hero() {
   const t = await getTranslations('Hero');
 
   return (
-    <section className="relative z-10 flex min-h-[100dvh] flex-col justify-between px-6 py-7 md:px-12 md:py-10">
+    <section className="legible relative z-10 flex min-h-[100dvh] flex-col justify-between px-6 py-7 md:px-12 md:py-10">
       <div className="flex items-start justify-between gap-4">
         <p className="text-dim flex items-center gap-2.5 font-mono text-[11px] tracking-[0.22em] uppercase">
           <span aria-hidden className="relative flex h-1.5 w-1.5">

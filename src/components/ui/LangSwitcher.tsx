@@ -15,7 +15,7 @@ export default function LangSwitcher() {
   return (
     <nav
       aria-label="Language"
-      className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] uppercase"
+      className="-my-2 flex items-center gap-2 font-mono text-xs tracking-[0.2em] uppercase"
     >
       {LOCALES.map((l, i) => (
         <span key={l} className="flex items-center gap-2">
@@ -23,11 +23,11 @@ export default function LangSwitcher() {
             href={pathname}
             locale={l}
             aria-current={l === locale ? 'true' : undefined}
-            className={
+            className={`inline-flex py-2 ${
               l === locale
                 ? 'text-fg'
                 : 'text-faint hover:text-dim transition-colors'
-            }
+            }`}
           >
             {l}
           </Link>

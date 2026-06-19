@@ -12,7 +12,7 @@ export default async function Manifesto() {
   const t = await getTranslations('Manifesto');
 
   return (
-    <section id="manifesto" className="relative z-10">
+    <section id="manifesto" className="legible relative z-10">
       <div className="flex min-h-[100dvh] flex-col justify-center gap-8 px-6 md:px-12">
         <SplitReveal
           as="h2"

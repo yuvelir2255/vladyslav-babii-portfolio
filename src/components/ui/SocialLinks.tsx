@@ -24,12 +24,12 @@ export default function SocialLinks() {
               href={l.href}
               target={external ? '_blank' : undefined}
               rel={external ? 'noreferrer noopener' : undefined}
-              className="text-dim hover:text-fg group relative -my-1 inline-flex py-1 transition-colors"
+              className="text-dim hover:text-fg group relative -my-2 inline-flex py-2 transition-colors"
             >
               {l.label}
               <span
                 aria-hidden
-                className="bg-fg absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
+                className="bg-fg absolute bottom-2 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
               />
             </a>
           </li>

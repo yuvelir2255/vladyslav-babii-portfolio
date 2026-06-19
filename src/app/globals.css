@@ -3,8 +3,8 @@
 @theme {
   --color-bg: #0a0b0d;
   --color-fg: #f4f4f2;
-  --color-dim: rgba(244, 244, 242, 0.55);
-  --color-faint: rgba(244, 244, 242, 0.32);
+  --color-dim: rgba(244, 244, 242, 0.62);
+  --color-faint: rgba(244, 244, 242, 0.5);
   --color-accent-web: #4a6cff;
   --color-accent-tg: #2aabee;
   --color-accent-ai: #8b5cf6;
@@ -16,6 +16,7 @@
 
 html {
   scroll-behavior: auto;
+  color-scheme: dark;
 }
 
 body {
@@ -26,6 +27,20 @@ body {
 ::selection {
   background: var(--color-fg);
   color: var(--color-bg);
+}
+
+/* Visible keyboard focus — the custom comet cursor hides the native pointer, so
+   a clear, high-contrast ring matters for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--color-fg);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Legibility halo: lifts text off the bright crests of the WebGL field with a
+   soft dark glow around the glyphs — without dimming the field itself. */
+.legible {
+  text-shadow: 0 1px 14px rgba(10, 11, 13, 0.7);
 }
 
 /* Lenis smooth scroll */

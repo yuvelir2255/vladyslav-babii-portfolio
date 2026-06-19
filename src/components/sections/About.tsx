@@ -12,7 +12,7 @@ export default async function About() {
   return (
     <section
       id="about"
-      className="relative z-10 flex min-h-[100dvh] flex-col justify-center px-6 py-24 md:px-12"
+      className="legible relative z-10 flex min-h-[100dvh] flex-col justify-center px-6 py-24 md:px-12"
     >
       <div className="max-w-4xl">
         <Reveal

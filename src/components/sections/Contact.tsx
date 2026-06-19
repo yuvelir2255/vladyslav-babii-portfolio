@@ -39,6 +39,7 @@ function Field({
           rows={4}
           placeholder={placeholder}
           aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
           className={`${cls} resize-none`}
         />
       ) : (
@@ -48,10 +49,15 @@ function Field({
           type={type}
           placeholder={placeholder}
           aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
           className={cls}
         />
       )}
-      {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
+      {error && (
+        <p id={`${id}-error`} className="mt-1.5 text-xs text-red-400">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -102,7 +108,7 @@ export default function Contact() {
     key === 'invalid' ? t('invalidEmail') : key ? t('required') : undefined;
 
   return (
-    <section id="contact" className="relative z-10 px-6 py-28 md:px-12">
+    <section id="contact" className="legible relative z-10 px-6 py-28 md:px-12">
       <div className="mx-auto max-w-2xl">
         <h2 className="font-sans text-[clamp(2.5rem,8vw,5.5rem)] leading-[1.02] font-semibold tracking-[-0.03em]">
           {t('title')}

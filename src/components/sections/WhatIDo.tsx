@@ -86,9 +86,9 @@ export default function WhatIDo() {
       id="what-i-do"
       className="relative z-10 flex min-h-[100dvh] flex-col justify-center gap-10 px-6 py-24 md:px-12"
     >
-      <p className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase">
+      <h2 className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase">
         {t('label')}
-      </p>
+      </h2>
       <div
         ref={cardsRef}
         className="mx-auto flex w-full max-w-xl flex-col gap-6"

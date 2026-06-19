@@ -128,13 +128,16 @@ export default function Field() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Scale the work down on phones (fewer points, lower dpr, no MSAA) so the
+    // field stays smooth on mobile GPUs.
+    const isSmall = window.innerWidth < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2);
 
     const renderer = new Renderer({
       canvas,
       alpha: true,
       dpr,
-      antialias: true,
+      antialias: !isSmall,
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -147,8 +150,8 @@ export default function Field() {
     const scene = new Transform();
 
     // --- dunes: point grid, wide in x, receding far in -z (all in front) ---
-    const NX = 220;
-    const NZ = 220;
+    const NX = isSmall ? 140 : 220;
+    const NZ = isSmall ? 140 : 220;
     const dunes = new Float32Array(NX * NZ * 2);
     let k = 0;
     for (let j = 0; j < NZ; j++) {
@@ -182,7 +185,7 @@ export default function Field() {
     duneMesh.setParent(scene);
 
     // --- stars: scattered above the horizon, far back, gently twinkling ---
-    const NSTARS = 900;
+    const NSTARS = isSmall ? 520 : 900;
     const starPos = new Float32Array(NSTARS * 3);
     const starSeed = new Float32Array(NSTARS * 2);
     for (let i = 0; i < NSTARS; i++) {

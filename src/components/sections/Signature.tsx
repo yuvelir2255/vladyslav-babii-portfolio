@@ -11,7 +11,7 @@ export default async function Signature() {
   return (
     <section
       id="signature"
-      className="relative z-10 flex min-h-[100dvh] items-center justify-center px-6 text-center"
+      className="legible relative z-10 flex min-h-[100dvh] items-center justify-center px-6 text-center"
     >
       <SplitReveal
         as="h2"
