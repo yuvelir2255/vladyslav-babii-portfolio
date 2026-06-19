@@ -16,5 +16,30 @@
     "p1": "Nineteen. From Kharkiv, building in Warsaw.",
     "p2": "A month into development I designed, built and launched a real AI product — not a demo, a tool a business uses every day to take orders.",
     "p3": "Before code I ran my own projects and shipped. I read a build like an owner: from the first pixel to the bottom line. Whatever I start, I take to the finish."
+  },
+  "WhatIDo": {
+    "label": "What I do",
+    "cards": {
+      "web": {
+        "title": "Websites",
+        "subtitle": "Fast, distinctive — motion that earns attention."
+      },
+      "tg": {
+        "title": "Telegram Mini Apps",
+        "subtitle": "Full products living inside the chat."
+      },
+      "ai": {
+        "title": "AI Products",
+        "subtitle": "Tools that ship and take real orders."
+      },
+      "auto": {
+        "title": "Automation",
+        "subtitle": "I delete the manual work."
+      },
+      "design": {
+        "title": "Design",
+        "subtitle": "I design what I build — end to end."
+      }
+    }
   }
 }
