@@ -41,5 +41,15 @@
         "subtitle": "I design what I build — end to end."
       }
     }
+  },
+  "Signature": {
+    "line": "Ready when it matters."
+  },
+  "Work": {
+    "label": "Selected work",
+    "features": "Highlights",
+    "comingSoon": "Coming soon",
+    "moreSoon": "More projects landing here soon.",
+    "preview": "Screenshots coming"
   }
 }

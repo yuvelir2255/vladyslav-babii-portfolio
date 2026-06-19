@@ -41,5 +41,15 @@
         "subtitle": "Проєктую те, що будую — від початку до кінця."
       }
     }
+  },
+  "Signature": {
+    "line": "Ready when it matters."
+  },
+  "Work": {
+    "label": "Вибрані роботи",
+    "features": "Ключове",
+    "comingSoon": "Скоро",
+    "moreSoon": "Скоро тут з'являться нові проєкти.",
+    "preview": "Скоро скриншоти"
   }
 }

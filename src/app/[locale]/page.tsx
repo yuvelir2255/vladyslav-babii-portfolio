@@ -3,6 +3,8 @@ import Hero from '@/components/sections/Hero';
 import Manifesto from '@/components/sections/Manifesto';
 import About from '@/components/sections/About';
 import WhatIDo from '@/components/sections/WhatIDo';
+import Signature from '@/components/sections/Signature';
+import WorkDreamGold from '@/components/sections/WorkDreamGold';
 
 export default async function Home({
   params,
@@ -18,6 +20,8 @@ export default async function Home({
       <Manifesto />
       <About />
       <WhatIDo />
+      <Signature />
+      <WorkDreamGold />
     </main>
   );
 }
