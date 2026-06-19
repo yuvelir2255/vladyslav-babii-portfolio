@@ -4,6 +4,10 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Archivo, Space_Mono } from 'next/font/google';
 import { routing } from '@/i18n/routing';
+import SmoothScroll from '@/components/providers/SmoothScroll';
+import Cursor from '@/components/ui/Cursor';
+import Grain from '@/components/ui/Grain';
+import Preloader from '@/components/ui/Preloader';
 import '../globals.css';
 
 const archivo = Archivo({
@@ -44,8 +48,11 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${archivo.variable} ${spaceMono.variable}`}>
       <body className="font-sans antialiased">
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <SmoothScroll>{children}</SmoothScroll>
         </NextIntlClientProvider>
+        <Grain />
+        <Cursor />
+        <Preloader />
       </body>
     </html>
   );

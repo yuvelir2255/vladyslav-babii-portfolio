@@ -22,3 +22,26 @@ body {
   background: var(--color-bg);
   color: var(--color-fg);
 }
+
+::selection {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+/* Custom cursor hides the native pointer on fine-pointer devices only */
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none;
+}
