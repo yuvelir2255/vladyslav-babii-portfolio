@@ -51,5 +51,25 @@
     "comingSoon": "Скоро",
     "moreSoon": "Скоро тут з'являться нові проєкти.",
     "preview": "Скоро скриншоти"
+  },
+  "Contact": {
+    "title": "Поговорімо.",
+    "subtitle": "Є ідея, продукт або процес, який має працювати сам? Розкажіть — відповідаю швидко й беруся ще швидше.",
+    "name": "Ім'я",
+    "email": "Email",
+    "project": "Ваш проєкт",
+    "namePh": "Ваше ім'я",
+    "emailPh": "you@email.com",
+    "projectPh": "Що хочете створити?",
+    "submit": "Надіслати",
+    "sending": "Надсилаю…",
+    "success": "Дякую — повідомлення надіслано. Скоро відповім.",
+    "error": "Щось пішло не так. Напишіть напряму: vladbabii31@gmail.com",
+    "required": "Обов'язково",
+    "invalidEmail": "Введіть коректний email",
+    "contactLine": "vladbabii31@gmail.com · @BabiiVladyslav · Варшава, PL"
+  },
+  "Footer": {
+    "rights": "© 2026 Vladyslav Babii"
   }
 }

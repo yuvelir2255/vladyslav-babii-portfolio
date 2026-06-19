@@ -51,5 +51,25 @@
     "comingSoon": "Coming soon",
     "moreSoon": "More projects landing here soon.",
     "preview": "Screenshots coming"
+  },
+  "Contact": {
+    "title": "Let's talk.",
+    "subtitle": "Got an idea, a product, or a process that should run itself? Tell me about it — I reply fast and start faster.",
+    "name": "Name",
+    "email": "Email",
+    "project": "Your project",
+    "namePh": "Your name",
+    "emailPh": "you@email.com",
+    "projectPh": "What do you want to build?",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "success": "Thanks — your message is on its way. I'll reply soon.",
+    "error": "Something went wrong. Email me directly: vladbabii31@gmail.com",
+    "required": "Required",
+    "invalidEmail": "Enter a valid email",
+    "contactLine": "vladbabii31@gmail.com · @BabiiVladyslav · Warsaw, PL"
+  },
+  "Footer": {
+    "rights": "© 2026 Vladyslav Babii"
   }
 }

@@ -5,6 +5,8 @@ import About from '@/components/sections/About';
 import WhatIDo from '@/components/sections/WhatIDo';
 import Signature from '@/components/sections/Signature';
 import WorkDreamGold from '@/components/sections/WorkDreamGold';
+import Contact from '@/components/sections/Contact';
+import Footer from '@/components/sections/Footer';
 
 export default async function Home({
   params,
@@ -22,6 +24,8 @@ export default async function Home({
       <WhatIDo />
       <Signature />
       <WorkDreamGold />
+      <Contact />
+      <Footer />
     </main>
   );
 }
