@@ -1,12 +1,73 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-bg: #100f0d;
+  --color-bone: #ece7da;
+  --color-steel: #9c968a;
+  --color-dim: #6f6a60;
+  --color-orange: #ff5a1e;
+  --color-line: rgba(236, 231, 218, 0.12);
+
+  --font-display: var(--font-anton), 'Arial Narrow', sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-label: var(--font-oswald), 'Arial Narrow', sans-serif;
+  --font-stencil: var(--font-saira-stencil), var(--font-oswald), sans-serif;
+}
+
 html {
-  color-scheme: light;
+  color-scheme: dark;
+  background: var(--color-bg);
 }
 
 body {
-  background: #ffffff;
-  color: #111111;
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-bone);
+  font-family: var(--font-mono);
   -webkit-font-smoothing: antialiased;
 }
+
+/* зерно бетона (overlay) */
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* едва заметные «прутья» */
+.bars::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0 78px,
+    rgba(0, 0, 0, 0.4) 78px 82px
+  );
+  -webkit-mask: linear-gradient(
+    90deg,
+    transparent,
+    #000 16%,
+    #000 84%,
+    transparent
+  );
+  mask: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent);
+}
+
+@keyframes ticker-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* prefers-reduced-motion намеренно НЕ обрабатываем — движение всегда включено (решение владельца) */
