@@ -56,7 +56,7 @@ export function Cursor() {
       className="pointer-events-none fixed top-0 left-0 z-[60] -mt-5 -ml-5 h-10 w-10 rounded-full mix-blend-screen"
       style={{
         background:
-          'radial-gradient(circle, rgba(255,90,30,0.55), transparent 70%)',
+          'radial-gradient(circle, color-mix(in srgb, var(--color-orange) 55%, transparent), transparent 70%)',
       }}
     />
   );

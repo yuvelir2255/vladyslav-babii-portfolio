@@ -6,7 +6,10 @@ export function HeroScreen2() {
     <section className="grain relative flex min-h-[82svh] items-center border-t border-[var(--color-line)]">
       <ManifestMotion>
         <div className="relative z-[2] max-w-[1000px] px-14 max-md:px-6">
-          <p className="mb-6 border-l-[3px] border-[var(--color-orange)] pl-3 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
+          <p className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
+            <span aria-hidden="true" className="mr-2">
+              ●
+            </span>
             On the record / statement 01
           </p>
           <p

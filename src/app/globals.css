@@ -4,8 +4,9 @@
   --color-bg: #100f0d;
   --color-bone: #ece7da;
   --color-steel: #9c968a;
-  --color-dim: #6f6a60;
+  --color-dim: #827c70;
   --color-orange: #ff5a1e;
+  --color-orange-soft: color-mix(in srgb, var(--color-orange) 12%, transparent);
   --color-line: rgba(236, 231, 218, 0.12);
 
   --font-display: var(--font-anton), 'Arial Narrow', sans-serif;

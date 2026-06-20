@@ -18,8 +18,15 @@ export function HeroNameMotion({
       const h1 = ref.current?.querySelector<HTMLElement>('[data-hero-name]');
       if (!h1) return;
 
-      // буквы «штампуются» на входе
-      const split = new SplitText(h1, { type: 'chars' });
+      // имя по словам (для SR) — собираем до сплита, восстанавливаем aria-label после
+      const label = Array.from(h1.children)
+        .map((c) => c.textContent?.trim() ?? '')
+        .filter(Boolean)
+        .join(' ');
+
+      // буквы «штампуются» на входе; aria:'none' — SR читает h1 по aria-label, не по буквам
+      const split = new SplitText(h1, { type: 'chars', aria: 'none' });
+      if (label) h1.setAttribute('aria-label', label);
       gsap.from(split.chars, {
         yPercent: 120,
         opacity: 0,

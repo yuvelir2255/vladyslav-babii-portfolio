@@ -121,7 +121,7 @@ export function FileNav() {
             data-row
             href={s.href}
             onClick={() => setOpen(false)}
-            className="group flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-steel)] uppercase transition-colors hover:bg-[rgba(255,90,30,0.12)] hover:text-[var(--color-bone)] focus-visible:bg-[rgba(255,90,30,0.12)] focus-visible:text-[var(--color-bone)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-orange)]"
+            className="group flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-steel)] uppercase transition-colors hover:bg-[var(--color-orange-soft)] hover:text-[var(--color-bone)] focus-visible:bg-[var(--color-orange-soft)] focus-visible:text-[var(--color-bone)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-orange)]"
           >
             <span className="text-[11px] text-[var(--color-dim)] group-hover:text-[var(--color-orange)]">
               {s.code}

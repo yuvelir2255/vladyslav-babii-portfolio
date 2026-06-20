@@ -17,6 +17,7 @@ export function HeroScreen1() {
           </p>
           <h1
             data-hero-name
+            aria-label={hero.name.join(' ')}
             className="my-[1.1rem] font-[family-name:var(--font-display)] text-[clamp(58px,7.6vw,104px)] leading-[1.04] tracking-[0.015em] uppercase"
           >
             {hero.name.map((w) => (
