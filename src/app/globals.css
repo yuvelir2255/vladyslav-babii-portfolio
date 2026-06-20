@@ -166,3 +166,58 @@ html.intake-seen .preloader {
   text-transform: uppercase;
   background: rgba(16, 15, 13, 0.55);
 }
+
+/* досье: рассекречивание (redaction) */
+.redacted-wrap {
+  position: relative;
+  display: inline-block;
+  min-width: 60%;
+}
+.redaction-bar {
+  position: absolute;
+  inset: 0;
+  transform-origin: right;
+  background: repeating-linear-gradient(90deg, #000 0 10px, #0c0b0a 10px 12px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+[data-redacted][data-open='true'] .redaction-bar {
+  opacity: 0;
+  transform: scaleX(0);
+  pointer-events: none;
+}
+[data-redacted]:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
+}
+
+/* штамп Declassified в углу карты дела */
+.stamp-declassified {
+  position: absolute;
+  right: 4%;
+  bottom: 5%;
+  z-index: 4;
+  transform: rotate(-9deg);
+  border: 3px solid var(--color-orange);
+  color: var(--color-orange);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font: 22px var(--font-stencil);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(16, 15, 13, 0.5);
+}
+
+/* scan-вариант кастомного курсора над делом */
+.cursor-dot.is-scan {
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border: 1px solid color-mix(in srgb, var(--color-orange) 60%, transparent);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-orange) 18%, transparent),
+    transparent 72%
+  );
+}

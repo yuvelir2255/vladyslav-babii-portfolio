@@ -1,0 +1,125 @@
+import Image from 'next/image';
+import { about } from '@/content/about';
+import { RedactedField } from './RedactedField';
+import { Fingerprint } from './Fingerprint';
+
+export function About() {
+  return (
+    <section
+      id="about"
+      data-cursor="scan"
+      className="grain relative flex min-h-[100svh] items-center border-t border-[var(--color-line)] px-14 py-20 max-md:px-6"
+    >
+      <div
+        data-folder
+        className="relative z-[2] mx-auto flex w-full max-w-[1100px] gap-12 max-lg:flex-col"
+      >
+        <div className="flex flex-[0.8] flex-col gap-5">
+          <div data-mugshot className="relative">
+            <span className="evtag">№VB-19</span>
+            <Image
+              src="/media/booking/mugshot.webp"
+              alt="Booking photo of Vladyslav Babii"
+              width={480}
+              height={600}
+              sizes="(max-width: 1024px) 80vw, 360px"
+              className="block w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
+            />
+          </div>
+          <div className="flex items-stretch gap-4">
+            <div className="relative flex-1 overflow-hidden rounded-[8px] border border-[var(--color-line)]">
+              <Image
+                src="/media/booking/mugshot.webp"
+                alt=""
+                aria-hidden="true"
+                width={240}
+                height={300}
+                sizes="180px"
+                className="block w-full -scale-x-100 opacity-70 grayscale"
+              />
+              <span className="absolute bottom-1 left-2 text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+                Profile
+              </span>
+            </div>
+            <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-[8px] border border-[var(--color-line)] p-3">
+              <Fingerprint className="h-20 w-auto" />
+              <span className="text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+                Biometrics
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex-[1.2]">
+          <p className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
+            <span aria-hidden="true" className="mr-2">
+              ●
+            </span>
+            {about.label}
+          </p>
+
+          <div className="grid grid-cols-2 gap-x-8 gap-y-5 max-sm:grid-cols-1">
+            {about.facts.map((f) => {
+              const isAge = /age/i.test(f.k);
+              return (
+                <div data-dossier-field key={f.k}>
+                  <span className="block text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+                    {f.k}
+                  </span>
+                  <span
+                    {...(isAge ? { 'data-age': true } : {})}
+                    className={`mt-1 block text-[15px] ${
+                      isAge
+                        ? 'text-[var(--color-orange)]'
+                        : 'text-[var(--color-bone)]'
+                    }`}
+                  >
+                    {f.v}
+                  </span>
+                </div>
+              );
+            })}
+
+            {about.redacted.map((r) => (
+              <div
+                data-dossier-field
+                key={r.k}
+                className="col-span-2 max-sm:col-span-1"
+              >
+                <RedactedField label={r.k} value={r.v} />
+              </div>
+            ))}
+          </div>
+
+          <div data-dossier-field className="mt-6">
+            <span className="block text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+              Disposition
+            </span>
+            <p
+              data-disposition
+              className="mt-1 max-w-[48ch] text-[15px] leading-[1.6] text-[var(--color-steel)]"
+            >
+              {about.disposition}
+              <span className="ml-2 inline-block rounded border border-[var(--color-orange)] px-2 py-[2px] align-middle text-[10px] tracking-[0.08em] text-[var(--color-orange)] uppercase">
+                {about.status}
+              </span>
+            </p>
+          </div>
+
+          <div data-dossier-field className="mt-6">
+            <span className="block text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+              Tools / known associates
+            </span>
+            <p className="mt-1 text-[12px] tracking-[0.04em] text-[var(--color-steel)]">
+              {about.tools.join(' · ')}
+            </p>
+          </div>
+        </div>
+
+        <span data-stamp className="stamp-declassified" aria-hidden="true">
+          Declassified
+        </span>
+      </div>
+    </section>
+  );
+}
