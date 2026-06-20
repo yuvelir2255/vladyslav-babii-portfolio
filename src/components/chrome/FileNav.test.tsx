@@ -4,15 +4,13 @@ import { describe, it, expect } from 'vitest';
 import { FileNav } from './FileNav';
 
 describe('FileNav', () => {
-  it('раскрывает директорию секций по клику', async () => {
+  it('переключает директорию и содержит секции', async () => {
     render(<FileNav />);
-    expect(screen.queryByText('Evidence')).not.toBeInTheDocument();
-    await userEvent.click(
-      screen.getByRole('button', { name: /open directory/i }),
-    );
-    expect(screen.getByRole('link', { name: /evidence/i })).toBeInTheDocument();
-    expect(
-      screen.getByRole('link', { name: /visiting hours/i }),
-    ).toBeInTheDocument();
+    const btn = screen.getByRole('button', { name: /directory/i });
+    expect(btn).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(btn);
+    expect(btn).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('Evidence')).toBeInTheDocument();
+    expect(screen.getByText('Visiting Hours')).toBeInTheDocument();
   });
 });

@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap } from '@/lib/gsap';
 
 const SECTIONS = [
   { code: '00', label: 'The Yard', href: '#yard' },
@@ -12,14 +14,61 @@ const SECTIONS = [
 
 export function FileNav() {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<ReturnType<typeof gsap.timeline> | null>(null);
 
+  // таймлайн раскрытия строим один раз
+  useGSAP(
+    () => {
+      const panel = panelRef.current;
+      if (!panel) return;
+      const rows = panel.querySelectorAll('[data-row]');
+      gsap.set(panel, {
+        autoAlpha: 0,
+        y: -10,
+        scale: 0.97,
+        transformOrigin: 'top center',
+      });
+      tlRef.current = gsap
+        .timeline({ paused: true })
+        .to(panel, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.34,
+          ease: 'power3.out',
+        })
+        .from(
+          rows,
+          {
+            autoAlpha: 0,
+            y: 10,
+            duration: 0.3,
+            stagger: 0.05,
+            ease: 'power2.out',
+          },
+          '-=0.2',
+        );
+    },
+    { scope: root },
+  );
+
+  // плавное открытие/закрытие по состоянию
+  useEffect(() => {
+    const tl = tlRef.current;
+    if (!tl) return;
+    if (open) tl.play();
+    else tl.reverse();
+  }, [open]);
+
+  // Esc + клик-вне закрывают
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setOpen(false);
     };
     const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node))
+      if (root.current && !root.current.contains(e.target as Node))
         setOpen(false);
     };
     window.addEventListener('keydown', onKey);
@@ -31,7 +80,7 @@ export function FileNav() {
   }, []);
 
   return (
-    <div ref={ref} className="fixed top-3 left-1/2 z-50 -translate-x-1/2">
+    <div ref={root} className="fixed top-3 left-1/2 z-50 -translate-x-1/2">
       <button
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
@@ -40,29 +89,47 @@ export function FileNav() {
       >
         <span className="text-[var(--color-orange)]">●</span>
         <span>VB-19</span>
-        <span className="text-[var(--color-dim)]">{open ? '×' : '•••'}</span>
+        <span className="relative inline-flex h-3 w-4 items-center justify-center text-[var(--color-dim)]">
+          <span
+            className={`absolute leading-none transition-all duration-300 ${
+              open ? 'scale-50 rotate-90 opacity-0' : 'opacity-100'
+            }`}
+          >
+            •••
+          </span>
+          <span
+            className={`absolute text-[15px] leading-none transition-all duration-300 ${
+              open ? 'opacity-100' : 'scale-50 -rotate-90 opacity-0'
+            }`}
+          >
+            ×
+          </span>
+        </span>
       </button>
 
-      {open && (
-        <nav className="grain absolute top-[calc(100%+8px)] left-1/2 w-[230px] -translate-x-1/2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-[rgba(16,15,13,0.92)] p-2 backdrop-blur">
-          <p className="px-3 py-2 text-[10px] tracking-[0.2em] text-[var(--color-dim)] uppercase">
-            Cell-block directory
-          </p>
-          {SECTIONS.map((s) => (
-            <a
-              key={s.code}
-              href={s.href}
-              onClick={() => setOpen(false)}
-              className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-steel)] uppercase transition-colors hover:bg-[rgba(255,90,30,0.12)] hover:text-[var(--color-bone)]"
-            >
-              <span className="text-[11px] text-[var(--color-dim)] group-hover:text-[var(--color-orange)]">
-                {s.code}
-              </span>
-              <span>{s.label}</span>
-            </a>
-          ))}
-        </nav>
-      )}
+      <nav
+        ref={panelRef}
+        aria-hidden={!open}
+        className="grain invisible absolute top-[calc(100%+8px)] left-1/2 w-[230px] -translate-x-1/2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-[rgba(16,15,13,0.92)] p-2 backdrop-blur"
+      >
+        <p className="px-3 py-2 text-[10px] tracking-[0.2em] text-[var(--color-dim)] uppercase">
+          Cell-block directory
+        </p>
+        {SECTIONS.map((s) => (
+          <a
+            key={s.code}
+            data-row
+            href={s.href}
+            onClick={() => setOpen(false)}
+            className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-steel)] uppercase transition-colors hover:bg-[rgba(255,90,30,0.12)] hover:text-[var(--color-bone)]"
+          >
+            <span className="text-[11px] text-[var(--color-dim)] group-hover:text-[var(--color-orange)]">
+              {s.code}
+            </span>
+            <span>{s.label}</span>
+          </a>
+        ))}
+      </nav>
     </div>
   );
 }
