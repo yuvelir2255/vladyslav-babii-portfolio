@@ -11,6 +11,7 @@ export function BookingPhoto() {
         alt="Booking photo of Vladyslav Babii"
         width={480}
         height={640}
+        sizes="(max-width: 790px) 300px, (max-width: 1264px) 38vw, 480px"
         priority
         className="block w-full rounded-[10px] border border-[var(--color-line)] shadow-[0_30px_70px_rgba(0,0,0,0.55)]"
       />

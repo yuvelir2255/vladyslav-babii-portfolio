@@ -36,6 +36,10 @@ export function Preloader() {
     lenis?.scrollTo(0, { immediate: true });
     window.scrollTo(0, 0);
 
+    // контент за прелоадером недоступен с клавиатуры/SR, пока идёт intake
+    const content = document.getElementById('app-content');
+    if (content) content.inert = true;
+
     const obj = { v: 0 };
     const tween = gsap.to(obj, {
       v: 100,
@@ -54,6 +58,7 @@ export function Preloader() {
             } catch {
               /* приватный режим — просто покажем intake снова в след. раз */
             }
+            if (content) content.inert = false;
             lenis?.start();
             setDone(true);
           },
@@ -63,6 +68,7 @@ export function Preloader() {
 
     return () => {
       tween.kill();
+      if (content) content.inert = false;
       lenis?.start(); // страховка: не оставить скролл заблокированным
     };
   }, []);

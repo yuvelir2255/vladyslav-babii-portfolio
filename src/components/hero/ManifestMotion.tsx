@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, SplitText } from '@/lib/gsap';
+import { gsap, SplitText, ScrollTrigger } from '@/lib/gsap';
 
 export function ManifestMotion({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -14,18 +14,26 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
 
       // строки выезжают снизу из-под маски — плавный premium reveal
       const split = new SplitText(p, { type: 'lines', mask: 'lines' });
-      const tween = gsap.from(split.lines, {
-        yPercent: 110,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.12,
-        scrollTrigger: { trigger: p, start: 'top 80%', once: true },
-        onComplete: () => split.revert(), // вернуть естественный поток (адаптив)
+      // видимый дефолт: reveal прячет-и-показывает только когда триггер реально
+      // сработал — если ScrollTrigger не отработает, текст не останется скрытым
+      gsap.set(split.lines, { yPercent: 0, opacity: 1 });
+      const st = ScrollTrigger.create({
+        trigger: p,
+        start: 'top 80%',
+        once: true,
+        onEnter: () =>
+          gsap.from(split.lines, {
+            yPercent: 110,
+            opacity: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            stagger: 0.12,
+            onComplete: () => split.revert(), // вернуть естественный поток (адаптив)
+          }),
       });
 
       return () => {
-        tween.scrollTrigger?.kill();
+        st.kill();
         split.revert();
       };
     },

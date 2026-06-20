@@ -9,11 +9,14 @@ export default function Home() {
   return (
     <>
       <Preloader />
-      <ConcreteBg />
-      <Cursor />
-      <FileNav />
-      <Hero />
-      <AudioToggle />
+      {/* во время intake прелоадер делает этот контейнер inert (см. Preloader.tsx) */}
+      <div id="app-content">
+        <ConcreteBg />
+        <Cursor />
+        <FileNav />
+        <Hero />
+        <AudioToggle />
+      </div>
     </>
   );
 }
