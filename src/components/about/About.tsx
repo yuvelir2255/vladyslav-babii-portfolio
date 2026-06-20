@@ -19,10 +19,10 @@ export function About() {
             <div data-mugshot className="relative">
               <span className="evtag">№VB-19</span>
               <Image
-                src="/media/booking/mugshot.webp"
-                alt="Booking photo of Vladyslav Babii"
-                width={480}
-                height={600}
+                src="/media/booking/inmate-build.webp"
+                alt="Vladyslav Babii building on a laptop inside a concrete cell, orange jumpsuit, code on the screens"
+                width={960}
+                height={1192}
                 sizes="(max-width: 1024px) 80vw, 360px"
                 className="block w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
               />
@@ -30,13 +30,13 @@ export function About() {
             <div data-lower-tiles className="flex items-stretch gap-4">
               <div className="relative flex-1 overflow-hidden rounded-[8px] border border-[var(--color-line)]">
                 <Image
-                  src="/media/booking/mugshot.webp"
+                  src="/media/booking/inmate-detail.webp"
                   alt=""
                   aria-hidden="true"
-                  width={240}
-                  height={300}
+                  width={640}
+                  height={794}
                   sizes="180px"
-                  className="block w-full -scale-x-100 opacity-70 grayscale"
+                  className="block w-full grayscale"
                 />
                 <span className="absolute bottom-1 left-2 text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
                   Profile

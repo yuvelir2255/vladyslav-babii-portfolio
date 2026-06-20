@@ -11,9 +11,7 @@ describe('About', () => {
     expect(screen.getByText('Vladyslav Babii')).toBeInTheDocument();
     expect(screen.getByText('Age')).toBeInTheDocument();
     expect(screen.getByText(/Kharkiv/)).toBeInTheDocument();
-    expect(
-      screen.getByAltText(/Booking photo of Vladyslav Babii/i),
-    ).toBeInTheDocument();
+    expect(screen.getByAltText(/Vladyslav Babii/i)).toBeInTheDocument();
   });
   it('две рассекречиваемые кнопки и стек', () => {
     const { container } = render(<About />);
