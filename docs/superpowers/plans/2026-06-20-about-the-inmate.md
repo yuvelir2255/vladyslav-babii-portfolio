@@ -1,5 +1,7 @@
 # About «The Inmate» — Implementation Plan
 
+> **СТАТУС (2026-06-21): РЕАЛИЗОВАНО** на ветке `feat/about-the-inmate` (PR #1, preview). По фидбэку владельца после сборки: pin/scrub-сцена ЗАМЕНЕНА на плавный on-enter reveal (без пиннинга), фото — 2 новых кадра «билдер в камере» (не дубль hero), фон сделан единым на весь сайт. План ниже отражает первоначальную сборку (Task 1–9); последующие правки см. в `CLAUDE.md` и истории git.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Собрать секцию `#about` («The Inmate») — рассекречиваемое досье с pin/scrub-сценой по концепту «Case File».
