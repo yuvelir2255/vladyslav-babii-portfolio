@@ -89,10 +89,10 @@ export function Preloader() {
         aria-hidden="true"
       />
       <div className="relative z-[2] w-[min(620px,86%)]" aria-hidden="true">
-        <p className="text-[12px] tracking-[0.32em] text-[var(--color-orange)] uppercase">
+        <p className="mb-5 text-[12px] tracking-[0.32em] text-[var(--color-orange)] uppercase">
           Processing inmate
         </p>
-        <div className="font-[family-name:var(--font-display)] text-[clamp(96px,16vw,168px)] leading-[0.86] tabular-nums">
+        <div className="font-[family-name:var(--font-display)] text-[clamp(96px,16vw,168px)] leading-[0.9] tabular-nums">
           {String(pct).padStart(3, '0')}
           <span className="align-top text-[0.28em] text-[var(--color-steel)]">
             %
