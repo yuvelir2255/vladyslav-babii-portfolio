@@ -2,9 +2,8 @@
 
 import { useRef, useState } from 'react';
 
-// тюремный эмбиент кладётся отдельно по пути /audio/ambient.mp3 (CC0).
-// до появления файла кнопка работает «вхолостую»: play() отклонится — остаёмся off.
-const SRC = '/audio/ambient.mp3';
+// фоновый трек (loop). preload="none" — грузится только по клику, не на init.
+const SRC = '/audio/breakbeat.mp3';
 
 export function AudioToggle() {
   const audioRef = useRef<HTMLAudioElement>(null);
