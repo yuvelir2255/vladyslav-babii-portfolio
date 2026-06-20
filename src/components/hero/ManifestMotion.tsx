@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap } from '@/lib/gsap';
+import { gsap, SplitText } from '@/lib/gsap';
 
 export function ManifestMotion({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -12,31 +12,22 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
       const p = ref.current?.querySelector<HTMLElement>('[data-manifest]');
       if (!p) return;
 
-      // декодим каждый сегмент отдельно — оранжевые ключи сохраняют цвет
-      const spans = gsap.utils.toArray<HTMLElement>(p.children);
-      const originals = spans.map((s) => s.textContent ?? '');
+      // строки выезжают снизу из-под маски — плавный premium reveal
+      const split = new SplitText(p, { type: 'lines', mask: 'lines' });
+      const tween = gsap.from(split.lines, {
+        yPercent: 110,
+        opacity: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.12,
+        scrollTrigger: { trigger: p, start: 'top 80%', once: true },
+        onComplete: () => split.revert(), // вернуть естественный поток (адаптив)
+      });
 
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: p, start: 'top 78%', once: true },
-      });
-      spans.forEach((s, i) => {
-        tl.to(
-          s,
-          {
-            duration: 0.9,
-            scrambleText: {
-              text: originals[i],
-              chars: 'upperCase',
-              speed: 0.6,
-            },
-            // ScrambleText тримит пробелы на стыках — возвращаем точный оригинал
-            onComplete: () => {
-              s.textContent = originals[i];
-            },
-          },
-          i * 0.12,
-        );
-      });
+      return () => {
+        tween.scrollTrigger?.kill();
+        split.revert();
+      };
     },
     { scope: ref },
   );
