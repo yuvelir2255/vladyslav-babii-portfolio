@@ -9,31 +9,34 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
 
   useGSAP(
     () => {
-      const p = ref.current?.querySelector<HTMLElement>('[data-manifest]');
-      if (!p) return;
+      const root = ref.current;
+      const p = root?.querySelector<HTMLElement>('[data-manifest]');
+      const section = root?.closest('section');
+      if (!p || !section) return;
 
-      // строки выезжают снизу из-под маски — плавный premium reveal
-      const split = new SplitText(p, { type: 'lines', mask: 'lines' });
-      // видимый дефолт: reveal прячет-и-показывает только когда триггер реально
-      // сработал — если ScrollTrigger не отработает, текст не останется скрытым
-      gsap.set(split.lines, { yPercent: 0, opacity: 1 });
-      const st = ScrollTrigger.create({
-        trigger: p,
-        start: 'top 80%',
-        once: true,
-        onEnter: () =>
-          gsap.from(split.lines, {
-            yPercent: 110,
-            opacity: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            stagger: 0.12,
-            onComplete: () => split.revert(), // вернуть естественный поток (адаптив)
-          }),
+      // дробим на слова; цвет (bone/orange) сохраняется — приглушаем через opacity
+      const split = new SplitText(p, { type: 'words' });
+
+      // секция «застывает» по центру, текст слово-за-словом загорается по скроллу
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'center center',
+          end: '+=150%',
+          pin: true,
+          scrub: 0.6,
+        },
+      });
+      tl.from(split.words, {
+        opacity: 0.2,
+        ease: 'none',
+        stagger: 0.35,
+        duration: 0.6,
       });
 
       return () => {
-        st.kill();
+        tl.scrollTrigger?.kill();
+        tl.kill();
         split.revert();
       };
     },
