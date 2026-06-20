@@ -3,9 +3,9 @@ import { HeroScreen2 } from './HeroScreen2';
 
 export function Hero() {
   return (
-    <main>
+    <>
       <HeroScreen1 />
       <HeroScreen2 />
-    </main>
+    </>
   );
 }

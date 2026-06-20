@@ -4,6 +4,7 @@ import { FileNav } from '@/components/chrome/FileNav';
 import { Preloader } from '@/components/chrome/Preloader';
 import { AudioToggle } from '@/components/chrome/AudioToggle';
 import { Hero } from '@/components/hero/Hero';
+import { About } from '@/components/about/About';
 
 export default function Home() {
   return (
@@ -14,7 +15,10 @@ export default function Home() {
         <ConcreteBg />
         <Cursor />
         <FileNav />
-        <Hero />
+        <main>
+          <Hero />
+          <About />
+        </main>
         <AudioToggle />
       </div>
     </>
