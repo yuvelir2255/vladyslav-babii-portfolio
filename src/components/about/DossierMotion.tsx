@@ -19,6 +19,12 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
       const setAge = () => {
         if (ageEl) ageEl.textContent = String(Math.round(counter.v));
       };
+      // обнуляем возраст в момент арма анимации (не на маунте), чтобы не было
+      // скачка 19→0→19; SSR/no-JS/тесты оставляют статичное «19» из разметки
+      const armAge = () => {
+        counter.v = 0;
+        setAge();
+      };
 
       // disposition: построчный reveal через SplitText (идиома манифеста hero)
       const dispoEl = root.querySelector<HTMLElement>('[data-disposition]');
@@ -67,6 +73,7 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
             scrub: 1,
           },
         });
+        if (ageEl) armAge();
         tl.from('[data-folder]', {
           autoAlpha: 0,
           rotateX: -10,
@@ -123,6 +130,7 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
           start: 'top 75%',
           once: true,
           onEnter: () => {
+            if (ageEl) armAge();
             gsap.from('[data-dossier-field]', {
               autoAlpha: 0,
               y: 22,
