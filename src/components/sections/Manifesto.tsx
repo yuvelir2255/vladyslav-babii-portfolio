@@ -19,7 +19,7 @@ export default async function Manifesto() {
           as="h2"
           from="left"
           text={t('buildWord')}
-          className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-bold tracking-[-0.04em]"
+          className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-semibold tracking-[-0.04em]"
         />
         <SplitReveal
           as="p"
@@ -34,7 +34,7 @@ export default async function Manifesto() {
           as="h2"
           from="right"
           text={t('craftWord')}
-          className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-bold tracking-[-0.04em]"
+          className="font-sans text-[clamp(4rem,19vw,15rem)] leading-[0.95] font-semibold tracking-[-0.04em]"
         />
         <SplitReveal
           as="p"

@@ -10,8 +10,8 @@
   --color-accent-ai: #8b5cf6;
   --color-accent-auto: #10b981;
   --color-accent-design: #f59e0b;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-space-mono), ui-monospace, monospace;
+  --font-sans: var(--font-plex), ui-monospace, monospace;
+  --font-mono: var(--font-plex), ui-monospace, monospace;
 }
 
 html {

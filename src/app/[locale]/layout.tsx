@@ -6,7 +6,7 @@ import {
   setRequestLocale,
 } from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import { Archivo, Space_Mono } from 'next/font/google';
+import { IBM_Plex_Mono } from 'next/font/google';
 import { routing } from '@/i18n/routing';
 import { siteUrl, localeUrl } from '@/lib/site';
 import SmoothScroll from '@/components/providers/SmoothScroll';
@@ -16,16 +16,10 @@ import Preloader from '@/components/ui/Preloader';
 import Field from '@/components/field/Field';
 import '../globals.css';
 
-const archivo = Archivo({
-  subsets: ['latin'],
-  variable: '--font-archivo',
-  display: 'swap',
-});
-
-const spaceMono = Space_Mono({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-space-mono',
+const plex = IBM_Plex_Mono({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-plex',
   display: 'swap',
 });
 
@@ -87,7 +81,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${archivo.variable} ${spaceMono.variable}`}>
+    <html lang={locale} className={plex.variable}>
       <body className="font-sans antialiased">
         <Field />
         <NextIntlClientProvider messages={messages}>
