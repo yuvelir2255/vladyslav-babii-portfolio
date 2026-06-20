@@ -3,10 +3,11 @@ import { describe, it, expect } from 'vitest';
 import { Placard } from './Placard';
 
 describe('Placard', () => {
-  it('рендерит данные booking-таблички', () => {
+  it('рендерит линованную табличку с данными владельца', () => {
     render(<Placard />);
-    expect(screen.getByText('Department of Shipping')).toBeInTheDocument();
-    expect(screen.getByText('Ukraine')).toBeInTheDocument();
+    expect(screen.getByText(/dept\. of shipping/i)).toBeInTheDocument();
     expect(screen.getByText('VB-19')).toBeInTheDocument();
+    expect(screen.getByText('V. Babii')).toBeInTheDocument();
+    expect(screen.getByText(/shipping products/i)).toBeInTheDocument();
   });
 });

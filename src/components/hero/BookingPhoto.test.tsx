@@ -8,6 +8,6 @@ describe('BookingPhoto', () => {
     expect(screen.getByAltText(/booking photo/i)).toBeInTheDocument();
     expect(screen.getByText('EXHIBIT A')).toBeInTheDocument();
     expect(screen.getByText(/at large/i)).toBeInTheDocument();
-    expect(screen.getByText('Department of Shipping')).toBeInTheDocument();
+    expect(screen.getByText(/dept\. of shipping/i)).toBeInTheDocument();
   });
 });

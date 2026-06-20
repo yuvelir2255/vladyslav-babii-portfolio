@@ -3,10 +3,11 @@ export const hero = {
   name: ['Vladyslav', 'Babii'] as const,
   role: 'Telegram Mini Apps · Websites · AI Products',
   placard: {
-    agency: 'Department of Shipping',
-    region: 'Ukraine',
-    date: '06·20·2026',
+    dept: 'Dept. of Shipping',
     number: 'VB-19',
+    name: 'V. Babii',
+    date: '2026',
+    crime: 'shipping products',
   },
   ticker: [
     'INTAKE TERMINAL — BLOCK VB',
