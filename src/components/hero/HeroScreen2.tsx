@@ -14,7 +14,9 @@ export function HeroScreen2() {
           {hero.manifest.map((seg, i) => (
             <span
               key={i}
-              className={seg.o ? 'text-[var(--color-orange)]' : undefined}
+              className={
+                'o' in seg && seg.o ? 'text-[var(--color-orange)]' : undefined
+              }
             >
               {seg.t}
             </span>
