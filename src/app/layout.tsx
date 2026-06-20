@@ -6,6 +6,7 @@ import {
   Saira_Stencil_One,
 } from 'next/font/google';
 import './globals.css';
+import { SmoothScroll } from '@/components/motion/SmoothScroll';
 
 const anton = Anton({
   weight: '400',
@@ -39,7 +40,9 @@ export default function RootLayout({
       lang="en"
       className={`${anton.variable} ${jetbrains.variable} ${oswald.variable} ${sairaStencil.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

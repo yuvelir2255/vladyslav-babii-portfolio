@@ -72,6 +72,21 @@ body {
 
 /* prefers-reduced-motion намеренно НЕ обрабатываем — движение всегда включено (решение владельца) */
 
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 /* booking-табличка (текст поверх доски на мугшоте) */
 .placard {
   position: absolute;
