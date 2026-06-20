@@ -71,3 +71,46 @@ body {
 }
 
 /* prefers-reduced-motion намеренно НЕ обрабатываем — движение всегда включено (решение владельца) */
+
+/* booking-табличка (текст поверх доски на мугшоте) */
+.placard {
+  position: absolute;
+  left: 27.5%;
+  top: 70.5%;
+  width: 45%;
+  height: 15.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1px;
+  text-transform: uppercase;
+}
+.placard .agency {
+  font: 700 clamp(8px, 1.1vw, 11px) / 1.15 var(--font-label);
+  letter-spacing: 0.12em;
+  color: #f2efe7;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+.placard .region {
+  font: 600 clamp(7px, 0.95vw, 9px) / 1.1 var(--font-label);
+  letter-spacing: 0.22em;
+  color: #cbc6ba;
+}
+.placard .row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-top: 2px;
+}
+.placard .date {
+  font: 600 clamp(7px, 0.95vw, 9px) var(--font-mono);
+  letter-spacing: 0.06em;
+  color: #d9d4c7;
+}
+.placard .num {
+  font: 700 clamp(11px, 1.5vw, 14px) var(--font-label);
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
