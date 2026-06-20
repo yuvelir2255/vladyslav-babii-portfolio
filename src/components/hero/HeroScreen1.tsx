@@ -32,14 +32,14 @@ export function HeroScreen1() {
             <a
               href={hero.cta[0].href}
               data-magnetic
-              className="rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[#160d06] uppercase"
+              className="rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[#160d06] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)]"
             >
               {hero.cta[0].label} ↗
             </a>
             <a
               href={hero.cta[1].href}
               data-magnetic
-              className="rounded border border-[var(--color-line)] px-[1.4rem] py-[0.9rem] text-[12px] font-medium tracking-[0.05em] uppercase"
+              className="rounded border border-[var(--color-line)] px-[1.4rem] py-[0.9rem] text-[12px] font-medium tracking-[0.05em] uppercase hover:border-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
             >
               {hero.cta[1].label}{' '}
               <span className="text-[var(--color-dim)]">
