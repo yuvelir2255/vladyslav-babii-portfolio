@@ -39,6 +39,10 @@ yarn-error.log*
 
 # local tooling (Claude Code preview launch config, etc.)
 .claude/
+.superpowers/
+
+# рабочие исходники и генерации (фото, мугшоты и т.п.) — не в git; финал кладём в /public
+/assets/
 
 # typescript
 *.tsbuildinfo
