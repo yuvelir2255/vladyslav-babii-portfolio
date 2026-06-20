@@ -22,7 +22,7 @@ export default function SmoothScroll({
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
+    const lenis = new Lenis({ lerp: 0.18, smoothWheel: true });
 
     const skewTo = wrapRef.current
       ? gsap.quickTo(wrapRef.current, 'skewY', {
