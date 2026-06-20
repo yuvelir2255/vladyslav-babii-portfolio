@@ -4,7 +4,10 @@ import { BookingPhoto } from './BookingPhoto';
 
 export function HeroScreen1() {
   return (
-    <section className="grain bars relative flex min-h-[100svh] flex-col">
+    <section
+      id="yard"
+      className="grain bars relative flex min-h-[100svh] flex-col pt-16"
+    >
       <Ticker />
       <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-md:flex-col max-md:gap-8 max-md:px-6">
         <div className="flex-[1.1]">
