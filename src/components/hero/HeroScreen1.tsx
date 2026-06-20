@@ -1,6 +1,7 @@
 import { hero } from '@/content/hero';
 import { Ticker } from './Ticker';
 import { BookingPhoto } from './BookingPhoto';
+import { HeroNameMotion } from './HeroNameMotion';
 
 export function HeroScreen1() {
   return (
@@ -10,7 +11,7 @@ export function HeroScreen1() {
     >
       <Ticker />
       <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-md:flex-col max-md:gap-8 max-md:px-6">
-        <div className="flex-[1.1]">
+        <HeroNameMotion className="flex-[1.1]">
           <p className="text-[12px] tracking-[0.1em] text-[var(--color-orange)] uppercase">
             {hero.meta}
           </p>
@@ -46,7 +47,7 @@ export function HeroScreen1() {
               </span>
             </a>
           </div>
-        </div>
+        </HeroNameMotion>
         <div className="flex flex-1 justify-center">
           <BookingPhoto />
         </div>
