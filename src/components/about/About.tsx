@@ -9,7 +9,7 @@ export function About() {
     <section
       id="about"
       data-cursor="scan"
-      className="grain relative flex min-h-[100svh] items-center border-t border-[var(--color-line)] px-14 py-20 max-md:px-6"
+      className="grain relative border-t border-[var(--color-line)] px-14 py-24 max-md:px-6 max-md:py-16"
     >
       <DossierMotion>
         <div
@@ -28,7 +28,7 @@ export function About() {
                 className="block w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
               />
             </div>
-            <div className="flex items-stretch gap-4">
+            <div data-lower-tiles className="flex items-stretch gap-4">
               <div className="relative flex-1 overflow-hidden rounded-[8px] border border-[var(--color-line)]">
                 <Image
                   src="/media/booking/mugshot.webp"
@@ -53,7 +53,10 @@ export function About() {
           </div>
 
           <div className="flex-[1.2]">
-            <p className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
+            <p
+              data-about-label
+              className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase"
+            >
               <span aria-hidden="true" className="mr-2">
                 ●
               </span>
