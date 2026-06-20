@@ -44,9 +44,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${anton.variable} ${jetbrains.variable} ${oswald.variable} ${sairaStencil.variable} ${marker.variable}`}
     >
       <body>
+        {/* до отрисовки: если intake пройден в этой сессии — прячем прелоадер (без кадра-вспышки) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(sessionStorage.getItem('vb19-intake')==='1')document.documentElement.classList.add('intake-seen')}catch(e){}",
+          }}
+        />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

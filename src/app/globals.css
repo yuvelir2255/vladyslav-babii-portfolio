@@ -87,6 +87,12 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* прелоадер: если intake уже пройден в этой сессии — прячем до первой отрисовки
+   (класс ставит инлайн-скрипт в <head>, чтобы не было кадра-вспышки на ревизите) */
+html.intake-seen .preloader {
+  display: none;
+}
+
 /* booking-табличка — текст прямо на доске мугшота (без подложки), значения от руки */
 .placard {
   position: absolute;

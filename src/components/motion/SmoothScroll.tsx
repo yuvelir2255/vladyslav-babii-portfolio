@@ -7,6 +7,8 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    // прелоадер (и др.) могут останавливать/возобновлять скролл
+    (window as Window & { __lenis?: Lenis }).__lenis = lenis;
 
     // синхронизация Lenis ↔ ScrollTrigger через тикер GSAP
     lenis.on('scroll', ScrollTrigger.update);
@@ -18,6 +20,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       lenis.off('scroll', ScrollTrigger.update);
       gsap.ticker.remove(update);
       lenis.destroy();
+      delete (window as Window & { __lenis?: Lenis }).__lenis;
     };
   }, []);
 
