@@ -64,7 +64,8 @@ export function ShaderBg() {
     try {
       renderer = new Renderer({
         alpha: false,
-        dpr: Math.min(2, window.devicePixelRatio || 1),
+        // фоновый шум — кап dpr 1.5 (на ретине вдвое меньше пикселей, визуально незаметно)
+        dpr: Math.min(1.5, window.devicePixelRatio || 1),
       });
     } catch {
       return; // нет WebGL — фолбэк на статичный фон
@@ -98,11 +99,16 @@ export function ShaderBg() {
     window.addEventListener('mousemove', onMouse);
     resize();
 
+    // троттл до ~30fps: дрейф медленный, 60→30 незаметно, но GPU вдвое свободнее
     let raf = 0;
+    let last = -Infinity;
+    const minInterval = 1000 / 30;
     const loop = (t: number) => {
+      raf = requestAnimationFrame(loop);
+      if (t - last < minInterval) return;
+      last = t;
       program.uniforms.uTime.value = t * 0.001;
       renderer.render({ scene: mesh });
-      raf = requestAnimationFrame(loop);
     };
     raf = requestAnimationFrame(loop);
 
