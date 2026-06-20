@@ -69,7 +69,7 @@ export default function CasePhones({ media }: { media: Media[] }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(60% 55% at 62% 48%, rgba(245,158,11,0.18), rgba(245,158,11,0.06) 45%, transparent 72%)',
+            'radial-gradient(60% 55% at 62% 48%, rgba(255,255,255,0.1), rgba(255,255,255,0.04) 45%, transparent 72%)',
         }}
       />
       <div className="flex gap-5 overflow-x-auto pb-4 lg:justify-end lg:overflow-visible">

@@ -161,7 +161,7 @@ export default function Contact() {
               </button>
             </Magnetic>
             {status === 'success' && (
-              <p role="status" className="text-accent-auto text-sm">
+              <p role="status" className="text-fg text-sm">
                 {t('success')}
               </p>
             )}

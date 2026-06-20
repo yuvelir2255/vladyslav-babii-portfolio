@@ -1,15 +1,10 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-bg: #0a0b0d;
+  --color-bg: #0d0d0d;
   --color-fg: #f4f4f2;
   --color-dim: rgba(244, 244, 242, 0.62);
   --color-faint: rgba(244, 244, 242, 0.5);
-  --color-accent-web: #4a6cff;
-  --color-accent-tg: #2aabee;
-  --color-accent-ai: #8b5cf6;
-  --color-accent-auto: #10b981;
-  --color-accent-design: #f59e0b;
   --font-sans: var(--font-plex), ui-monospace, monospace;
   --font-mono: var(--font-plex), ui-monospace, monospace;
 }
@@ -37,10 +32,10 @@ body {
   border-radius: 2px;
 }
 
-/* Legibility halo: lifts text off the bright crests of the WebGL field with a
+/* Legibility halo: lifts text off the brighter wisps of the smoke field with a
    soft dark glow around the glyphs — without dimming the field itself. */
 .legible {
-  text-shadow: 0 1px 14px rgba(10, 11, 13, 0.7);
+  text-shadow: 0 1px 14px rgba(13, 13, 13, 0.7);
 }
 
 /* Lenis smooth scroll */

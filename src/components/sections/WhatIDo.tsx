@@ -6,11 +6,11 @@ import { gsap, useGSAP } from '@/lib/gsap';
 import GlassCard from '@/components/ui/GlassCard';
 
 const CARDS = [
-  { key: 'web', accent: 'var(--color-accent-web)' },
-  { key: 'tg', accent: 'var(--color-accent-tg)' },
-  { key: 'ai', accent: 'var(--color-accent-ai)' },
-  { key: 'auto', accent: 'var(--color-accent-auto)' },
-  { key: 'design', accent: 'var(--color-accent-design)' },
+  { key: 'web' },
+  { key: 'tg' },
+  { key: 'ai' },
+  { key: 'auto' },
+  { key: 'design' },
 ] as const;
 
 /**
@@ -102,7 +102,6 @@ export default function WhatIDo() {
               index={String(i + 1).padStart(2, '0')}
               title={title}
               subtitle={t(`cards.${c.key}.subtitle`)}
-              accent={c.accent}
               glyph={title.charAt(0)}
             />
           );

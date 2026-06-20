@@ -18,8 +18,8 @@ export default async function Hero() {
       <div className="flex items-start justify-between gap-4">
         <p className="text-dim flex items-center gap-2.5 font-mono text-[11px] tracking-[0.22em] uppercase">
           <span aria-hidden className="relative flex h-1.5 w-1.5">
-            <span className="bg-accent-auto absolute inline-flex h-full w-full rounded-full opacity-60 motion-safe:animate-ping" />
-            <span className="bg-accent-auto relative inline-flex h-1.5 w-1.5 rounded-full" />
+            <span className="bg-fg absolute inline-flex h-full w-full rounded-full opacity-60 motion-safe:animate-ping" />
+            <span className="bg-fg relative inline-flex h-1.5 w-1.5 rounded-full" />
           </span>
           {t('available')}
         </p>

@@ -22,7 +22,7 @@ export default async function WorkDreamGold() {
     <section id="work" className="legible relative z-10 px-6 py-28 md:px-12">
       <Reveal
         as="p"
-        className="text-accent-design font-mono text-[11px] tracking-[0.3em] uppercase"
+        className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase"
       >
         {t('label')}
       </Reveal>
@@ -49,7 +49,7 @@ export default async function WorkDreamGold() {
               <li key={f} className="flex items-center gap-3 text-sm">
                 <span
                   aria-hidden
-                  className="bg-accent-design h-1.5 w-1.5 shrink-0 rounded-full"
+                  className="bg-dim h-1.5 w-1.5 shrink-0 rounded-full"
                 />
                 <span className="text-dim">{f}</span>
               </li>
@@ -87,7 +87,7 @@ export default async function WorkDreamGold() {
       {/* coming-soon site + more-projects slot */}
       <div className="mt-24 grid gap-5 sm:grid-cols-2">
         <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-8">
-          <span className="text-accent-design font-mono text-[11px] tracking-[0.3em] uppercase">
+          <span className="text-faint font-mono text-[11px] tracking-[0.3em] uppercase">
             {t('comingSoon')}
           </span>
           <h3 className="mt-4 font-sans text-2xl font-semibold tracking-tight">
