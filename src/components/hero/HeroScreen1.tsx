@@ -10,7 +10,7 @@ export function HeroScreen1() {
       className="grain bars relative flex min-h-[100svh] flex-col pt-16"
     >
       <Ticker />
-      <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-md:flex-col max-md:gap-8 max-md:px-6">
+      <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-lg:flex-col max-lg:gap-8 max-lg:px-6">
         <HeroNameMotion className="flex-[1.1]">
           <p className="text-[12px] tracking-[0.1em] text-[var(--color-orange)] uppercase">
             {hero.meta}
