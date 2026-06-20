@@ -16,7 +16,7 @@ export function About() {
           data-folder
           className="relative z-[2] mx-auto flex w-full max-w-[1100px] gap-12 max-lg:flex-col"
         >
-          <div className="flex flex-[0.8] flex-col gap-5">
+          <div className="flex flex-[0.8] flex-col gap-5 max-lg:w-full max-lg:max-w-[440px] max-lg:self-center">
             <div data-mugshot className="relative">
               <span className="evtag">№VB-19</span>
               <Image

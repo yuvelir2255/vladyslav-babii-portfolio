@@ -26,30 +26,38 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
         ? new SplitText(dispoEl, { type: 'lines', mask: 'lines' })
         : null;
 
+      // оригиналы грифов фиксируем один раз: иначе повторный вызов (scrub
+      // пере-пересекает tl.call) прочитает уже зашифрованный текст как цель
+      const redactedEls = Array.from(
+        root.querySelectorAll<HTMLElement>('[data-redacted-value]'),
+      );
+      const originals = redactedEls.map((el) => el.textContent ?? '');
+      let declassified = false;
+
       // рассекречивание: синхронизировать DOM-состояние грифа + декод текста
       const declassify = () => {
+        if (declassified) return;
+        declassified = true;
         root.querySelectorAll<HTMLElement>('[data-redacted]').forEach((b) => {
           b.dataset.open = 'true';
           b.setAttribute('aria-expanded', 'true');
         });
-        root
-          .querySelectorAll<HTMLElement>('[data-redacted-value]')
-          .forEach((el) => {
-            gsap.to(el, {
-              duration: 0.7,
-              scrambleText: {
-                text: el.textContent ?? '',
-                chars: 'upperAndLowerCase',
-                revealDelay: 0.15,
-              },
-            });
+        redactedEls.forEach((el, i) => {
+          gsap.to(el, {
+            duration: 0.7,
+            scrambleText: {
+              text: originals[i],
+              chars: 'upperAndLowerCase',
+              revealDelay: 0.15,
+            },
           });
+        });
       };
 
       const mm = gsap.matchMedia();
 
-      // DESKTOP — pin + scrub
-      mm.add('(min-width: 768px) and (pointer: fine)', () => {
+      // DESKTOP — pin + scrub (только когда колонки рядом, т.е. от lg=1024)
+      mm.add('(min-width: 1024px) and (pointer: fine)', () => {
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
@@ -94,12 +102,7 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
           { drawSVG: '0%', stagger: 0.04, duration: 0.5 },
           '>-0.1',
         );
-        tl.to(
-          '[data-redaction-bar]',
-          { scaleX: 0, transformOrigin: 'right', stagger: 0.1, duration: 0.4 },
-          '>-0.05',
-        );
-        tl.call(declassify);
+        tl.call(declassify, undefined, '>-0.05');
         tl.from(
           '[data-stamp]',
           {
@@ -113,8 +116,8 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
         );
       });
 
-      // MOBILE / TOUCH — простой reveal один раз
-      mm.add('(max-width: 767px), (pointer: coarse)', () => {
+      // MOBILE / TABLET / TOUCH — простой reveal один раз (стек-раскладка)
+      mm.add('(max-width: 1023px), (pointer: coarse)', () => {
         ScrollTrigger.create({
           trigger: section,
           start: 'top 75%',
@@ -147,13 +150,7 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
                 onUpdate: setAge,
               });
             }
-            gsap.to('[data-redaction-bar]', {
-              scaleX: 0,
-              transformOrigin: 'right',
-              stagger: 0.12,
-              duration: 0.5,
-              onComplete: declassify,
-            });
+            gsap.delayedCall(0.5, declassify);
             gsap.from('[data-stamp]', {
               autoAlpha: 0,
               scale: 1.6,
