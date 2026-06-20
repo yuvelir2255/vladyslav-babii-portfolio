@@ -5,9 +5,8 @@ export const hero = {
   placard: {
     dept: 'Dept. of Shipping',
     number: 'VB-19',
-    name: 'V. Babii',
-    date: '2026',
-    crime: 'shipping products',
+    name: 'Vladyslav Babii',
+    date: '06 · 20 · 2026',
   },
   ticker: [
     'INTAKE TERMINAL — BLOCK VB',

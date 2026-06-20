@@ -3,6 +3,7 @@ import {
   Anton,
   JetBrains_Mono,
   Oswald,
+  Permanent_Marker,
   Saira_Stencil_One,
 } from 'next/font/google';
 import './globals.css';
@@ -23,6 +24,11 @@ const sairaStencil = Saira_Stencil_One({
   subsets: ['latin'],
   variable: '--font-saira-stencil',
 });
+const marker = Permanent_Marker({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-marker',
+});
 
 export const metadata: Metadata = {
   title: 'Vladyslav Babii — Case File',
@@ -38,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${anton.variable} ${jetbrains.variable} ${oswald.variable} ${sairaStencil.variable}`}
+      className={`${anton.variable} ${jetbrains.variable} ${oswald.variable} ${sairaStencil.variable} ${marker.variable}`}
     >
       <body>
         <SmoothScroll>{children}</SmoothScroll>

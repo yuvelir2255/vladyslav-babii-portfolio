@@ -17,10 +17,6 @@ export function Placard() {
         <span className="pl">Date</span>
         <span className="pv">{p.date}</span>
       </span>
-      <span className="prow">
-        <span className="pl">Crime</span>
-        <span className="pv">{p.crime}</span>
-      </span>
     </div>
   );
 }

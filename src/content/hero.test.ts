@@ -9,8 +9,8 @@ describe('hero content', () => {
   it('booking-табличка заполнена данными о владельце', () => {
     expect(hero.placard.dept).toMatch(/shipping/i);
     expect(hero.placard.number).toBe('VB-19');
-    expect(hero.placard.name).toBe('V. Babii');
-    expect(hero.placard.crime).toBe('shipping products');
+    expect(hero.placard.name).toBe('Vladyslav Babii');
+    expect(hero.placard.date).toMatch(/2026/);
   });
   it('есть пункты тикера и две CTA', () => {
     expect(hero.ticker.length).toBeGreaterThanOrEqual(4);
