@@ -1,108 +1,44 @@
 # Portfolio — правила проекта и статус
 
-> Проектный CLAUDE.md (приоритетнее глобального ~/.claude/CLAUDE.md). Сайт-портфолио **Vladyslav Babii** уровня aboutluca. Отвечать по-русски.
+> Проектный CLAUDE.md (приоритетнее глобального ~/.claude/CLAUDE.md). Отвечать по-русски.
 
 ## Что это
 
-Кинематографичный двуязычный (EN/UK) портфолио-сайт. Сам сайт — доказательство навыков: WebGL-поле частиц + GSAP-моушн. Цель-действие — заявка в Telegram от работодателей/клиентов.
+Персональный сайт-портфолио **Vladyslav Babii** (разработчик: Telegram Mini Apps, сайты, AI-продукты). Цель сайта — впечатлить работодателей/клиентов и собрать заявку (контакт/форма).
 
-> **Дизайн-якорь (требование владельца, 2026-06-20): aboutluca.com** (Luca Nardi). Берём его шрифты / стиль / моушн-язык: **IBM Plex Mono** (у Luca на нём ВЕСЬ сайт, включая крупный дисплей; бесплатный, Google Fonts/OFL), тёмный фон `#151515`, моно-минимализм, тонкие хайрлайны, трекинг-капс лейблы, «ENTER»-гейт. **Ничего НЕ брать из старого сайта-портфолио владельца** (он в другом проекте — не референс). Моя позиция (озвучена владельцу): берём технику/типографику/моушн/вайб по максимуму, но остаётся ЕГО — НЕ 1:1 клон (aboutluca узнаваем). **ОДОБРЕНО владельцем 2026-06-20 — «Luca-моушн-пасс» (решения зафиксированы, НЕ перетягивать):** (A) заменить WebGL-поле (дюны+звёзды) на **FBM-дым**, который курсор раздвигает (униформы `uMouse/uMouseRadius/uMouseStrength/uMouseHole/uMouseWarp`); (B) **ре-тайпсет ВСЕГО сайта на IBM Plex Mono** (Archivo+Space Mono убрать; риск — проверить кириллицу для UK); (C) **чистый монохром** (убрать 5 `--color-accent-*`, глифы карточек + золото кейса → серый/белый). Граница «наше»: кометный курсор (теперь и раздвигает дым) + контент + HeroName-частицы + EN/UK. **Спека:** `docs/superpowers/specs/2026-06-20-luca-motion-pass-design.md` · **План:** `docs/superpowers/plans/2026-06-20-luca-motion-pass-build.md`. **✅ ВЫПОЛНЕНО 2026-06-20** (A+B+C сделаны и проверены — см. раздел ниже «Luca-моушн-пасс»).
+**Статус (2026-06-20): чистый старт.** Старый дизайн (мономинимал «под aboutluca») полностью убран по решению владельца — не зашёл. Сейчас в репо только пустой рабочий каркас Next.js. **Ждём, пока владелец пришлёт референс нового дизайна** (сайт, который ему нравится), и собираем по нему ОРИГИНАЛЬНОЕ портфолио (не клон) на том же уровне качества.
 
 ## Стек
 
-Next.js 16 (App Router) · React 19 · TS strict · **Tailwind v4** (токены в `src/app/globals.css` через `@theme`, без tailwind.config) · **GSAP** (ScrollTrigger, SplitText) · **Lenis** · **OGL** (WebGL) · **next-intl v4** (EN/UK) · Vitest · Prettier/ESLint/Husky.
+Next.js 16 (App Router) · React 19 · TS strict · **Tailwind v4** (токены в `src/app/globals.css` через `@theme`, без tailwind.config) · Vitest · Prettier/ESLint/Husky (lint-staged).
 
-- Next 16: middleware = **`src/proxy.ts`** (не middleware.ts).
-- Шрифты: **IBM Plex Mono** через next/font (`--font-plex`, subsets latin+cyrillic, веса 300–600). Обе `@theme`-переменные `--font-sans`/`--font-mono` указывают на него → весь сайт на одном моно (ре-тайпсет выполнен 2026-06-20, Archivo+Space Mono убраны). UK-кириллица покрыта Plex'ом.
+- Доп. библиотеки (анимация/i18n/WebGL и т.п.) ставим по мере надобности под новый дизайн — сейчас их нет (минимум зависимостей).
+- Стек можно поменять под референс, если он того требует (по согласованию с владельцем).
 
 ## Как запускать (Windows!)
 
 - ⚠️ **cwd сбрасывается** после каждой команды → начинать команды с `Set-Location 'C:\Users\ювелир\Desktop\portfolio'`.
-- Dev: `npm run dev` → http://localhost:3000 (редирект на `/en`). Build: `npm run build`. Tests: `npm test`. Types: `npm run typecheck`.
-- ✅ **Анимации работают у ВСЕХ** (проектное решение от 2026-06-19, как aboutluca): `prefers-reduced-motion` НЕ гейтит анимации. Раньше у владельца (reduce ВКЛ в Windows) была статика — теперь поле/комета/прелоадер/reveal/секвенция карточек/плавный скролл идут для всех (в т.ч. в его Chrome). При желании позже — кнопка-переключатель «reduce motion» на сайте (лучший компромисс).
-- Проверка motion: установлен **Playwright** (`python .verify\*.py`, запускать с `reduced_motion="no-preference"`) — снимает кадры анимаций; либо смотреть прямо в Chrome (теперь анимации видны).
+- Dev: `npm run dev` → http://localhost:3000. Build: `npm run build`. Tests: `npm test`. Types: `npm run typecheck`.
+- Проверка в браузере — через preview-инструмент (`preview_start` и т.д.).
+
+## Контент и история
+
+- **Весь реальный контент владельца** (имя, роль, био EN/UK, манифест, услуги, контакты, соцсети, кейс Dream Gold) сохранён в **`docs/content-backup.md`** — брать оттуда при сборке, не печатать заново.
+- **Скриншоты Dream Gold** — в `public/media/dream-gold/` (`shop/product/sizer/cart/extra.png`).
+- **Старый сайт целиком** сохранён в git-ветке **`archive/luca-portfolio-2026-06-20`** (вернуть/подсмотреть код в любой момент).
 
 ## Правила
 
-- Дизайн-конвейер: `frontend-design` / `design-taste-frontend` / `ui-ux-pro-max` → `impeccable` перед «готово». «Готово» = чистый `npm run build` + проверено в браузере (375/768/1280).
-- a11y: контраст ≥4.5:1, видимый focus, alt/aria. **`prefers-reduced-motion` сознательно НЕ респектим** (проектное решение — полный движ у всех, как aboutluca); компромисс на будущее — in-page toggle «reduce motion».
-- Осознанные переопределения design-taste по просьбе владельца: **кастомный кометный курсор** + **«scroll to explore»** + **анимации без учёта reduced-motion** (скилл их не любит — но владелец явно захотел aboutluca-стиль, «у всех одинаково красиво»).
-- Графика/картинки — через **Higgsfield**. Контент проектов — **TS + MDX**. Свой домен — в самом конце.
+- **Не клонировать чужие сайты 1:1.** Берём вдохновение/уровень качества с референса, но делаем оригинальное и узнаваемо ЕГО (портфолио-клон бьёт по репутации + чужой IP).
+- Перед сборкой нового дизайна — сначала разобрать референс и согласовать направление (brainstorming → план), потом код.
+- Дизайн-конвейер: `frontend-design` / `design-taste-frontend` / `ui-ux-pro-max` → `impeccable` перед «готово».
+- «Готово» = чистый `npm run build` + проверено в браузере (375/768/1280).
+- a11y: контраст ≥4.5:1, видимый focus, alt/aria. Адаптив mobile-first.
+- Иконки — только SVG-сеты (Lucide/Tabler для UI, Simple Icons для брендов). Эмодзи как иконки — нельзя.
+- Секреты — только в `.env.local` (gitignored), в код/git не попадают.
 
-## Контент
+## Git / деплой
 
-- Имя: **Vladyslav Babii**. Манифест-слова: **BUILD → CRAFT**, финальная подпись **«Ready when it matters.»**
-- Карточки What I do: Websites (синий) · Telegram Mini Apps (голубой) · AI Products (фиолетовый) · Automation (изумруд) · Design (янтарь). Появляются по очереди с приближением + hover-динамика (как у Luca).
-- Контакты: `vladbabii31@gmail.com` · `@BabiiVladyslav` · LinkedIn · GitHub · Instagram. Форма «Let's talk» → serverless → Telegram.
-- Кейс-флагман: **Dream Gold (Telegram Mini App)** — `t.me/dreamgold_jewelry_bot/shop`, демо `dreamgold-jewelry.vercel.app`. Фишки: AI-карточки (GPT-4o-mini vision), размер кольца (px→мм), HMAC-заказы, 3 языка. Фото с телефона предоставит владелец. + Dream Gold website «скоро» + слот будущих проектов.
-
-## Документы (в этом же репо, `docs/`)
-
-- Спека: `docs/superpowers/specs/2026-06-19-portfolio-design.md`
-- План (фазы 0-10): `docs/superpowers/plans/2026-06-19-portfolio-build.md`
-- Спека «Luca-моушн-пасс» (дым/IBM Plex Mono/монохром, 2026-06-20): `docs/superpowers/specs/2026-06-20-luca-motion-pass-design.md`
-
-## Текущий статус (ОБНОВЛЯТЬ по ходу)
-
-- ✅ **Фаза 0** — фундамент: next-intl EN/UK, шрифты, тёмные токены, тулинг. Коммит.
-- ✅ **Фаза 1** — примитивы: кометный курсор, grain, прелоадер, Lenis, реестр GSAP. Коммит.
-- ✅ **Фаза 2** — WebGL-поле (`src/components/field/Field.tsx`): дюны с глубиной/горизонтом, звёздное небо с мерцанием (Transform-сцена, отдельная программа), реакция на курсор — параллакс камеры за мышью, провод скролл-камеры (uScroll по прогрессу скролла). Проверено в браузере. Коммиты.
-- ✅ **Курсор исправлен**: кастомный орб показывается всегда (для мыши); в обычном режиме — комета с хвостом, в reduced-motion — аккуратная яркая точка без хвоста (раньше под reduce курсор полностью отключался → владелец его не видел).
-- ✅ **Фаза 3 ЗАКРЫТА** — секции героя, манифеста и About:
-  - ✅ **Task 3.1** примитивы reveal: `src/lib/motion.ts` (stagger-тайминги, **по TDD**, `motion.test.ts` 4/4), `ui/SplitReveal.tsx` (пословно через SplitText + маска строк `.split-line`, ScrollTrigger), `ui/Reveal.tsx` (блочный fade+rise). Фолбэк без JS / reduced-motion. Коммит.
-  - ✅ **Task 3.2** Hero (`sections/Hero.tsx` + `ui/LangSwitcher`, `SocialLinks`, `ScrollCue`): «available»-индикатор, EN/UK, имя+роль пословно после прелоадера (delay ~1.35/1.65с), соц-ссылки (реальные URL: github.com/yuvelir2255, linkedin вход vladyslav-babii-886052385, instagram babii.vladyslavv), scroll-подсказка. Проверено десктоп+мобайл 375. Коммит.
-  - ✅ **Task 3.3** Манифест (`sections/Manifesto.tsx`): BUILD + текст (спека §5.2) и CRAFT + стек, пословный reveal на скролле. BUILD/CRAFT оставлены англ. в обеих локалях (подпись-айдентика). EN+UK проверены. Коммит.
-  - ✅ **Task 3.4** About (`sections/About.tsx`): био из спеки §5.3 (EN/UK), reveal по абзацам (эйбрау «About» + крупный лид + 2 приглушённых абзаца). Проверено EN+UK в браузере. Коммит.
-- ✅ **Фаза 4 ЗАКРЫТА** — карточки «What I do»: `ui/GlassCard.tsx` (стеклянная карточка со свечением, крупный глиф-буква, hover оживляет глиф/свечение/линию + подъём) и `sections/WhatIDo.tsx` (по умолчанию вертикальный список; с JS — pinned-секвенция: карточки по очереди наезжают с зумом/блюром, текущая уходит). 5 услуг §5.4. Проверено в browser (Chrome + Playwright motion): статика, hover, EN/UK, **секвенция в движении** (m02 Telegram→m03 переход→m04 Design). Коммиты.
-- ✅ **Рефактор «анимации у всех»** (по просьбе владельца): сняты все гейты `prefers-reduced-motion` (Field, Cursor, Preloader, SmoothScroll, SplitReveal, Reveal, WhatIDo, CSS scroll-cue). `npm run build` чистый. Комета/поле/reveal/секвенция подтверждены Playwright'ом.
-- ✅ **Фаза 5 ЗАКРЫТА** — подпись + кейс + контент-модель: 5.1 контент-модель по TDD (`content/projects/`: types/validateProject + dream-gold-app[live] + dream-gold-site[coming-soon] + index; projects.test.ts), 5.2 Signature («Ready when it matters.»), 5.3 кейс Dream Gold (`sections/WorkDreamGold.tsx` + `ui/TiltCard.tsx`): лид/фишки/ссылки/теги из модели, **3 реальных скриншота Mini App** (`public/media/dream-gold/{shop,product,sizer}.png`, через `next/image fill` + 3D-наклон) + «coming soon» сайт + слот. (Доп. фото в папке: cart.png, extra.png — про запас.)
-- ✅ **Фаза 6 ЗАКРЫТА** — контакт-форма «Let's talk» → Telegram: 6.1 по TDD (`lib/telegram.ts`: validateContact/isSpam-honeypot/buildTelegramMessage/sendTelegramMessage + `app/api/contact/route.ts`: 422/honeypot/rate-limit/send), 6.2 секция Contact (форма + состояния + a11y) + Footer. **Секреты в `.env.local`** (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID) — gitignored; `.env.example` закоммичен. Реальная отправка в Telegram подтверждена.
-  - Порядок секций в `page.tsx`: Hero → Manifesto → About → WhatIDo → Signature → WorkDreamGold → Contact → Footer. **Сайт структурно ПОЛНЫЙ.**
-- ✅ **Фаза 7 ЗАКРЫТА** — i18n: тест паритета ключей en↔uk + «нет пустых значений» (`src/messages/i18n-parity.test.ts`, тесты колокально, не в `tests/`). Аудит секций — весь копирайт через `t()`. Локализованы 2 CTA-кнопки кейса (`Work.openApp`/`webDemo`; в модели ссылок добавлен опц. `labelKey`, резолв в `WorkDreamGold.tsx`). `npm test` 16/16, build/typecheck чисто, рендер `/en`+`/uk` проверен (curl dev-сервера). Осознанно отложено в Фазу 9 (a11y): `alt` картинок + `aria-label="Language"` — англ. в обеих локалях.
-- ✅ **Фаза 8.1 ЗАКРЫТА** — SEO/OG: `generateMetadata` в `[locale]/layout.tsx` (локализ. title/description из нового `Meta`-неймспейса, `metadataBase`, canonical + hreflang en/uk/x-default, OpenGraph + Twitter summary_large_image, robots index/follow). Базовый URL — `src/lib/site.ts` (`NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` → localhost; в `.env.example`). `src/app/sitemap.ts` (обе локали + hreflang) + `src/app/robots.ts`. OG-картинка `src/app/[locale]/opengraph-image.tsx` через `next/og` — бренд-карточка (тёмный фон + сине-фиол. свечение + имя + тэглайн), **дефолтный шрифт next/og рендерит без подгрузки** (Latin/бренд, общий на обе локали; локализованы og:title/description в HTML-мете). Один `<h1>` (Hero) подтверждён. `npm test` 16/16, build чистый, рендер robots/sitemap/og + метатеги обеих локалей проверены curl'ом (картинка визуально ок).
-- ⏭️ **Фаза 8.2 (графика Higgsfield) — РЕКОМЕНДОВАНО ПРОПУСТИТЬ**: OG сделана кодом, скрины Dream Gold реальные, фон — WebGL-поле; доп. генерация не нужна (ждёт решения владельца).
-- ✅ **Фаза 9 (полировка) ЗАКРЫТА** — `impeccable audit` (14/20 «Good», слабое звено a11y; AI-slop тест ПРОЙДЕН — поле+комета distinctive) → `polish` пофиксил P1/P2:
-  - **Контраст:** `--color-dim` 0.55→0.62 (≈7:1), `--color-faint` 0.32→0.5 (≈4.9:1) — оба проходят WCAG AA (раньше faint ≈2.6:1 проваливал). `color-scheme: dark`.
-  - **Читаемость над полем:** утилита `.legible` (text-shadow-гало) на корнях 7 секций — текст не тонет в ярких дюнах, поле НЕ затемняется (его не трогаем — это подпись). WhatIDo пропущен (текст на стеклокарточках).
-  - **Focus:** глобальный `:focus-visible` (2px fg outline) — раньше был только слабый UA-дефолт.
-  - **Тач-цели:** соц-ссылки + LangSwitcher ≥24px (WCAG 2.5.8).
-  - **Форма:** `aria-describedby` связывает ошибку с полем.
-  - **Перф:** Field масштабируется на мобайле (`isSmall<768`: точки 220→140, звёзды 900→520, dpr 2→1.5, antialias off).
-  - **Семантика:** WhatIDo лейбл `<p>`→`<h2>`.
-  - **reduced-motion: ОСТАВЛЕН ОТКЛЮЧЁННЫМ** (повторное решение владельца 2026-06-19 — кнопку-тогл НЕ добавляли). `onScroll`-кэш P3 НЕ трогали (pinned-секция меняет высоту → сломало бы uScroll). Manifesto 15rem overflow — проверено Playwright'ом, **overflow нет** на 375/768/1280.
-  - Проверки: `npm test` 16/16, build+typecheck чисто, Playwright-скрины 1280/768/375 (контраст/фокус/легибилити/форма) — ок. Скрипты verify удалены.
-- ✅ **Фаза 10 — DONE, сайт live** (детали ниже в «Git / деплой»). Опц. на будущее: Lighthouse-замер, in-page «reduce motion» toggle (если передумает).
-- ℹ️ Запуск/проверка: dev иногда отваливается между сессиями — `npm run dev` (порт 3000); при смене `.env` ПЕРЕЗАПУСКАТЬ сервер. Проверка: Claude_in_Chrome (**выбирать Browser 1 Windows**) или Playwright (`.verify/*.py`, `reduced_motion="no-preference"`, потом удалять). Анимации видны везде.
-
-## Git / деплой (Фаза 10 — DONE, сайт live)
-
-- Git: ветка переименована **`master`→`main`**. **GitHub-репо создан:** https://github.com/yuvelir2255/vladyslav-babii-portfolio — **PUBLIC** (владелец выбрал public; секрет-скан перед пушем чист: `.env.local` не в истории, токенов в коде нет). `main`→`origin/main`.
-- **Vercel:** проект `portfolio` под командой **`vladyslav-s-projects9`** (Vercel-аккаунт vladbabii31; кросс-аккаунт с GitHub yuvelir2255). Первый `vercel deploy` ушёл в **target=production** (дефолт для первого деплоя нового проекта). Сборка **Ready**. Прод-алиас: **https://portfolio-vladyslav-s-projects9.vercel.app**. (Это была первичная картина CLI-деплоя; позже Git подключён — автодеплой по push работает, см. ниже.)
-- ✅ **САЙТ LIVE И ПУБЛИЧЕН** (владелец отключил Deployment Protection + добавил env, агент перевыкатил прод `vercel deploy --prod`). Все роуты **200**: `/`,`/en`,`/uk`,`/sitemap.xml`,`/robots.txt`,`/en/opengraph-image`. Живой рендер проверен Playwright-скрином. Метатеги/canonical/OG/sitemap — абсолютные, на прод-домен `VERCEL_PROJECT_PRODUCTION_URL` = `portfolio-lake-one-70s392j0p5.vercel.app` (некрасивый, но валидный публичный алиас; сменится на свой домен через `NEXT_PUBLIC_SITE_URL`).
-- ✅ **Форма → Telegram проверена на проде:** `POST /api/contact → 200 {"ok":true}`, доходит в Telegram (chat 491267017).
-- ✅ **Push-деплой подключён и подтверждён:** `git push` в `main` автоматически триггерит прод-деплой (владелец подключил Git в Settings→Git). Текущий HEAD/прод-коммит — `8b5badb` (актуальный — см. `git log`).
-- **Свой домен** — в самом конце по отдельному «ок» (тогда выставить `NEXT_PUBLIC_SITE_URL`).
-
-## Дизайн — пост-деплой моушн-пасс v1 (по просьбе владельца «красивые анимации»)
-
-Через brainstorming согласованы наборы, исполнены по gsap-конвейеру (ScrollTrigger), проверены Playwright'ом (моушн + перф + overflow). **ВСЁ ЗАКОММИЧЕНО И ЗАДЕПЛОЕНО (live):** motion v1 + Hero-частицы — `d5c8f24`; delight — `6c4fff0`; иммерсия кейса — `8b5badb`.
-
-- **Разные reveal'ы:** `ui/ClipReveal` (BUILD клип-вайп слева, CRAFT справа — два «движения»), `ui/SignatureLine` (char-scrub: «Ready when it matters.» собирается на входе, полный белый к центру). Заменили однотипный пословный reveal в Manifesto/Signature. (Скрины кейса теперь въезжают через `ui/CasePhones` — см. ниже; временный `StaggerReveal` удалён.)
-- **Поле оживает (`field/Field.tsx`):** `uEnergy` от скорости скролла (ярче/выше дюны, плавно гаснет) + `uTint` — поле мягко холоднеет к нижним секциям (mood). Тонко.
-- **Velocity-skew (`providers/SmoothScroll.tsx`):** обёртка контента + лёгкий `skewY` по скорости Lenis (clamp ±1°). Из-за трансформа обёртки пиннингу **WhatIDo задан `pinType:'transform'`** (иначе position:fixed-пин ломается) — проверено, секвенция карточек жива, overflow нет на 375/768/1280.
-- **Hero showcase — имя собирается из частиц (`ui/HeroName.tsx`):** имя «Vladyslav Babii» семплится из реального `<h1>` (computed-шрифт, offscreen-канвас → пиксели) в точки; частицы слетаются из рассеянного облака в форму имени (~1.15с, старт после прелоадера delay 1.5с), затем растворяются — проявляется чёткий DOM-`<h1>` (hand-off через WAAPI, читаемый финал). Отдельный 2D-канвас поверх поля (НЕ трогает WebGL-поле), в той же эстетике светящихся точек; цикл идёт только во время входа (~2с), потом стоп — нет постоянной нагрузки. `<h1>` остаётся в DOM (SEO/a11y, один h1), без JS виден (фолбэк); ждёт `document.fonts.ready` для совпадения глифов. Роль появляется после (delay 2.7с). Проверено desktop+mobile (перенос ок), overflow нет, 0 ошибок в консоли.
-- **Delight v1 — микро-взаимодействия:** `ui/Magnetic` (обёртка: дочерний элемент притягивается к курсору на ховере, springs back через gsap quickTo) на CTA — кнопка формы «Send message» и кнопки кейса. Комета-курсор (`Cursor.tsx`) реагирует на интерактив: над `a/button/input/...` орб подрастает и формирует кольцо (делегирование `pointerover/out`). Press-feedback `active:scale-95` на CTA. Проверено: магнит сдвигает ~17px, кольцо курсора видно, overflow нет, 0 ошибок.
-- **Case-immersion v1 (кейс Dream Gold):** `ui/CasePhones` — 3 скрина с глубиной: вход (fade+scale стаггер) + индивидуальный скролл-параллакс на каждый (разные rate, yPercent scrub), 3D-tilt на ховере сохранён, за кластером мягкое **золотое свечение** (ювелирная теплота). Тёплый акцент секции: эйбрау + маркеры фишек → `text-accent-design`/`bg-accent-design` (арт-дирекшн на секцию: бренд = золото). Удалён осиротевший `StaggerReveal` (его роль взял CasePhones). Фикс мобайла: `min-w-0` на обёртке (grid-элемент со скроллером не сжимался → overflow). Проверено: overflow ок (375/1280), 0 ошибок, контент-модель/скрины/ссылки не тронуты.
-- reduced-motion по-прежнему ОТКЛЮЧЁН (решение владельца). Дальше по желанию: поле↔имя взаимодействие глубже, ещё delight/иммерсия.
-
-## Дизайн — «Luca-моушн-пасс» (дым / IBM Plex Mono / монохром, 2026-06-20)
-
-Исполнен по плану `docs/superpowers/plans/2026-06-20-luca-motion-pass-build.md` (executing-plans), проверен в браузере (preview MCP) на 375/768/1280 × EN/UK. **Закоммичено локально, НЕ задеплоено** (ждёт «ок» владельца на push — push в `main` триггерит прод-деплой). Коммиты: type `4f4a05f`, монохром `2d7c058`, дым `3ff48ce`, lerp `3e6e118`, docs (этот).
-
-- **(A) FBM-дым (`field/Field.tsx`, полный rewrite):** дюны+звёзды заменены на полноэкранный квад с фрагментным domain-warp FBM-шейдером (iq q→r→f, simplex). Тёмный moody-монохром (дым макс ~`#4d4d4d` — намеренно приглушён для легибилити). **Курсор раздвигает дым:** радиальный сдвиг домена (`uMouseStrength`, база .12 / над интерактивом .22) + локальная «дырка» плотности (`uMouseHole`) + свечение по краю (`uMouseWarp`); `uMouse` сглажен lerp. `uScroll` — дрейф+затухание вниз, `uVelocity` — турбулентность от скорости. Перф: `dpr` 1.0/0.75 (десктоп/мобайл), октавы 4/2, пауза при `visibilitychange`. Курсор и Field оба слушают `window.pointermove` → комета и дым синхронны без связки. **Перф-ручки если мобайл-телефон тормозит:** `uOctaves`/`dpr` вниз (на десктопе 240fps, реальный телефонный GPU тут не профилировался).
-- **(B) IBM Plex Mono везде:** см. раздел «Стек». BUILD/CRAFT дисплей `font-bold`→`font-semibold` (вес 700 не грузим).
-- **(C) Чистый монохром:** удалены 5 `--color-accent-*`; все использования → серый/белый (GlassCard без пропа `accent`, WhatIDo, кейс Dream Gold, золотое свечение телефонов → белое, зелёные «available»/успех формы → белый). `--color-bg` `#0a0b0d`→`#0d0d0d` (нейтральный near-black), `.legible`-гало под новый фон. Греп подтвердил: 0 акцентов в `src` (кроме OG-картинки — вне scope).
-- **Lenis** `duration:1.1`→`lerp:0.18` (почерк Luca); velocity-skew + `pinType:'transform'` сохранены (пиннинг WhatIDo подтверждён).
-- **Вне scope (не трогали):** контент, структура секций, i18n EN/UK, форма→Telegram, SEO/sitemap/robots, контент-модель, `HeroName` (Plex подхватился из computed-стиля сам). **OG-картинка `opengraph-image.tsx` осознанно оставлена цветной** (сине-фиол. свечение + зелёная точка) — спорит с монохромом, но §F спеки выводит SEO/OG из scope; правка OG — отдельным «ок».
-- **Открытый вопрос (флаг владельцу):** ошибка формы в Contact осталась `text-red-400` (не accent-токен, в план не входила) — красное против чистого монохрома, но красный для ошибок полезен для usability/a11y. Решение за владельцем: оставить красным или увести в белый/серый.
-- **`impeccable audit` НЕ прогонялся** агентом (по заметке владельца запускается вручную/осознанно — шумно). Контраст основного текста над дымом ≈7.7:1 (AA с запасом); faint-мелочь над самым ярким дымом опирается на `.legible`-гало (как и раньше — не регрессия). reduced-motion остаётся ОТКЛЮЧЁН.
+- Ветка `main`. GitHub-репо: https://github.com/yuvelir2255/vladyslav-babii-portfolio (PUBLIC).
+- Vercel: проект `portfolio` (push в `main` триггерит прод-деплой). **Деплой/push — только по явному «ок» владельца.**
+- Conventional Commits, по-русски, осмысленными группами. Деструктивный git заблокирован глобальным хуком.

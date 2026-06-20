@@ -1,91 +1,12 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-bg: #0d0d0d;
-  --color-fg: #f4f4f2;
-  --color-dim: rgba(244, 244, 242, 0.62);
-  --color-faint: rgba(244, 244, 242, 0.5);
-  --font-sans: var(--font-plex), ui-monospace, monospace;
-  --font-mono: var(--font-plex), ui-monospace, monospace;
-}
-
 html {
-  scroll-behavior: auto;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-fg);
-}
-
-::selection {
-  background: var(--color-fg);
-  color: var(--color-bg);
-}
-
-/* Visible keyboard focus — the custom comet cursor hides the native pointer, so
-   a clear, high-contrast ring matters for keyboard users. */
-:focus-visible {
-  outline: 2px solid var(--color-fg);
-  outline-offset: 3px;
-  border-radius: 2px;
-}
-
-/* Legibility halo: lifts text off the brighter wisps of the smoke field with a
-   soft dark glow around the glyphs — without dimming the field itself. */
-.legible {
-  text-shadow: 0 1px 14px rgba(13, 13, 13, 0.7);
-}
-
-/* Lenis smooth scroll */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: clip;
-}
-
-/* Custom cursor hides the native pointer on fine-pointer devices only */
-.has-custom-cursor,
-.has-custom-cursor * {
-  cursor: none;
-}
-
-/* SplitText word-by-word reveal: lines mask the words rising from below.
-   Bottom padding (with compensating negative margin) keeps descenders from
-   being clipped by the mask. Only present in motion mode (SplitText is skipped
-   under reduced-motion, leaving plain, fully visible text). */
-.split-line {
-  overflow: hidden;
-  padding-bottom: 0.15em;
-  margin-bottom: -0.15em;
-}
-.split-word {
-  will-change: transform;
-}
-
-/* Hero scroll cue: a dot travelling down a hairline. Motion only. */
-.scroll-cue-dot {
-  animation: scroll-cue 1.8s ease-in-out infinite;
-}
-@keyframes scroll-cue {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(266%);
-    opacity: 0;
-  }
+  background: #ffffff;
+  color: #111111;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
