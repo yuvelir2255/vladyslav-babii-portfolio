@@ -5,10 +5,7 @@ import { HeroNameMotion } from './HeroNameMotion';
 
 export function HeroScreen1() {
   return (
-    <section
-      id="yard"
-      className="grain bars relative flex min-h-[100svh] flex-col pt-16"
-    >
+    <section id="yard" className="relative flex min-h-[100svh] flex-col pt-16">
       <Ticker />
       <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-lg:flex-col max-lg:gap-8 max-lg:px-6">
         <HeroNameMotion className="flex-[1.1]">

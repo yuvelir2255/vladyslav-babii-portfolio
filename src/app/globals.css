@@ -208,16 +208,3 @@ html.intake-seen .preloader {
   text-transform: uppercase;
   background: rgba(16, 15, 13, 0.5);
 }
-
-/* scan-вариант кастомного курсора над делом */
-.cursor-dot.is-scan {
-  width: 64px;
-  height: 64px;
-  margin: -32px 0 0 -32px;
-  border: 1px solid color-mix(in srgb, var(--color-orange) 60%, transparent);
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--color-orange) 18%, transparent),
-    transparent 72%
-  );
-}

@@ -3,7 +3,7 @@ import { ManifestMotion } from './ManifestMotion';
 
 export function HeroScreen2() {
   return (
-    <section className="grain relative flex min-h-[82svh] items-center border-t border-[var(--color-line)]">
+    <section className="relative flex min-h-[82svh] items-center">
       <ManifestMotion>
         <div className="relative z-[2] max-w-[1000px] px-14 max-md:px-6">
           <p className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">

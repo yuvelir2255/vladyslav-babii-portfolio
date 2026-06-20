@@ -43,25 +43,9 @@ export function Cursor() {
       };
     });
 
-    // scan-зоны (досье): курсор становится «лупой»
-    const scans = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-cursor="scan"]'),
-    );
-    const scanCleaners = scans.map((s) => {
-      const enter = () => el.classList.add('is-scan');
-      const leave = () => el.classList.remove('is-scan');
-      s.addEventListener('mouseenter', enter);
-      s.addEventListener('mouseleave', leave);
-      return () => {
-        s.removeEventListener('mouseenter', enter);
-        s.removeEventListener('mouseleave', leave);
-      };
-    });
-
     return () => {
       window.removeEventListener('mousemove', move);
       cleaners.forEach((c) => c());
-      scanCleaners.forEach((c) => c());
     };
   }, []);
 
@@ -69,7 +53,7 @@ export function Cursor() {
     <div
       ref={dot}
       aria-hidden="true"
-      className="cursor-dot pointer-events-none fixed top-0 left-0 z-[60] -mt-5 -ml-5 h-10 w-10 rounded-full mix-blend-screen"
+      className="pointer-events-none fixed top-0 left-0 z-[60] -mt-5 -ml-5 h-10 w-10 rounded-full mix-blend-screen"
       style={{
         background:
           'radial-gradient(circle, color-mix(in srgb, var(--color-orange) 55%, transparent), transparent 70%)',

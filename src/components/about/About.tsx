@@ -8,8 +8,7 @@ export function About() {
   return (
     <section
       id="about"
-      data-cursor="scan"
-      className="grain relative border-t border-[var(--color-line)] px-14 py-24 max-md:px-6 max-md:py-16"
+      className="relative px-14 py-24 max-md:px-6 max-md:py-16"
     >
       <DossierMotion>
         <div

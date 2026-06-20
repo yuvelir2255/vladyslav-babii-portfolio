@@ -18,25 +18,32 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
       const split = new SplitText(p, { type: 'words' });
 
       // секция «застывает» по центру, текст слово-за-словом загорается по скроллу
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: 'center center',
-          end: '+=150%',
-          pin: true,
-          scrub: 0.6,
-        },
-      });
-      tl.from(split.words, {
-        opacity: 0.2,
-        ease: 'none',
-        stagger: 0.35,
-        duration: 0.6,
-      });
+      const build = (end: string, scrub: number) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: 'center center',
+            end,
+            pin: true,
+            scrub,
+          },
+        });
+        tl.from(split.words, {
+          opacity: 0.2,
+          ease: 'none',
+          stagger: 0.5,
+          duration: 0.6,
+        });
+      };
+
+      const mm = gsap.matchMedia();
+      // десктоп: длинный «тяжёлый» пин (мышь крутит быстро — нужно больше пути)
+      mm.add('(min-width: 1024px)', () => build('+=320%', 1));
+      // мобайл/планшет: короче (тач уже даёт плавный «тяжёлый» скролл)
+      mm.add('(max-width: 1023px)', () => build('+=150%', 0.6));
 
       return () => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
+        mm.revert();
         split.revert();
       };
     },
