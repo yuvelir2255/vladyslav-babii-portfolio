@@ -1,38 +1,51 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Renderer, Camera, Transform, Geometry, Program, Mesh } from 'ogl';
+import { Renderer, Geometry, Program, Mesh } from 'ogl';
 
 /**
- * WebGL particle field (the site's signature backdrop):
- *  - a grid of glowing points displaced by layered simplex noise into drifting
- *    dunes that recede to a horizon, and
- *  - a twinkling starfield above the horizon.
- * The whole scene parallaxes gently toward the cursor. Fixed, behind all content.
+ * FBM smoke field (the site's signature backdrop, aboutluca-style): a fullscreen
+ * quad runs a domain-warped fractal-noise fragment shader, drifting like slow
+ * smoke over near-black. The cursor parts the smoke — it shoves the noise domain
+ * radially away and thins density into a soft "hole" with a faint rim — via the
+ * uMouse* uniforms. uScroll drifts/fades the smoke down the page; scroll velocity
+ * adds a touch of turbulence. Fixed, behind all content.
  *
- * Pauses when the tab is hidden. uScroll flows the terrain toward the camera on
- * page scroll. Runs regardless of prefers-reduced-motion (project decision: full
- * motion for everyone, like aboutluca).
+ * Pauses when the tab is hidden. Monochrome (no color tints). Runs regardless of
+ * prefers-reduced-motion (project decision: full motion for everyone, like
+ * aboutluca). Fallback without WebGL/JS: the static near-black body background.
  */
 
-const duneVertex = /* glsl */ `
+const vertex = /* glsl */ `
+  precision highp float;
+  attribute vec2 position;
+  attribute vec2 uv;
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = vec4(position, 0.0, 1.0);
+  }
+`;
+
+const fragment = /* glsl */ `
   precision highp float;
 
-  attribute vec2 aPos;          // grid coords: x in [-9,9], z in [5,-30]
+  varying vec2 vUv;
 
-  uniform mat4 modelViewMatrix; // provided by OGL
-  uniform mat4 projectionMatrix;
   uniform float uTime;
-  uniform float uScroll;
-  uniform float uDpr;
-  uniform float uSize;
-  uniform float uEnergy;
-
-  varying float vBright;
+  uniform vec2  uResolution;
+  uniform float uScroll;       // 0..1 page scroll progress
+  uniform float uVelocity;     // smoothed scroll speed (turbulence)
+  uniform float uOctaves;      // fbm octaves (perf knob)
+  uniform vec2  uMouse;        // [0,1], y up (smoothed JS-side)
+  uniform float uMouseRadius;  // radius of influence
+  uniform float uMouseStrength;// domain push strength (parting)
+  uniform float uMouseHole;    // local density thinning (0..1)
+  uniform float uMouseWarp;    // rim ripple strength
 
   // --- simplex noise 2D (Ashima / Stefan Gustavson) ---
-  vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
-  vec2 mod289(vec2 x){ return x - floor(x * (1.0/289.0)) * 289.0; }
+  vec3 mod289(vec3 x){ return x - floor(x*(1.0/289.0))*289.0; }
+  vec2 mod289(vec2 x){ return x - floor(x*(1.0/289.0))*289.0; }
   vec3 permute(vec3 x){ return mod289(((x*34.0)+1.0)*x); }
   float snoise(vec2 v){
     const vec4 C = vec4(0.211324865405187, 0.366025403784439,
@@ -58,71 +71,62 @@ const duneVertex = /* glsl */ `
     return 130.0 * dot(m, g);
   }
 
-  void main(){
-    float t = uTime * 0.04;
-    float z = aPos.y + uScroll * 4.0;        // terrain flows toward camera on scroll
-
-    float h  = snoise(vec2(aPos.x * 0.18, z * 0.18 - t)) * 0.60;
-    h       += snoise(vec2(aPos.x * 0.45, z * 0.45 - t)) * 0.28;
-    h       += snoise(vec2(aPos.x * 1.10, z * 1.10 - t)) * 0.12;
-
-    vec3 pos = vec3(aPos.x, h * 0.9 * (1.0 + uEnergy * 0.18), aPos.y);
-
-    vBright = smoothstep(-0.3, 0.7, h);
-
-    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
-    gl_Position = projectionMatrix * mv;
-    gl_PointSize = clamp(uSize * uDpr / max(-mv.z, 0.5), 1.0, 22.0);
+  float fbm(vec2 p){
+    float v = 0.0;
+    float a = 0.5;
+    for (int i = 0; i < 6; i++) {        // hard cap; uOctaves breaks early
+      if (float(i) >= uOctaves) break;
+      v += a * snoise(p);
+      p = p * 2.02 + 19.19;
+      a *= 0.5;
+    }
+    return v;
   }
-`;
-
-const duneFragment = /* glsl */ `
-  precision highp float;
-  varying float vBright;
-  uniform float uEnergy;
-  uniform vec3 uTint;
-  void main(){
-    vec2 uv = gl_PointCoord - 0.5;
-    float d = length(uv);
-    float a = smoothstep(0.5, 0.0, d) * (0.12 + vBright * 0.95);
-    a *= 1.0 + uEnergy * 0.6;
-    if (a < 0.01) discard;
-    gl_FragColor = vec4(uTint, a);
-  }
-`;
-
-const starVertex = /* glsl */ `
-  precision highp float;
-
-  attribute vec3 aPos;
-  attribute vec2 aSeed;         // x: twinkle phase, y: base size
-
-  uniform mat4 modelViewMatrix;
-  uniform mat4 projectionMatrix;
-  uniform float uTime;
-  uniform float uDpr;
-
-  varying float vTw;
 
   void main(){
-    float tw = 0.6 + 0.4 * sin(uTime * (0.5 + aSeed.x * 1.6) + aSeed.x * 6.2831);
-    vTw = tw;
-    vec4 mv = modelViewMatrix * vec4(aPos, 1.0);
-    gl_Position = projectionMatrix * mv;
-    gl_PointSize = max(aSeed.y * uDpr, 1.4);
-  }
-`;
+    vec2 asp = vec2(uResolution.x / uResolution.y, 1.0);
+    vec2 uv  = vUv;
+    vec2 p   = (uv - 0.5) * asp * 2.4;     // smoke scale
 
-const starFragment = /* glsl */ `
-  precision highp float;
-  varying float vTw;
-  uniform vec3 uTint;
-  void main(){
-    vec2 uv = gl_PointCoord - 0.5;
-    float d = length(uv);
-    float a = smoothstep(0.5, 0.0, d) * vTw * 0.9;
-    if (a < 0.01) discard;
-    gl_FragColor = vec4(uTint, a);
+    float t = uTime * 0.05;
+    p.y += uScroll * 0.9;                   // smoke drifts down the page
+
+    // --- cursor parts the smoke: shove the domain radially away from cursor ---
+    vec2 mo   = (uMouse - 0.5) * asp * 2.4;
+    vec2 toM  = p - mo;
+    float dist = length(toM);
+    float infl = smoothstep(uMouseRadius, 0.0, dist); // 1 at cursor -> 0 at edge
+    p += normalize(toM + 1e-4) * infl * uMouseStrength;
+
+    // --- domain-warped fbm smoke (iq-style q -> r -> f) ---
+    float turb = 1.0 + uVelocity * 0.5;
+    vec2 q = vec2(fbm(p + vec2(0.0, t)),
+                  fbm(p + vec2(5.2, 1.3 - t)));
+    vec2 r = vec2(fbm(p + q * 1.6 + vec2(1.7, 9.2) + t * 0.15),
+                  fbm(p + q * 1.6 + vec2(8.3, 2.8) - t * 0.12));
+    float f = fbm(p + r * turb);
+
+    float density = smoothstep(-0.55, 0.85, f);
+
+    // local thinning ("hole") + faint rim ripple under the cursor
+    density *= 1.0 - infl * uMouseHole;
+    density += infl * uMouseWarp * 0.10 * snoise(p * 3.0 + t);
+
+    // grayscale smoke over near-black — dark & moody so text stays legible
+    vec3 bg    = vec3(0.051);                  // ~#0d0d0d (matches --color-bg)
+    vec3 smoke = vec3(0.13) + 0.17 * density;  // dark grays (max ~#4d4d4d)
+    vec3 col   = mix(bg, smoke, clamp(density, 0.0, 1.0));
+
+    // soft rim light around the parted hole
+    float rim = 1.0 - smoothstep(0.0, 0.16, abs(dist - uMouseRadius * 0.55));
+    col += infl * rim * 0.05;
+
+    // vertical vignette + gentle fade as you descend the page
+    float vig = smoothstep(1.2, 0.2, length((uv - 0.5) * vec2(1.0, 1.25)));
+    col *= 0.55 + 0.45 * vig;
+    col *= 1.0 - uScroll * 0.15;
+
+    gl_FragColor = vec4(col, 1.0);
   }
 `;
 
@@ -133,141 +137,94 @@ export default function Field() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Scale the work down on phones (fewer points, lower dpr, no MSAA) so the
-    // field stays smooth on mobile GPUs.
+    // Fragment-heavy shader: keep the buffer small. Smoke is soft/low-frequency,
+    // so a low dpr is imperceptible and keeps it smooth (more so on phones).
     const isSmall = window.innerWidth < 768;
-    const dpr = Math.min(window.devicePixelRatio || 1, isSmall ? 1.5 : 2);
+    const dpr = isSmall ? 0.75 : 1.0;
 
     const renderer = new Renderer({
       canvas,
-      alpha: true,
       dpr,
-      antialias: !isSmall,
+      antialias: false,
+      alpha: false,
     });
     const gl = renderer.gl;
-    gl.clearColor(0, 0, 0, 0);
 
-    const camera = new Camera(gl, { fov: 50, near: 0.1, far: 200 });
-    const baseY = 0.75;
-    camera.position.set(0, baseY, 5.5);
-    camera.lookAt([0, 0.15, -12]);
+    // fullscreen triangle (covers clip space; uv 0..1 across the screen)
+    const geometry = new Geometry(gl, {
+      position: { size: 2, data: new Float32Array([-1, -1, 3, -1, -1, 3]) },
+      uv: { size: 2, data: new Float32Array([0, 0, 2, 0, 0, 2]) },
+    });
 
-    const scene = new Transform();
-
-    // --- dunes: point grid, wide in x, receding far in -z (all in front) ---
-    const NX = isSmall ? 140 : 220;
-    const NZ = isSmall ? 140 : 220;
-    const dunes = new Float32Array(NX * NZ * 2);
-    let k = 0;
-    for (let j = 0; j < NZ; j++) {
-      const z = 5 - (j / (NZ - 1)) * 35; // 5 (near) -> -30 (far)
-      for (let i = 0; i < NX; i++) {
-        const x = -9 + (i / (NX - 1)) * 18; // -9 -> 9
-        dunes[k++] = x;
-        dunes[k++] = z;
-      }
-    }
-    const duneGeometry = new Geometry(gl, { aPos: { size: 2, data: dunes } });
-    const duneProgram = new Program(gl, {
-      vertex: duneVertex,
-      fragment: duneFragment,
+    const program = new Program(gl, {
+      vertex,
+      fragment,
       uniforms: {
         uTime: { value: 0 },
+        uResolution: { value: [1, 1] },
         uScroll: { value: 0 },
-        uDpr: { value: dpr },
-        uSize: { value: 18 },
-        uEnergy: { value: 0 },
-        uTint: { value: [1, 1, 1] },
+        uVelocity: { value: 0 },
+        uOctaves: { value: isSmall ? 2.0 : 4.0 },
+        uMouse: { value: [0.5, 0.5] },
+        uMouseRadius: { value: 0.55 },
+        uMouseStrength: { value: 0.0 }, // eased toward target each frame
+        uMouseHole: { value: 0.55 },
+        uMouseWarp: { value: 1.0 },
       },
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
     });
-    duneProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE); // additive glow
-    const duneMesh = new Mesh(gl, {
-      geometry: duneGeometry,
-      program: duneProgram,
-      mode: gl.POINTS,
-    });
-    duneMesh.setParent(scene);
 
-    // --- stars: scattered above the horizon, far back, gently twinkling ---
-    const NSTARS = isSmall ? 520 : 900;
-    const starPos = new Float32Array(NSTARS * 3);
-    const starSeed = new Float32Array(NSTARS * 2);
-    for (let i = 0; i < NSTARS; i++) {
-      starPos[i * 3] = (Math.random() - 0.5) * 64; // x: -32 -> 32
-      starPos[i * 3 + 1] = 2.5 + Math.random() * 13; // y: sky above the horizon
-      starPos[i * 3 + 2] = -8 - Math.random() * 32; // z: far back
-      starSeed[i * 2] = Math.random(); // phase
-      starSeed[i * 2 + 1] = 1.4 + Math.random() * 2.4; // size
-    }
-    const starGeometry = new Geometry(gl, {
-      aPos: { size: 3, data: starPos },
-      aSeed: { size: 2, data: starSeed },
-    });
-    const starProgram = new Program(gl, {
-      vertex: starVertex,
-      fragment: starFragment,
-      uniforms: {
-        uTime: { value: 0 },
-        uDpr: { value: dpr },
-        uTint: { value: [1, 1, 1] },
-      },
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
-    });
-    starProgram.setBlendFunc(gl.SRC_ALPHA, gl.ONE);
-    const starMesh = new Mesh(gl, {
-      geometry: starGeometry,
-      program: starProgram,
-      mode: gl.POINTS,
-    });
-    starMesh.setParent(scene);
-
-    // --- cursor parallax (smoothed) ---
-    let targetX = 0;
-    let targetY = 0;
-    let curX = 0;
-    let curY = 0;
-    let energy = 0;
-    let targetEnergy = 0;
-    let lastScrollY = window.scrollY;
-    const onPointer = (e: PointerEvent) => {
-      targetX = (e.clientX / window.innerWidth) * 2 - 1;
-      targetY = (e.clientY / window.innerHeight) * 2 - 1;
-    };
-
-    const applyCamera = () => {
-      camera.position.x = curX * 0.6;
-      camera.position.y = baseY - curY * 0.25;
-      camera.lookAt([0, 0.15, -12]);
-    };
+    const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       renderer.setSize(w, h);
-      camera.perspective({ aspect: w / h });
+      program.uniforms.uResolution.value = [w, h];
     };
     resize();
     window.addEventListener('resize', resize);
 
+    // --- mouse: smoothed position + hover boost over interactive elements ---
+    let targetMX = 0.5;
+    let targetMY = 0.5;
+    let curMX = 0.5;
+    let curMY = 0.5;
+    const STRENGTH_BASE = 0.12;
+    const STRENGTH_HOVER = 0.22;
+    let strengthCur = 0;
+    let hoverTarget = 0; // 0..1
+    const INTERACTIVE = 'a, button, input, textarea, label, [data-cursor]';
+
+    const onPointer = (e: PointerEvent) => {
+      targetMX = e.clientX / window.innerWidth;
+      targetMY = 1 - e.clientY / window.innerHeight; // gl_FragCoord origin = bottom-left
+    };
+    const onOver = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      if (t?.closest?.(INTERACTIVE)) hoverTarget = 1;
+    };
+    const onOut = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      const rel = e.relatedTarget as Element | null;
+      if (t?.closest?.(INTERACTIVE) && !rel?.closest?.(INTERACTIVE)) {
+        hoverTarget = 0;
+      }
+    };
+    window.addEventListener('pointermove', onPointer, { passive: true });
+    window.addEventListener('pointerover', onOver, { passive: true });
+    window.addEventListener('pointerout', onOut, { passive: true });
+
+    // --- scroll: progress + velocity-driven turbulence ---
+    let lastScrollY = window.scrollY;
+    let targetVel = 0;
+    let velCur = 0;
     const onScroll = () => {
       const y = window.scrollY;
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      const sp = max > 0 ? y / max : 0;
-      duneProgram.uniforms.uScroll.value = sp;
-      // mood: the field drifts gently cooler as you descend the page
-      const tint = [1 - sp * 0.3, 1 - sp * 0.18, 1];
-      duneProgram.uniforms.uTint.value = tint;
-      starProgram.uniforms.uTint.value = tint;
-      // scroll velocity feeds the field's energy (brighter/taller dunes)
-      targetEnergy = Math.min(Math.abs(y - lastScrollY) / 50, 1);
+      program.uniforms.uScroll.value = max > 0 ? y / max : 0;
+      targetVel = Math.min(Math.abs(y - lastScrollY) / 60, 1);
       lastScrollY = y;
     };
-    window.addEventListener('pointermove', onPointer, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
 
     let raf = 0;
@@ -276,15 +233,22 @@ export default function Field() {
 
     const render = (now: number) => {
       const t = (now - start) / 1000;
-      duneProgram.uniforms.uTime.value = t;
-      starProgram.uniforms.uTime.value = t;
-      curX += (targetX - curX) * 0.04;
-      curY += (targetY - curY) * 0.04;
-      energy += (targetEnergy - energy) * 0.08;
-      targetEnergy *= 0.9;
-      duneProgram.uniforms.uEnergy.value = energy;
-      applyCamera();
-      renderer.render({ scene, camera });
+      program.uniforms.uTime.value = t;
+
+      curMX += (targetMX - curMX) * 0.1;
+      curMY += (targetMY - curMY) * 0.1;
+      program.uniforms.uMouse.value = [curMX, curMY];
+
+      const strengthTarget =
+        STRENGTH_BASE + (STRENGTH_HOVER - STRENGTH_BASE) * hoverTarget;
+      strengthCur += (strengthTarget - strengthCur) * 0.08;
+      program.uniforms.uMouseStrength.value = strengthCur;
+
+      velCur += (targetVel - velCur) * 0.08;
+      targetVel *= 0.9;
+      program.uniforms.uVelocity.value = velCur;
+
+      renderer.render({ scene: mesh });
       if (running) raf = requestAnimationFrame(render);
     };
     raf = requestAnimationFrame(render);
@@ -305,6 +269,8 @@ export default function Field() {
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', onPointer);
+      window.removeEventListener('pointerover', onOver);
+      window.removeEventListener('pointerout', onOut);
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
     };
