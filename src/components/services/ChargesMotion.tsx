@@ -28,9 +28,8 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const pad = (n: number) => String(n).padStart(2, '0');
 
       // общий one-shot слэм одного пункта
-      const revealCount = (card: HTMLElement) => {
+      const revealCount = (card: HTMLElement, words: Element[]) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
-        const charge = card.querySelector<HTMLElement>('[data-count-charge]');
         const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
         const stamp = card.querySelector<HTMLElement>('[data-count-stamp]');
         const stampDraw = card.querySelector<SVGElement>('[data-stamp-draw]');
@@ -49,14 +48,12 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             0,
           );
         }
-        if (charge) {
-          const sp = new SplitText(charge, { type: 'words' });
+        if (words.length)
           tl.from(
-            sp.words,
+            words,
             { autoAlpha: 0, y: 24, stagger: 0.06, duration: 0.5 },
             0.1,
           );
-        }
         if (gloss) tl.from(gloss, { autoAlpha: 0, y: 14, duration: 0.5 }, 0.25);
         if (stampDraw)
           tl.from(stampDraw, { drawSVG: '0%', duration: 0.4 }, 0.35);
@@ -127,6 +124,16 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           gsap.set(verdict, { position: 'absolute', inset: 0, autoAlpha: 0 });
         if (rail) gsap.set(rail, { autoAlpha: 1 });
 
+        // сплитим заголовки один раз на контекст (не на каждую активацию)
+        const splits = cards.map((c) => {
+          const charge = c.querySelector<HTMLElement>('[data-count-charge]');
+          return charge ? new SplitText(charge, { type: 'words' }) : null;
+        });
+        // каждый пункт «слэмается» один раз (при первом достижении).
+        // повторная активация .from() захватывала бы промежуточное значение
+        // как конечное → залипание полупрозрачности.
+        const revealed = new Set<number>();
+
         let current = -1;
         const total = cards.length + 1; // counts + verdict
         const show = (i: number) => {
@@ -145,7 +152,10 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             revealVerdict();
             return;
           }
-          revealCount(cards[i]);
+          if (!revealed.has(i)) {
+            revealed.add(i);
+            revealCount(cards[i], splits[i]?.words ?? []);
+          }
           setRail(i);
         };
 
@@ -163,7 +173,10 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           onUpdate: (self) => show(Math.round(self.progress * (total - 1))),
         });
         show(0);
-        return () => st.kill();
+        return () => {
+          st.kill();
+          splits.forEach((s) => s?.revert());
+        };
       };
 
       const mm = gsap.matchMedia();

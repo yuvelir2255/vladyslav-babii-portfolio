@@ -22,7 +22,7 @@ export function Services() {
           </header>
 
           <div className="relative h-[58vh] min-h-[440px]">
-            <ol data-charges-list className="contents">
+            <ol data-charges-list>
               {services.counts.map((c) => (
                 <CountCard key={c.n} count={c} total={services.counts.length} />
               ))}
