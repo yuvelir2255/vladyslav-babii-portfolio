@@ -117,6 +117,11 @@ export function ExhibitDevice() {
             />
           </div>
         </div>
+
+        {/* штамп ADMITTED — слэмнут на нижний угол телефона */}
+        <span data-admitted aria-hidden="true" className="stamp-admitted">
+          Admitted
+        </span>
       </div>
 
       {/* точки-индикаторы */}
@@ -126,7 +131,7 @@ export function ExhibitDevice() {
             key={s.src}
             type="button"
             aria-label={`Show ${s.label}`}
-            aria-current={idx === i}
+            aria-current={idx === i ? 'true' : undefined}
             onClick={() => setI(idx)}
             className="inline-flex h-[44px] w-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]"
           >
@@ -140,11 +145,6 @@ export function ExhibitDevice() {
           </button>
         ))}
       </div>
-
-      {/* штамп ADMITTED */}
-      <span data-admitted aria-hidden="true" className="stamp-admitted">
-        Admitted
-      </span>
     </div>
   );
 }

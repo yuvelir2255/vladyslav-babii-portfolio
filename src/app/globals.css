@@ -217,8 +217,8 @@ html.intake-seen .preloader {
 /* штамп ADMITTED в секции Evidence (мирроринг .stamp-declassified) */
 .stamp-admitted {
   position: absolute;
-  right: 2%;
-  bottom: -2%;
+  right: -5%;
+  bottom: 7%;
   z-index: 4;
   transform: rotate(-9deg);
   border: 3px solid var(--color-orange);

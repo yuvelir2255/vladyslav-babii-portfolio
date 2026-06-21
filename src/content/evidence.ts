@@ -10,13 +10,9 @@ export const evidence = {
     markers: [
       { n: '1', title: 'AI product cards', note: 'GPT-4o-mini vision' },
       { n: '2', title: 'On-screen ring sizer', note: 'px → mm' },
-      {
-        n: '3',
-        title: 'HMAC-signed orders',
-        note: 'Trilingual · light + dark · ~77 KB',
-      },
+      { n: '3', title: 'HMAC-signed orders', note: 'Tamper-proof orders' },
     ],
-    facts: ['Live', 'Telegram Mini App', '~77 KB', '×3 lang'],
+    facts: ['Trilingual', 'Light + dark', '~77 KB'],
     tags: ['Telegram Mini App', 'React', 'TypeScript', 'OpenAI', 'Supabase'],
     shots: [
       {
