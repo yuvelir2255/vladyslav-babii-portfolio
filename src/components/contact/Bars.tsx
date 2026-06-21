@@ -8,11 +8,16 @@ export function Bars() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-      {/* дневной свет за прутьями — контролируемый центральный шафт (flat warm), скрыт до релиза */}
+      {/* дневной свет за прутьями — мягкий центральный шафт (feathered + blur),
+          читается как луч, а не панель; скрыт до релиза */}
       <div
         data-daylight
-        className="absolute inset-y-0 left-1/2 w-[46%] -translate-x-1/2 opacity-0"
-        style={{ background: '#d8a24a' }}
+        className="absolute inset-y-0 left-1/2 w-[56%] -translate-x-1/2 opacity-0"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, rgba(216,162,74,0.55) 28%, rgba(247,212,138,0.92) 50%, rgba(216,162,74,0.55) 72%, transparent 100%)',
+          filter: 'blur(10px)',
+        }}
       />
       {/* левая половина решётки */}
       <div
