@@ -6,7 +6,7 @@ export const hero = {
     dept: 'Dept. of Shipping',
     number: 'VB-19',
     name: 'Vladyslav Babii',
-    date: '06 · 20 · 2026',
+    date: '21 · 06 · 2026',
   },
   ticker: [
     'INTAKE TERMINAL — BLOCK VB',
