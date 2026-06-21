@@ -13,6 +13,12 @@ describe('About', () => {
     expect(screen.getByText(/Kharkiv/)).toBeInTheDocument();
     expect(screen.getByAltText(/Vladyslav Babii/i)).toBeInTheDocument();
   });
+  it('секция имеет семантический <h2> (заголовок в outline)', () => {
+    const { container } = render(<About />);
+    const h2 = container.querySelector('section#about h2');
+    expect(h2).toBeTruthy();
+    expect(h2?.textContent).toMatch(/subject file/i);
+  });
   it('две рассекречиваемые кнопки и стек', () => {
     const { container } = render(<About />);
     const redacted = container.querySelectorAll('[data-redacted]');

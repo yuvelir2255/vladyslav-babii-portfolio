@@ -17,9 +17,9 @@ describe('ChainOfCustody', () => {
       'https://dreamgold-jewelry.vercel.app',
     );
   });
-  it('показывает EVID-02 как pending', () => {
+  it('показывает EVID-02 как coming soon', () => {
     render(<ChainOfCustody />);
     expect(screen.getByText(/EVID-02/)).toBeInTheDocument();
-    expect(screen.getByText(/Pending/i)).toBeInTheDocument();
+    expect(screen.getByText(/Coming soon/i)).toBeInTheDocument();
   });
 });

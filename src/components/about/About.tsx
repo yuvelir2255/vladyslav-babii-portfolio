@@ -24,7 +24,7 @@ export function About() {
                 width={960}
                 height={1192}
                 sizes="(max-width: 1024px) 80vw, 360px"
-                className="block w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
+                className="block h-auto w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
               />
             </div>
             <div data-lower-tiles className="flex items-stretch gap-4">
@@ -36,7 +36,7 @@ export function About() {
                   width={640}
                   height={794}
                   sizes="180px"
-                  className="block w-full grayscale"
+                  className="block h-auto w-full grayscale"
                 />
                 <span className="absolute bottom-1 left-2 text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
                   Profile
@@ -52,7 +52,7 @@ export function About() {
           </div>
 
           <div className="flex-[1.2]">
-            <p
+            <h2
               data-about-label
               className="mb-6 text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase"
             >
@@ -60,7 +60,7 @@ export function About() {
                 ●
               </span>
               {about.label}
-            </p>
+            </h2>
 
             <div className="grid grid-cols-2 gap-x-8 gap-y-5 max-sm:grid-cols-1">
               {about.facts.map((f) => {

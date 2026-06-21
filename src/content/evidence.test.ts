@@ -24,8 +24,8 @@ describe('evidence content', () => {
       expect(l.label.length).toBeGreaterThan(0);
     }
   });
-  it('EVID-02 — pending-сайт', () => {
+  it('EVID-02 — сайт coming soon', () => {
     expect(evidence.pending.code).toBe('EVID-02');
-    expect(evidence.pending.status).toMatch(/pending/i);
+    expect(evidence.pending.status).toMatch(/coming soon/i);
   });
 });
