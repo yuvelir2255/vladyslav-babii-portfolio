@@ -83,7 +83,7 @@ Next.js 16 (App Router, RSC, route handlers) · React 19 · TS strict · **Tailw
 
 ## Бэклог (мелочи, не критично)
 
-- **Дата** на booking-табличке hero — в будущем (`06·26·2026`).
+- **Дата** на booking-табличке hero — `21 · 06 · 2026` (формат DD · MM · YYYY, `src/content/hero.ts` → `placard.date`).
 - **Мугшот hero (`mugshot.webp`, `priority`)** роняет dev-only next/image aspect-варнинг из-за 0.75px суб-пиксельного округления (размеры уже выставлены под файл 480×642). В прод-сборке варнинга нет, CLS/искажений нет — оставлено как есть.
 - **Опционально:** добавить `priority`/`loading="eager"` на About `inmate-build.webp` (LCP-кандидат), если будет в зоне правок.
 
