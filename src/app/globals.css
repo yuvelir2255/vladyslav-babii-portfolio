@@ -213,3 +213,20 @@ html.intake-seen .preloader {
 [data-rail-item].is-active {
   color: var(--color-orange);
 }
+
+/* штамп ADMITTED в секции Evidence (мирроринг .stamp-declassified) */
+.stamp-admitted {
+  position: absolute;
+  right: 2%;
+  bottom: -2%;
+  z-index: 4;
+  transform: rotate(-9deg);
+  border: 3px solid var(--color-orange);
+  color: var(--color-orange);
+  border-radius: 6px;
+  padding: 5px 14px;
+  font: 20px var(--font-stencil);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: rgba(16, 15, 13, 0.5);
+}
