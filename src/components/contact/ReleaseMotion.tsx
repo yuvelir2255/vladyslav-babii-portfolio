@@ -24,13 +24,18 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
       };
       window.addEventListener('vb:released', release);
 
-      // СТАДИЯ 1 — on-enter (прутья садятся, контент проявляется)
+      // СТАДИЯ 1 — on-enter (прутья садятся, контент проявляется).
+      // Реплей: без `once` — onEnter на каждый вход СВЕРХУ ВНИЗ; прошлый таймлайн
+      // убиваем (стадия 2/release event — отдельно, её не трогаем).
+      let revealTl: gsap.core.Timeline | null = null;
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top 75%',
-        once: true,
         onEnter: () => {
-          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          revealTl?.kill();
+          const tl = (revealTl = gsap.timeline({
+            defaults: { ease: 'power3.out' },
+          }));
           tl.from(
             ['[data-bars-left]', '[data-bars-right]'],
             { y: -28, autoAlpha: 0, duration: 0.8 },
@@ -51,6 +56,7 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
 
       return () => {
         window.removeEventListener('vb:released', release);
+        revealTl?.kill();
         st.kill();
       };
     },

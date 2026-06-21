@@ -48,12 +48,17 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
       // Видимый дефолт: прячем-и-проявляем (.from) ТОЛЬКО когда триггер сработал.
       // Если ScrollTrigger не отработает (SSR/headless/тесты) — контент остаётся
       // виден из разметки, секция не «уезжает» в пустоту.
+      // Реплей: без `once` — onEnter срабатывает на каждый вход СВЕРХУ ВНИЗ
+      // (возврат снизу вверх контент не трогает); прошлый таймлайн убиваем.
+      let revealTl: gsap.core.Timeline | null = null;
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top 82%',
-        once: true,
         onEnter: () => {
-          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          revealTl?.kill();
+          const tl = (revealTl = gsap.timeline({
+            defaults: { ease: 'power3.out' },
+          }));
 
           // ВЕРХ — мугшот + лейбл + поля одновременно (фото и текст вместе),
           // порядок сверху вниз за счёт stagger полей
@@ -110,7 +115,10 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
         },
       });
 
-      return () => st.kill();
+      return () => {
+        revealTl?.kill();
+        st.kill();
+      };
     },
     { scope: ref },
   );
