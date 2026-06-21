@@ -33,8 +33,9 @@
 по `max-w ~1100px`:
 
 - **Хедер секции:** эйдброу `● EVIDENCE` + семантический `<h2>` `The people submit the following
-  evidence:` (зеркалит интро Charges `The people charge the defendant with:`). NB: в Charges
-  семантического h2 нет (стилизованный `<p>`) — тут делаем правильно.
+  evidence:` (зеркалит интро Charges `The people charge the defendant with:`). NB: у секции About
+  семантического `<h2>` нет (лейбл — стилизованный `<p>`); тут делаем правильно (в Charges `<h2>`
+  уже есть — `Services.tsx:19`).
 - **Сцена (две колонки):**
   - **Лево — устройство-экспонат:** телефон в «пакете для улик» (прозрачный контур + бирка
     chain-of-custody со штрихкодом и подписью `EVID-01`). Экран = **карусель живых скринов**
