@@ -1,31 +1,22 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { evidence } from '@/content/evidence';
 
 export function ExhibitDevice() {
   const { code, shots } = evidence.exhibit;
   const len = shots.length;
   const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setI((p) => (p + 1) % len), 2800);
-    return () => clearInterval(id);
-  }, [paused, len]);
-
+  const prev = () => setI((p) => (p - 1 + len) % len);
   const next = () => setI((p) => (p + 1) % len);
 
+  const arrowCls =
+    'inline-flex h-[44px] w-[44px] items-center justify-center text-[var(--color-steel)] transition-colors hover:text-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]';
+
   return (
-    <div
-      className="relative mx-auto w-[min(280px,72vw)]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-    >
+    <div className="relative mx-auto w-[min(280px,72vw)]">
       <div data-device className="relative">
         {/* пакет для улик */}
         <svg
@@ -88,14 +79,6 @@ export function ExhibitDevice() {
             <span className="absolute bottom-2 left-2 z-10 rounded-[3px] bg-[rgba(16,15,13,0.7)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-bone)] uppercase">
               {shots[i].label}
             </span>
-
-            {/* тап по экрану листает */}
-            <button
-              type="button"
-              onClick={next}
-              aria-label="Next screenshot"
-              className="absolute inset-0 z-20 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-[var(--color-orange)]"
-            />
           </div>
         </div>
 
@@ -105,8 +88,28 @@ export function ExhibitDevice() {
         </span>
       </div>
 
-      {/* точки-индикаторы */}
+      {/* ручное управление: стрелки ◀ ▶ + точки-индикаторы (без автоплея) */}
       <div className="mt-4 flex items-center justify-center gap-1">
+        <button
+          type="button"
+          onClick={prev}
+          aria-label="Previous screenshot"
+          className={arrowCls}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+
         {shots.map((s, idx) => (
           <button
             key={s.src}
@@ -125,6 +128,26 @@ export function ExhibitDevice() {
             />
           </button>
         ))}
+
+        <button
+          type="button"
+          onClick={next}
+          aria-label="Next screenshot"
+          className={arrowCls}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-[18px] w-[18px]"
+            aria-hidden="true"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
       </div>
     </div>
   );

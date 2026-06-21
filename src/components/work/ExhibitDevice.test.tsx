@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ExhibitDevice } from './ExhibitDevice';
 
@@ -25,5 +25,24 @@ describe('ExhibitDevice', () => {
     expect(
       screen.getByRole('button', { name: /show cart/i }),
     ).toBeInTheDocument();
+  });
+  it('стрелки prev/next листают вручную, в обе стороны с зацикливанием', () => {
+    render(<ExhibitDevice />);
+    const next = screen.getByRole('button', { name: /next screenshot/i });
+    const prev = screen.getByRole('button', { name: /previous screenshot/i });
+    const current = () =>
+      screen
+        .getAllByRole('button')
+        .find((b) => b.getAttribute('aria-current') === 'true')
+        ?.getAttribute('aria-label');
+
+    expect(current()).toMatch(/show shop/i);
+    fireEvent.click(next);
+    expect(current()).toMatch(/show product/i);
+    fireEvent.click(prev);
+    expect(current()).toMatch(/show shop/i);
+    // prev с первого кадра → последний (Cart), зацикливание
+    fireEvent.click(prev);
+    expect(current()).toMatch(/show cart/i);
   });
 });
