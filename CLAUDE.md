@@ -32,7 +32,7 @@ Next.js 16 (App Router, RSC, route handlers) · React 19 · TS strict · **Tailw
 | hero (`#yard`) | `components/hero` · `content/hero.ts` | манифест: pin + слово-за-словом подсветка по скроллу | 2 экрана; booking-табличка; мугшот; CTA `#work`/`#contact` |
 | About (`#about`) | `components/about` · `content/about.ts` | `DossierMotion` — on-enter reveal без пина | досье; declassify грифов; count-up возраста; DrawSVG-отпечаток; 2 фото «билдер в камере» (`inmate-build.webp` цвет + `inmate-detail.webp` ч/б) |
 | Services (`#services`) | `components/services` · `content/services.ts` | `ChargesMotion` — единый pin+snap на всех экранах | обвинительный акт; слэм штампа GUILTY (`back.out` + DrawSVG ink-bleed + тряска); ScrambleText/SplitText; индекс-рейл; финал SENTENCE без CTA |
-| Work (`#work`) | `components/work` · `content/evidence.ts` | `EvidenceMotion` — on-enter reveal без пина (сиблинг `DossierMotion`) | один экспонат-вещдок Dream Gold (`EVID-01`): карусель живых скринов, бирка chain-of-custody, 3 форензик-маркера, слэм-штамп ADMITTED, живая ссылка `t.me/dreamgold_jewelry_bot/shop`; `EVID-02 · PENDING` |
+| Work (`#work`) | `components/work` · `content/evidence.ts` | `EvidenceMotion` — on-enter reveal без пина (сиблинг `DossierMotion`) | один экспонат-вещдок Dream Gold (`EVID-01`): карусель живых скринов, бирка chain-of-custody, 3 форензик-маркера, слэм-штамп ADMITTED, живые ссылки (бот + `dreamgold-jewelry.vercel.app` — веб-версия приложения); `EVID-02 · Coming soon` (маркетинговый сайт DG, ещё делается) |
 | Contact (`#contact`) | `components/contact` · `content/contact.ts` | `ReleaseMotion` — стадия 1 on-enter (`ScrollTrigger once`) + стадия 2 по событию `vb:released` | «Release» (Cell Door + свет): прутья садятся → на отправке разъезжаются (`xPercent ±110`) + дневной свет (feathered-шафт + blur); форма 3 поля → Telegram; типографская directory |
 
 **Бэкенд формы:** `src/lib/telegram.ts` (validate / honeypot=`company` / buildMessage / send) + `src/app/api/contact/route.ts` (honeypot → in-memory rate-limit → валидация → отправка). Env `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` — только `.env.local` (+ пустой `.env.example`), на Vercel в Production+Preview. Живую доставку владелец проверяет сам на проде.
@@ -44,6 +44,7 @@ Next.js 16 (App Router, RSC, route handlers) · React 19 · TS strict · **Tailw
 - **Единый фон:** один `ConcreteBg` (fixed: радиальный градиент + OGL-шейдер + grain + bars) на весь сайт; секции прозрачны над ним (per-section grain/bars и border-t-разделители сняты). **Единый курсор** везде (без scan-варианта).
 - **Шейдер (OGL) и курсор — только desktop;** на тач/без-WebGL → статичный бетон (фолбэк).
 - **Прелоадер (`chrome/Preloader.tsx`):** intake 0→100 → «дверь» уезжает вверх. Показ **раз за сессию** (`sessionStorage` `vb19-intake`); инлайн-скрипт в `<body>` ставит `html.intake-seen` до отрисовки (без вспышки на ревизите) → на `<html>` стоит `suppressHydrationWarning`. Scroll-lock через Lenis (`window.__lenis`, выставлен в `SmoothScroll`).
+- **Навигация по якорям (`SmoothScroll.tsx`):** делегированный click-handler на `a[href^="#"]` → `lenis.scrollTo` (плавно вместо резкого нативного прыжка; уважает модификаторы/среднюю кнопку, синхронит hash через `replaceState`). Покрывает FileNav + hero-CTA автоматически.
 - **Тумблер звука (`chrome/AudioToggle.tsx`):** off по умолчанию, `preload="none"`, graceful если файла нет. Трек **`/audio/breakbeat.mp3`** (256 kbps), volume 0.4, loop.
 - **`prefers-reduced-motion` НАМЕРЕННО не уважаем** (решение владельца — движение всегда вкл). Прочую a11y держим.
 - **a11y-контраст (закрыто):** все токены на bg проходят AA — bone 15.5:1, steel 6.5:1, orange 6.1:1, **dim `#827c70` 4.62:1**. Есть `--color-orange-soft` (orange@12%) для hover/focus-подложек.
@@ -82,8 +83,11 @@ Next.js 16 (App Router, RSC, route handlers) · React 19 · TS strict · **Tailw
 
 ## Бэклог (мелочи, не критично)
 
-- **P3:** у секции About нет семантического `<h2>` (эйбров — стилизованный `<p>`); дата на booking-табличке hero в будущем (`06·26·2026`).
-- **Подсказка:** About `inmate-build.webp` ловит next/image LCP-варнинг (можно добавить `priority`/`loading="eager"`, если будет в зоне правок).
+- **Дата** на booking-табличке hero — в будущем (`06·26·2026`).
+- **Мугшот hero (`mugshot.webp`, `priority`)** роняет dev-only next/image aspect-варнинг из-за 0.75px суб-пиксельного округления (размеры уже выставлены под файл 480×642). В прод-сборке варнинга нет, CLS/искажений нет — оставлено как есть.
+- **Опционально:** добавить `priority`/`loading="eager"` на About `inmate-build.webp` (LCP-кандидат), если будет в зоне правок.
+
+> Закрыто в полировке (deploy `6191848`): About `<h2>` (был стилизованный `<p>`), `h-auto` на About-картинках (ушёл aspect-варнинг), тач-цель declassify 44px, плашка Contact ниже FileNav, плавная навигация по якорям, EVID-02 → Coming soon.
 
 ## Артефакты и история
 
