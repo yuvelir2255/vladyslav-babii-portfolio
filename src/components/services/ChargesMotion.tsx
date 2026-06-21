@@ -33,17 +33,40 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const headline = root.querySelector<HTMLElement>(
         '[data-verdict-headline]',
       );
+      // оригинальный текст номеров (для повторного scramble без «залипания» на огрызке)
+      const numText = new Map<HTMLElement, string>();
+      cards.forEach((c) => {
+        const n = c.querySelector<HTMLElement>('[data-count-num]');
+        if (n) numText.set(c, n.textContent || '');
+      });
       const pad = (n: number) => String(n).padStart(2, '0');
       const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
       const easeIO = (t: number) =>
         t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-      // общий one-shot слэм одного пункта (без изменений)
+      // слэм одного пункта — повторно-безопасный (играет КАЖДЫЙ раз при активации).
+      // Перед проигрышем сбрасываем элементы в финал и чистим твины → нет «залипания»
+      // полупрозрачности при скролле туда-обратно.
       const revealCount = (card: HTMLElement, words: Element[]) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
         const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
         const stamp = card.querySelector<HTMLElement>('[data-count-stamp]');
         const stampDraw = card.querySelector<SVGElement>('[data-stamp-draw]');
+        const original = numText.get(card) ?? num?.textContent ?? '';
+
+        // стоп прошлых твинов + сброс в финальное состояние (replay-safe)
+        gsap.killTweensOf(
+          [num, gloss, stamp, stampDraw, ...words].filter(Boolean) as Element[],
+        );
+        if (num) {
+          num.textContent = original;
+          gsap.set(num, { autoAlpha: 1 });
+        }
+        if (words.length) gsap.set(words, { autoAlpha: 1, y: 0 });
+        if (gloss) gsap.set(gloss, { autoAlpha: 1, y: 0 });
+        if (stampDraw) gsap.set(stampDraw, { drawSVG: '100%' });
+        if (stamp) gsap.set(stamp, { autoAlpha: 1, scale: 1, rotate: 0 });
+
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
         if (num) {
           tl.fromTo(num, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0);
@@ -52,7 +75,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             {
               duration: 0.5,
               scrambleText: {
-                text: num.textContent || '',
+                text: original,
                 chars: '0123456789',
               },
             },
@@ -135,8 +158,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         if (glow) gsap.set(glow, { autoAlpha: 0 });
         if (rail) gsap.set(rail, { autoAlpha: 1 });
 
-        // каждый пункт «слэмается» один раз (при первом достижении)
-        const revealed = new Set<number>();
         let current = -1;
         const lastIdx = cards.length - 1; // count 05
         const total = cards.length + 1; // snap-точек (counts + verdict)
@@ -161,10 +182,8 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           cards.forEach((c, idx) =>
             gsap.to(c, { autoAlpha: idx === i ? 1 : 0, duration: 0.25 }),
           );
-          if (!revealed.has(i)) {
-            revealed.add(i);
-            revealCount(cards[i], splits[i]?.words ?? []);
-          }
+          // повтор анимации при каждой активации пункта (и вниз, и вверх)
+          revealCount(cards[i], splits[i]?.words ?? []);
           setRail(i);
         };
 
@@ -200,10 +219,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           cards.forEach((c, idx) =>
             gsap.set(c, { autoAlpha: idx === lastIdx ? 1 : 0 }),
           );
-          if (!revealed.has(lastIdx)) {
-            revealed.add(lastIdx);
-            revealCount(cards[lastIdx], splits[lastIdx]?.words ?? []);
-          }
+          // count 05 уже проигран через show() перед входом в финал — тут не повторяем
           setRail(lastIdx);
           if (!eyebrowDone && eyebrow) {
             eyebrowDone = true;
