@@ -51,7 +51,7 @@ export const evidence = {
   },
   pending: {
     code: 'EVID-02',
-    status: 'Pending',
+    status: 'Coming soon',
     title: 'Dream Gold — Website',
     summary: 'A full marketing site for the atelier — in the works.',
   },
