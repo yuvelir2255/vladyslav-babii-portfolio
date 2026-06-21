@@ -78,13 +78,12 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
               );
             });
 
-          // 5. факты + «измерительная» линейка
+          // 5. факты
           tl.from(
             '[data-fact]',
             { autoAlpha: 0, y: 14, stagger: 0.05, duration: 0.4 },
             0.75,
           );
-          tl.from('[data-ruler]', { drawSVG: '0%', duration: 0.6 }, 0.85);
 
           // 6. слэм-штамп ADMITTED + микро-тряска сцены
           tl.from(

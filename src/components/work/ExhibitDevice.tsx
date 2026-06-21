@@ -84,25 +84,6 @@ export function ExhibitDevice() {
               />
             ))}
 
-            {/* «измерительная» линейка (DrawSVG) */}
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-              className="pointer-events-none absolute inset-0 h-full w-full"
-            >
-              <line
-                data-ruler
-                x1="6"
-                y1="50"
-                x2="94"
-                y2="50"
-                stroke="var(--color-orange)"
-                strokeWidth="0.5"
-                strokeOpacity="0.5"
-              />
-            </svg>
-
             {/* подпись текущего кадра */}
             <span className="absolute bottom-2 left-2 z-10 rounded-[3px] bg-[rgba(16,15,13,0.7)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-bone)] uppercase">
               {shots[i].label}
