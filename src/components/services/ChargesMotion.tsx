@@ -25,6 +25,9 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const progress = root.querySelector<HTMLElement>('[data-rail-progress]');
       const verdict = root.querySelector<HTMLElement>('[data-verdict]');
       const rail = root.querySelector<HTMLElement>('[data-rail]');
+      const chargesHeader = root.querySelector<HTMLElement>(
+        '[data-charges-header]',
+      );
       const pad = (n: number) => String(n).padStart(2, '0');
 
       // общий one-shot слэм одного пункта
@@ -145,9 +148,14 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           );
           if (verdict)
             gsap.to(verdict, { autoAlpha: isVerdict ? 1 : 0, duration: 0.25 });
-          // на вердикте убираем индекс-рейл — приговор занимает сцену чисто
+          // на вердикте убираем индекс-рейл и хедер секции — приговор занимает сцену чисто
           if (rail)
             gsap.to(rail, { autoAlpha: isVerdict ? 0 : 1, duration: 0.25 });
+          if (chargesHeader)
+            gsap.to(chargesHeader, {
+              autoAlpha: isVerdict ? 0 : 1,
+              duration: 0.3,
+            });
           if (isVerdict) {
             revealVerdict();
             return;

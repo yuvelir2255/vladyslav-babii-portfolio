@@ -6,6 +6,7 @@ import { AudioToggle } from '@/components/chrome/AudioToggle';
 import { Hero } from '@/components/hero/Hero';
 import { About } from '@/components/about/About';
 import { Services } from '@/components/services/Services';
+import { Evidence } from '@/components/work/Evidence';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
           <Hero />
           <About />
           <Services />
+          <Evidence />
         </main>
         <AudioToggle />
       </div>
