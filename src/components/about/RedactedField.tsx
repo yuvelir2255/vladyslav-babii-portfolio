@@ -28,7 +28,7 @@ export function RedactedField({
       aria-expanded="false"
       aria-label={`Declassify ${label}`}
       onClick={toggle}
-      className="block w-full text-left"
+      className="flex min-h-[44px] w-full flex-col justify-center text-left"
     >
       <span className="block text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
         {label}
