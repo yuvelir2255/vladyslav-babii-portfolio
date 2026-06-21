@@ -17,7 +17,7 @@ describe('About', () => {
     const { container } = render(<About />);
     const h2 = container.querySelector('section#about h2');
     expect(h2).toBeTruthy();
-    expect(h2?.textContent).toMatch(/subject file/i);
+    expect(h2?.textContent).toMatch(/the inmate/i);
   });
   it('две рассекречиваемые кнопки и стек', () => {
     const { container } = render(<About />);
