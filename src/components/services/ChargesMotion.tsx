@@ -28,9 +28,17 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const chargesHeader = root.querySelector<HTMLElement>(
         '[data-charges-header]',
       );
+      const glow = root.querySelector<HTMLElement>('[data-verdict-glow]');
+      const eyebrow = root.querySelector<HTMLElement>('[data-verdict-eyebrow]');
+      const headline = root.querySelector<HTMLElement>(
+        '[data-verdict-headline]',
+      );
       const pad = (n: number) => String(n).padStart(2, '0');
+      const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+      const easeIO = (t: number) =>
+        t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-      // общий one-shot слэм одного пункта
+      // общий one-shot слэм одного пункта (без изменений)
       const revealCount = (card: HTMLElement, words: Element[]) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
         const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
@@ -91,7 +99,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           it.classList.toggle('is-active', i === active),
         );
         // «Guilty ×N» = число пунктов, дошедших до активного включительно
-        // (надёжно при быстром скролле/фликах, без учёта пропущенных кадров)
         if (tally) tally.textContent = `Guilty ×${active + 1}`;
         if (railCount)
           railCount.textContent = `${pad(active + 1)} / ${pad(cards.length)}`;
@@ -103,63 +110,57 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           });
       };
 
-      const revealVerdict = () => {
-        if (!verdict) return;
-        gsap.fromTo(
-          verdict.children,
-          { autoAlpha: 0, y: 20 },
-          {
-            autoAlpha: 1,
-            y: 0,
-            stagger: 0.08,
-            duration: 0.5,
-            ease: 'power3.out',
-          },
-        );
-      };
-
-      // единое поведение для всех экранов: пин + snap, один пункт на сцене.
-      // pct — длина пиннинга на шаг (desktop длиннее: мышь крутит быстро).
-      const build = (pct: number) => {
+      // pin + snap. Тайминги РАЗВЕДЕНЫ:
+      //  countPct — длина пина на переключение пункта (короче = быстрее листать колесом);
+      //  finalPct — длина пина на финал-коллапс 05→вердикт (длиннее = плавный переход).
+      //  withBlur — desktop (blur) vs mobile (без blur).
+      const build = (countPct: number, finalPct: number, withBlur: boolean) => {
         gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
         gsap.set(cards[0], { autoAlpha: 1 });
-        if (verdict)
-          gsap.set(verdict, { position: 'absolute', inset: 0, autoAlpha: 0 });
-        if (rail) gsap.set(rail, { autoAlpha: 1 });
 
-        // сплитим заголовки один раз на контекст (не на каждую активацию)
+        // сплитим заголовки counts один раз на контекст
         const splits = cards.map((c) => {
           const charge = c.querySelector<HTMLElement>('[data-count-charge]');
           return charge ? new SplitText(charge, { type: 'words' }) : null;
         });
-        // каждый пункт «слэмается» один раз (при первом достижении).
-        // повторная активация .from() захватывала бы промежуточное значение
-        // как конечное → залипание полупрозрачности.
-        const revealed = new Set<number>();
 
+        // вердикт: per-line маска заголовка + стартовые скрытые состояния
+        const vSplit = headline
+          ? new SplitText(headline, { type: 'lines', mask: 'lines' })
+          : null;
+        const vLines = vSplit?.lines ?? [];
+        if (verdict)
+          gsap.set(verdict, { position: 'absolute', inset: 0, autoAlpha: 0 });
+        gsap.set(vLines, { yPercent: 100 });
+        if (glow) gsap.set(glow, { autoAlpha: 0 });
+        if (rail) gsap.set(rail, { autoAlpha: 1 });
+
+        // каждый пункт «слэмается» один раз (при первом достижении)
+        const revealed = new Set<number>();
         let current = -1;
-        const total = cards.length + 1; // counts + verdict
+        const lastIdx = cards.length - 1; // count 05
+        const total = cards.length + 1; // snap-точек (counts + verdict)
+        const countSegs = cards.length - 1; // сегментов «пункт→пункт»
+        let inFinal = false;
+        let eyebrowDone = false;
+
+        // прогресс-границы каждой snap-точки: counts короче, финал длиннее
+        const totalPct = countSegs * countPct + finalPct;
+        const bounds: number[] = [];
+        let acc = 0;
+        for (let i = 0; i < total; i++) {
+          bounds.push(acc / totalPct);
+          acc += i < countSegs ? countPct : finalPct;
+        }
+        const lastBound = bounds[lastIdx]; // прогресс на count 05
+
+        // дискретная дека для counts 0..lastIdx
         const show = (i: number) => {
           if (i === current) return;
           current = i;
-          const isVerdict = i >= cards.length;
           cards.forEach((c, idx) =>
             gsap.to(c, { autoAlpha: idx === i ? 1 : 0, duration: 0.25 }),
           );
-          if (verdict)
-            gsap.to(verdict, { autoAlpha: isVerdict ? 1 : 0, duration: 0.25 });
-          // на вердикте убираем индекс-рейл и хедер секции — приговор занимает сцену чисто
-          if (rail)
-            gsap.to(rail, { autoAlpha: isVerdict ? 0 : 1, duration: 0.25 });
-          if (chargesHeader)
-            gsap.to(chargesHeader, {
-              autoAlpha: isVerdict ? 0 : 1,
-              duration: 0.3,
-            });
-          if (isVerdict) {
-            revealVerdict();
-            return;
-          }
           if (!revealed.has(i)) {
             revealed.add(i);
             revealCount(cards[i], splits[i]?.words ?? []);
@@ -167,29 +168,137 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           setRail(i);
         };
 
+        // ближайший пункт по прогрессу (переключение на середине между snap-точками)
+        const nearestCount = (prog: number) => {
+          let idx = 0;
+          for (let i = 0; i < lastIdx; i++) {
+            if (prog >= (bounds[i] + bounds[i + 1]) / 2) idx = i + 1;
+          }
+          return idx;
+        };
+
+        // сброс «collapse» к базе обвинения (при отмотке вверх из финала)
+        const collapseReset = () => {
+          gsap.set(cards[lastIdx], { scale: 1, filter: 'blur(0px)' });
+          if (rail) gsap.set(rail, { x: 0, yPercent: -50, autoAlpha: 1 });
+          if (chargesHeader) gsap.set(chargesHeader, { y: 0, autoAlpha: 1 });
+          if (verdict) gsap.set(verdict, { autoAlpha: 0 });
+          if (glow) gsap.set(glow, { autoAlpha: 0 });
+          gsap.set(vLines, { yPercent: 100 });
+        };
+
+        // вход в финальный сегмент: count 05 — единственный активный, разовый scramble айброва
+        const enterFinal = () => {
+          if (inFinal) return;
+          inFinal = true;
+          current = lastIdx;
+          gsap.killTweensOf(
+            [cards[lastIdx], rail, chargesHeader, verdict, glow].filter(
+              Boolean,
+            ) as Element[],
+          );
+          cards.forEach((c, idx) =>
+            gsap.set(c, { autoAlpha: idx === lastIdx ? 1 : 0 }),
+          );
+          if (!revealed.has(lastIdx)) {
+            revealed.add(lastIdx);
+            revealCount(cards[lastIdx], splits[lastIdx]?.words ?? []);
+          }
+          setRail(lastIdx);
+          if (!eyebrowDone && eyebrow) {
+            eyebrowDone = true;
+            gsap.to(eyebrow, {
+              duration: 0.5,
+              scrambleText: {
+                text: eyebrow.textContent || '',
+                chars: 'upperCase',
+              },
+            });
+          }
+        };
+
+        const exitFinal = () => {
+          if (!inFinal) return;
+          inFinal = false;
+          eyebrowDone = false;
+          collapseReset();
+          current = -1;
+        };
+
+        // непрерывный рендер коллапса по sub-прогрессу p ∈ [0..1]
+        const collapseRender = (raw: number) => {
+          const p = clamp01(raw);
+          const out = clamp01(p / 0.6); // окно ухода обвинения
+          const sc = 1 - 0.16 * easeIO(clamp01(p / 0.9));
+          gsap.set(cards[lastIdx], {
+            transformOrigin: '50% 50%',
+            scale: sc,
+            autoAlpha: 1 - out,
+            filter: withBlur
+              ? `blur(${(6 * clamp01(p / 0.7)).toFixed(2)}px)`
+              : 'blur(0px)',
+          });
+          if (rail)
+            gsap.set(rail, {
+              x: -34 * easeIO(clamp01(p / 0.6)),
+              yPercent: -50,
+              autoAlpha: 1 - clamp01(p / 0.5),
+            });
+          if (chargesHeader)
+            gsap.set(chargesHeader, {
+              y: -24 * easeIO(clamp01(p / 0.6)),
+              autoAlpha: 1 - clamp01(p / 0.5),
+            });
+          const vp = clamp01((p - 0.4) / 0.6); // окно сборки вердикта
+          const evp = easeIO(vp);
+          if (verdict) gsap.set(verdict, { autoAlpha: vp });
+          if (glow)
+            gsap.set(glow, {
+              transformOrigin: '50% 50%',
+              autoAlpha: 0.5 * vp,
+              scale: 0.6 + 0.4 * evp,
+            });
+          vLines.forEach((ln, i) => {
+            const lp = clamp01((evp - i * 0.12) / 0.7);
+            gsap.set(ln, { yPercent: 100 * (1 - lp) });
+          });
+        };
+
         const st = ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: `+=${total * pct}%`,
+          end: `+=${totalPct}%`,
           pin: true,
           scrub: true,
           snap: {
-            snapTo: 1 / (total - 1),
+            snapTo: bounds,
             duration: 0.3,
             ease: 'power1.inOut',
           },
-          onUpdate: (self) => show(Math.round(self.progress * (total - 1))),
+          onUpdate: (self) => {
+            const prog = self.progress;
+            if (prog <= lastBound) {
+              if (inFinal) exitFinal();
+              show(nearestCount(prog));
+            } else {
+              enterFinal();
+              collapseRender((prog - lastBound) / (1 - lastBound));
+            }
+          },
         });
         show(0);
         return () => {
           st.kill();
           splits.forEach((s) => s?.revert());
+          vSplit?.revert();
         };
       };
 
       const mm = gsap.matchMedia();
-      mm.add('(min-width: 1024px)', () => build(90));
-      mm.add('(max-width: 1023px)', () => build(64));
+      // desktop: пункты быстрее (58), финал-коллапс плавный (72), с blur
+      mm.add('(min-width: 1024px)', () => build(58, 72, true));
+      // mobile/планшет: короче и без blur
+      mm.add('(max-width: 1023px)', () => build(44, 52, false));
 
       return () => mm.revert();
     },

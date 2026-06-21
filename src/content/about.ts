@@ -1,5 +1,5 @@
 export const about = {
-  label: 'On the record / Subject file',
+  label: 'The Inmate',
   facts: [
     { k: 'Inmate №', v: 'VB-19' },
     { k: 'Name', v: 'Vladyslav Babii' },
