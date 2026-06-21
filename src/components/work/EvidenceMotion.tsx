@@ -16,12 +16,19 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
 
       let titleSplit: SplitText | null = null;
 
+      // Реплей: без `once` — onEnter на каждый вход СВЕРХУ ВНИЗ; прошлый таймлайн
+      // убиваем, прошлый SplitText реверсим (иначе вложенные сплиты при повторе).
+      let revealTl: gsap.core.Timeline | null = null;
       const st = ScrollTrigger.create({
         trigger: section,
         start: 'top 72%',
-        once: true,
         onEnter: () => {
-          const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+          revealTl?.kill();
+          titleSplit?.revert();
+          titleSplit = null;
+          const tl = (revealTl = gsap.timeline({
+            defaults: { ease: 'power3.out' },
+          }));
 
           // 1. «пакет» прорисовывается
           tl.from('[data-bag-draw]', { drawSVG: '0%', duration: 0.7 }, 0);
@@ -118,6 +125,7 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
       });
 
       return () => {
+        revealTl?.kill();
         st.kill();
         titleSplit?.revert();
       };
