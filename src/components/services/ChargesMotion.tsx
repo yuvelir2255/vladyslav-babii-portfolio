@@ -1,0 +1,198 @@
+'use client';
+
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, ScrollTrigger, SplitText } from '@/lib/gsap';
+
+export function ChargesMotion({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const root = ref.current;
+      if (!root) return;
+      const section = root.closest('section');
+      if (!section) return;
+
+      const cards = gsap.utils.toArray<HTMLElement>('[data-count]', root);
+      if (!cards.length) return;
+      const railItems = gsap.utils.toArray<HTMLElement>(
+        '[data-rail-item]',
+        root,
+      );
+      const tally = root.querySelector<HTMLElement>('[data-rail-tally]');
+      const railCount = root.querySelector<HTMLElement>('[data-rail-count]');
+      const progress = root.querySelector<HTMLElement>('[data-rail-progress]');
+      const verdict = root.querySelector<HTMLElement>('[data-verdict]');
+      const pad = (n: number) => String(n).padStart(2, '0');
+
+      // общий one-shot слэм одного пункта (desktop и mobile)
+      const revealCount = (card: HTMLElement) => {
+        const num = card.querySelector<HTMLElement>('[data-count-num]');
+        const charge = card.querySelector<HTMLElement>('[data-count-charge]');
+        const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
+        const stamp = card.querySelector<HTMLElement>('[data-count-stamp]');
+        const stampDraw = card.querySelector<SVGElement>('[data-stamp-draw]');
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        if (num) {
+          tl.fromTo(num, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0);
+          tl.to(
+            num,
+            {
+              duration: 0.5,
+              scrambleText: {
+                text: num.textContent || '',
+                chars: '0123456789',
+              },
+            },
+            0,
+          );
+        }
+        if (charge) {
+          const sp = new SplitText(charge, { type: 'words' });
+          tl.from(
+            sp.words,
+            { autoAlpha: 0, y: 24, stagger: 0.06, duration: 0.5 },
+            0.1,
+          );
+        }
+        if (gloss) tl.from(gloss, { autoAlpha: 0, y: 14, duration: 0.5 }, 0.25);
+        if (stampDraw)
+          tl.from(stampDraw, { drawSVG: '0%', duration: 0.4 }, 0.35);
+        if (stamp)
+          tl.from(
+            stamp,
+            {
+              autoAlpha: 0,
+              scale: 1.8,
+              rotate: -16,
+              transformOrigin: 'center',
+              duration: 0.45,
+              ease: 'back.out(1.7)',
+            },
+            0.35,
+          );
+        // микро-тряска сцены на удар штампа
+        tl.add(
+          () =>
+            gsap.fromTo(
+              section,
+              { x: -4 },
+              { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.45)' },
+            ),
+          0.4,
+        );
+        return tl;
+      };
+
+      const setRail = (active: number, stamped: number) => {
+        railItems.forEach((it, i) =>
+          it.classList.toggle('is-active', i === active),
+        );
+        if (tally) tally.textContent = `Guilty ×${stamped}`;
+        if (railCount)
+          railCount.textContent = `${pad(active + 1)} / ${pad(cards.length)}`;
+        if (progress)
+          gsap.to(progress, {
+            scaleX: (active + 1) / cards.length,
+            duration: 0.3,
+            overwrite: true,
+          });
+      };
+
+      const revealVerdict = () => {
+        if (!verdict) return;
+        gsap.fromTo(
+          verdict.children,
+          { autoAlpha: 0, y: 20 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            stagger: 0.08,
+            duration: 0.5,
+            ease: 'power3.out',
+          },
+        );
+      };
+
+      const mm = gsap.matchMedia();
+
+      // DESKTOP: пин + snap, один пункт на сцене
+      mm.add('(min-width: 1024px)', () => {
+        const stamped = new Set<number>();
+        gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
+        gsap.set(cards[0], { autoAlpha: 1 });
+        if (verdict) gsap.set(verdict, { autoAlpha: 0 });
+
+        let current = -1;
+        const total = cards.length + 1; // counts + verdict
+        const show = (i: number) => {
+          if (i === current) return;
+          current = i;
+          const isVerdict = i >= cards.length;
+          cards.forEach((c, idx) =>
+            gsap.to(c, { autoAlpha: idx === i ? 1 : 0, duration: 0.25 }),
+          );
+          if (verdict)
+            gsap.to(verdict, { autoAlpha: isVerdict ? 1 : 0, duration: 0.25 });
+          if (isVerdict) {
+            revealVerdict();
+            return;
+          }
+          stamped.add(i);
+          revealCount(cards[i]);
+          setRail(i, stamped.size);
+        };
+
+        const st = ScrollTrigger.create({
+          trigger: section,
+          start: 'top top',
+          end: `+=${total * 90}%`,
+          pin: true,
+          scrub: true,
+          snap: {
+            snapTo: 1 / (total - 1),
+            duration: 0.3,
+            ease: 'power1.inOut',
+          },
+          onUpdate: (self) => show(Math.round(self.progress * (total - 1))),
+        });
+        show(0);
+        return () => st.kill();
+      });
+
+      // MOBILE/планшет: без пина, on-enter по стопке
+      mm.add('(max-width: 1023px)', () => {
+        const stamped = new Set<number>();
+        const triggers = cards.map((card, i) =>
+          ScrollTrigger.create({
+            trigger: card,
+            start: 'top 72%',
+            once: true,
+            onEnter: () => {
+              stamped.add(i);
+              revealCount(card);
+              setRail(i, stamped.size);
+            },
+          }),
+        );
+        if (verdict) {
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: verdict,
+              start: 'top 78%',
+              once: true,
+              onEnter: revealVerdict,
+            }),
+          );
+        }
+        return () => triggers.forEach((t) => t.kill());
+      });
+
+      return () => mm.revert();
+    },
+    { scope: ref },
+  );
+
+  return <div ref={ref}>{children}</div>;
+}
