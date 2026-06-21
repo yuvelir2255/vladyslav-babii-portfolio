@@ -24,6 +24,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const railCount = root.querySelector<HTMLElement>('[data-rail-count]');
       const progress = root.querySelector<HTMLElement>('[data-rail-progress]');
       const verdict = root.querySelector<HTMLElement>('[data-verdict]');
+      const rail = root.querySelector<HTMLElement>('[data-rail]');
       const pad = (n: number) => String(n).padStart(2, '0');
 
       // общий one-shot слэм одного пункта (desktop и mobile)
@@ -85,11 +86,13 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         return tl;
       };
 
-      const setRail = (active: number, stamped: number) => {
+      const setRail = (active: number) => {
         railItems.forEach((it, i) =>
           it.classList.toggle('is-active', i === active),
         );
-        if (tally) tally.textContent = `Guilty ×${stamped}`;
+        // «Guilty ×N» = число пунктов, дошедших до активного включительно
+        // (надёжно при быстром скролле/фликах, без учёта пропущенных кадров)
+        if (tally) tally.textContent = `Guilty ×${active + 1}`;
         if (railCount)
           railCount.textContent = `${pad(active + 1)} / ${pad(cards.length)}`;
         if (progress)
@@ -119,7 +122,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
 
       // DESKTOP: пин + snap, один пункт на сцене
       mm.add('(min-width: 1024px)', () => {
-        const stamped = new Set<number>();
         gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
         gsap.set(cards[0], { autoAlpha: 1 });
         if (verdict) gsap.set(verdict, { autoAlpha: 0 });
@@ -135,13 +137,15 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           );
           if (verdict)
             gsap.to(verdict, { autoAlpha: isVerdict ? 1 : 0, duration: 0.25 });
+          // на вердикте убираем индекс-рейл — приговор занимает сцену чисто
+          if (rail)
+            gsap.to(rail, { autoAlpha: isVerdict ? 0 : 1, duration: 0.25 });
           if (isVerdict) {
             revealVerdict();
             return;
           }
-          stamped.add(i);
           revealCount(cards[i]);
-          setRail(i, stamped.size);
+          setRail(i);
         };
 
         const st = ScrollTrigger.create({
@@ -163,16 +167,14 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
 
       // MOBILE/планшет: без пина, on-enter по стопке
       mm.add('(max-width: 1023px)', () => {
-        const stamped = new Set<number>();
         const triggers = cards.map((card, i) =>
           ScrollTrigger.create({
             trigger: card,
             start: 'top 72%',
             once: true,
             onEnter: () => {
-              stamped.add(i);
               revealCount(card);
-              setRail(i, stamped.size);
+              setRail(i);
             },
           }),
         );
