@@ -37,10 +37,10 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
       };
 
       const mm = gsap.matchMedia();
-      // десктоп: длинный «тяжёлый» пин (мышь крутит быстро — нужно больше пути)
-      mm.add('(min-width: 1024px)', () => build('+=320%', 1));
+      // десктоп: пин покороче + текст быстрее догоняет скролл (scrub 0.6 = отзывчивее)
+      mm.add('(min-width: 1024px)', () => build('+=250%', 0.6));
       // мобайл/планшет: короче (тач уже даёт плавный «тяжёлый» скролл)
-      mm.add('(max-width: 1023px)', () => build('+=150%', 0.6));
+      mm.add('(max-width: 1023px)', () => build('+=130%', 0.6));
 
       return () => {
         mm.revert();

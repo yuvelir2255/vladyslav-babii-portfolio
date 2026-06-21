@@ -6,7 +6,7 @@ import { gsap, ScrollTrigger } from '@/lib/gsap';
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    const lenis = new Lenis({ lerp: 0.09, smoothWheel: true });
     // прелоадер (и др.) могут останавливать/возобновлять скролл
     (window as Window & { __lenis?: Lenis }).__lenis = lenis;
 
