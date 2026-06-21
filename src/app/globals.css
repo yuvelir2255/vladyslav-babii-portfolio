@@ -208,3 +208,8 @@ html.intake-seen .preloader {
   text-transform: uppercase;
   background: rgba(16, 15, 13, 0.5);
 }
+
+/* активный пункт индекс-рейла секции Charges */
+[data-rail-item].is-active {
+  color: var(--color-orange);
+}
