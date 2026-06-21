@@ -7,6 +7,7 @@ import { Hero } from '@/components/hero/Hero';
 import { About } from '@/components/about/About';
 import { Services } from '@/components/services/Services';
 import { Evidence } from '@/components/work/Evidence';
+import { Contact } from '@/components/contact/Contact';
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
           <About />
           <Services />
           <Evidence />
+          <Contact />
         </main>
         <AudioToggle />
       </div>
