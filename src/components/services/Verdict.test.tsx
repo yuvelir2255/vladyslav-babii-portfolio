@@ -14,4 +14,10 @@ describe('Verdict', () => {
       /Guilty on all/i,
     );
   });
+  it('рендерит glow-слой и data-хуки для перехода', () => {
+    const { container } = render(<Verdict />);
+    expect(container.querySelector('[data-verdict-glow]')).not.toBeNull();
+    expect(container.querySelector('[data-verdict-eyebrow]')).not.toBeNull();
+    expect(container.querySelector('[data-verdict-headline]')).not.toBeNull();
+  });
 });
