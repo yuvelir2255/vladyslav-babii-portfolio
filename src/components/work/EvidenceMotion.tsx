@@ -12,123 +12,139 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
       const root = ref.current;
       if (!root) return;
       const section = root.closest('section');
-      if (!section) return;
 
+      // Скраб-ревил: прогресс привязан к положению элемента в скролле.
+      const reveal = (
+        el: Element,
+        vars: gsap.TweenVars,
+        start = 'top 90%',
+        end = 'top 60%',
+      ) =>
+        gsap.from(el, {
+          ...vars,
+          ease: 'none',
+          scrollTrigger: { trigger: el, start, end, scrub: 0.6 },
+        });
+
+      const device = root.querySelector('[data-device]');
+
+      // «пакет» улик — прорисовывается по скроллу
+      if (root.querySelector('[data-bag-draw]')) {
+        gsap.from('[data-bag-draw]', {
+          drawSVG: '0%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: device ?? root,
+            start: 'top 88%',
+            end: 'top 52%',
+            scrub: 0.8,
+          },
+        });
+      }
+
+      // устройство-экспонат
+      if (device)
+        reveal(
+          device,
+          { autoAlpha: 0, y: 44, rotate: -6, transformOrigin: 'center' },
+          'top 88%',
+          'top 54%',
+        );
+
+      // заголовок по словам
       let titleSplit: SplitText | null = null;
+      const title = root.querySelector<HTMLElement>('[data-exhibit-title]');
+      if (title) {
+        titleSplit = new SplitText(title, { type: 'words' });
+        gsap.from(titleSplit.words, {
+          autoAlpha: 0,
+          y: 20,
+          stagger: 0.05,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: title,
+            start: 'top 86%',
+            end: 'top 58%',
+            scrub: 0.6,
+          },
+        });
+      }
 
-      // Реплей: без `once` — onEnter на каждый вход СВЕРХУ ВНИЗ; прошлый таймлайн
-      // убиваем, прошлый SplitText реверсим (иначе вложенные сплиты при повторе).
-      let revealTl: gsap.core.Timeline | null = null;
-      const st = ScrollTrigger.create({
-        trigger: section,
-        start: 'top 72%',
-        onEnter: () => {
-          revealTl?.kill();
-          titleSplit?.revert();
-          titleSplit = null;
-          const tl = (revealTl = gsap.timeline({
-            defaults: { ease: 'power3.out' },
-          }));
+      // маркеры фишек — каждый по своему положению
+      root.querySelectorAll('[data-marker]').forEach((m) =>
+        reveal(m, {
+          autoAlpha: 0,
+          y: 26,
+          scale: 0.92,
+          transformOrigin: 'left center',
+        }),
+      );
 
-          // 1. «пакет» прорисовывается
-          tl.from('[data-bag-draw]', { drawSVG: '0%', duration: 0.7 }, 0);
-
-          // 2. устройство поднимается и доворачивается к камере
-          tl.from(
-            '[data-device]',
-            {
-              autoAlpha: 0,
-              y: 44,
-              rotate: -6,
-              transformOrigin: 'center',
-              duration: 0.9,
-            },
-            0.1,
-          );
-
-          // 3. заголовок экспоната по словам
-          const title = root.querySelector<HTMLElement>('[data-exhibit-title]');
-          if (title) {
-            titleSplit = new SplitText(title, { type: 'words' });
-            tl.from(
-              titleSplit.words,
-              { autoAlpha: 0, y: 20, stagger: 0.05, duration: 0.6 },
-              0.35,
-            );
-          }
-
-          // 4. маркеры падают по очереди + скрэмбл номеров
-          tl.from(
-            '[data-marker]',
-            {
-              autoAlpha: 0,
-              y: 26,
-              scale: 0.9,
-              transformOrigin: 'left center',
-              stagger: 0.12,
-              duration: 0.5,
-              ease: 'back.out(1.7)',
-            },
-            0.5,
-          );
-          root
-            .querySelectorAll<HTMLElement>('[data-marker-num]')
-            .forEach((el, idx) => {
-              const txt = el.textContent || '';
-              tl.to(
-                el,
-                {
+      // скрэмбл номеров маркеров — разовый щелчок при доскролле (скрабить нельзя)
+      const firstMarker = root.querySelector('[data-marker]');
+      if (firstMarker) {
+        let scrambled = false;
+        ScrollTrigger.create({
+          trigger: firstMarker,
+          start: 'top 78%',
+          onEnter: () => {
+            if (scrambled) return;
+            scrambled = true;
+            root
+              .querySelectorAll<HTMLElement>('[data-marker-num]')
+              .forEach((el, idx) => {
+                const txt = el.textContent || '';
+                gsap.to(el, {
                   duration: 0.4,
+                  delay: idx * 0.1,
                   scrambleText: { text: txt, chars: '0123456789' },
-                },
-                0.55 + idx * 0.12,
-              );
-            });
+                });
+              });
+          },
+        });
+      }
 
-          // 5. факты
-          tl.from(
-            '[data-fact]',
-            { autoAlpha: 0, y: 14, stagger: 0.05, duration: 0.4 },
-            0.75,
-          );
+      // факты
+      root
+        .querySelectorAll('[data-fact]')
+        .forEach((f) => reveal(f, { autoAlpha: 0, y: 14 }));
 
-          // 6. слэм-штамп ADMITTED + микро-тряска сцены
-          tl.from(
-            '[data-admitted]',
-            {
-              autoAlpha: 0,
-              scale: 1.8,
-              rotate: -20,
-              transformOrigin: 'center',
-              duration: 0.5,
-              ease: 'back.out(1.7)',
-            },
-            1.05,
-          );
-          tl.add(
-            () =>
+      // штамп ADMITTED + микро-тряска — разовый щелчок при доскролле
+      const admitted = root.querySelector('[data-admitted]');
+      if (admitted) {
+        gsap.from('[data-admitted]', {
+          autoAlpha: 0,
+          scale: 1.8,
+          rotate: -20,
+          transformOrigin: 'center',
+          duration: 0.5,
+          ease: 'back.out(1.7)',
+          scrollTrigger: {
+            trigger: admitted,
+            start: 'top 84%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+        if (section) {
+          ScrollTrigger.create({
+            trigger: admitted,
+            start: 'top 84%',
+            onEnter: () =>
               gsap.fromTo(
                 section,
                 { x: -4 },
                 { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.45)' },
               ),
-            1.1,
-          );
+          });
+        }
+      }
 
-          // 7. chain of custody проявляется
-          tl.from(
-            '[data-custody-row]',
-            { autoAlpha: 0, y: 16, stagger: 0.08, duration: 0.5 },
-            1.15,
-          );
-        },
-      });
+      // chain of custody — построчно по скроллу
+      root
+        .querySelectorAll('[data-custody-row]')
+        .forEach((r) => reveal(r, { autoAlpha: 0, y: 16 }));
 
-      return () => {
-        revealTl?.kill();
-        st.kill();
-        titleSplit?.revert();
-      };
+      return () => titleSplit?.revert();
     },
     { scope: ref },
   );
