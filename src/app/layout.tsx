@@ -30,10 +30,29 @@ const marker = Permanent_Marker({
   variable: '--font-marker',
 });
 
+const SITE_DESCRIPTION =
+  'I build products people use — Telegram Mini Apps, websites and AI tools that ship and take real orders.';
+
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : 'http://localhost:3000',
+  ),
   title: 'Vladyslav Babii — Case File',
-  description:
-    'I build products people use — Telegram Mini Apps, websites and AI tools that ship and take real orders.',
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: 'website',
+    title: 'Vladyslav Babii — Case File',
+    description: SITE_DESCRIPTION,
+    siteName: 'Vladyslav Babii',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Vladyslav Babii — Case File',
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

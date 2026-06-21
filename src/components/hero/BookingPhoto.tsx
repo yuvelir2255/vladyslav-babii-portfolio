@@ -13,7 +13,7 @@ export function BookingPhoto() {
         height={640}
         sizes="(max-width: 790px) 300px, (max-width: 1264px) 38vw, 480px"
         priority
-        className="block w-full rounded-[10px] border border-[var(--color-line)] shadow-[0_30px_70px_rgba(0,0,0,0.55)]"
+        className="block h-auto w-full rounded-[10px] shadow-[0_30px_70px_rgba(0,0,0,0.55)] ring-1 ring-[var(--color-line)] ring-inset"
       />
       <Placard />
     </div>
