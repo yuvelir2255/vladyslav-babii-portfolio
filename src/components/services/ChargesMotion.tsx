@@ -27,7 +27,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const rail = root.querySelector<HTMLElement>('[data-rail]');
       const pad = (n: number) => String(n).padStart(2, '0');
 
-      // общий one-shot слэм одного пункта (desktop и mobile)
+      // общий one-shot слэм одного пункта
       const revealCount = (card: HTMLElement) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
         const charge = card.querySelector<HTMLElement>('[data-count-charge]');
@@ -118,13 +118,14 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         );
       };
 
-      const mm = gsap.matchMedia();
-
-      // DESKTOP: пин + snap, один пункт на сцене
-      mm.add('(min-width: 1024px)', () => {
+      // единое поведение для всех экранов: пин + snap, один пункт на сцене.
+      // pct — длина пиннинга на шаг (desktop длиннее: мышь крутит быстро).
+      const build = (pct: number) => {
         gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
         gsap.set(cards[0], { autoAlpha: 1 });
-        if (verdict) gsap.set(verdict, { autoAlpha: 0 });
+        if (verdict)
+          gsap.set(verdict, { position: 'absolute', inset: 0, autoAlpha: 0 });
+        if (rail) gsap.set(rail, { autoAlpha: 1 });
 
         let current = -1;
         const total = cards.length + 1; // counts + verdict
@@ -151,7 +152,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         const st = ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: `+=${total * 90}%`,
+          end: `+=${total * pct}%`,
           pin: true,
           scrub: true,
           snap: {
@@ -163,33 +164,11 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         });
         show(0);
         return () => st.kill();
-      });
+      };
 
-      // MOBILE/планшет: без пина, on-enter по стопке
-      mm.add('(max-width: 1023px)', () => {
-        const triggers = cards.map((card, i) =>
-          ScrollTrigger.create({
-            trigger: card,
-            start: 'top 72%',
-            once: true,
-            onEnter: () => {
-              revealCount(card);
-              setRail(i);
-            },
-          }),
-        );
-        if (verdict) {
-          triggers.push(
-            ScrollTrigger.create({
-              trigger: verdict,
-              start: 'top 78%',
-              once: true,
-              onEnter: revealVerdict,
-            }),
-          );
-        }
-        return () => triggers.forEach((t) => t.kill());
-      });
+      const mm = gsap.matchMedia();
+      mm.add('(min-width: 1024px)', () => build(90));
+      mm.add('(max-width: 1023px)', () => build(64));
 
       return () => mm.revert();
     },

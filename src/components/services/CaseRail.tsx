@@ -7,7 +7,7 @@ export function CaseRail() {
     <aside
       data-rail
       aria-hidden="true"
-      className="pointer-events-none absolute top-1/2 right-0 hidden -translate-y-1/2 flex-col items-end gap-3 lg:flex"
+      className="pointer-events-none absolute top-1/2 right-0 flex -translate-y-1/2 flex-col items-end gap-3 max-md:gap-2"
     >
       <span
         data-rail-tally
@@ -29,7 +29,7 @@ export function CaseRail() {
       <span className="mt-1 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.12em] text-[var(--color-dim)] uppercase">
         Sentence
       </span>
-      <div className="mt-2 h-[3px] w-[120px] bg-[#2a2620]">
+      <div className="mt-2 h-[3px] w-[120px] bg-[#2a2620] max-md:w-[64px]">
         <div
           data-rail-progress
           className="h-full w-full origin-left scale-x-[0.2] bg-[var(--color-orange)]"

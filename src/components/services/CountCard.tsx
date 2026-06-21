@@ -4,24 +4,17 @@ type Count = (typeof services.counts)[number];
 
 export function CountCard({
   count,
-  total,
 }: {
   count: { n: string; charge: string; gloss: string; plea: string };
   total: number;
 }) {
   return (
-    <li
-      data-count
-      className="relative flex flex-col justify-center max-lg:min-h-[78vh]"
-    >
-      <span className="mb-3 inline-flex items-center gap-3 text-[11px] tracking-[0.25em] text-[var(--color-dim)] uppercase">
-        <span aria-hidden="true">Count</span>
-        <span className="text-[var(--color-orange)] lg:hidden">
-          {count.n} / {String(total).padStart(2, '0')}
-        </span>
+    <li data-count className="flex flex-col justify-center pr-28 max-md:pr-16">
+      <span className="mb-3 text-[11px] tracking-[0.25em] text-[var(--color-dim)] uppercase">
+        Count
       </span>
 
-      <div className="flex items-start gap-6 max-md:flex-col max-md:gap-3">
+      <div className="flex items-start gap-6 max-md:flex-col max-md:gap-2">
         <span
           data-count-num
           aria-hidden="true"
@@ -30,7 +23,7 @@ export function CountCard({
           {count.n}
         </span>
 
-        <div className="pt-2">
+        <div className="pt-2 max-md:pt-0">
           <h3
             data-count-charge
             className="max-w-[14ch] font-[family-name:var(--font-display)] text-[clamp(28px,4vw,46px)] leading-[1.02] tracking-[0.01em] text-[var(--color-bone)] uppercase"
@@ -39,7 +32,7 @@ export function CountCard({
           </h3>
           <p
             data-count-gloss
-            className="mt-4 max-w-[42ch] text-[14px] leading-[1.6] text-[var(--color-steel)]"
+            className="mt-4 max-w-[42ch] text-[14px] leading-[1.6] text-[var(--color-steel)] max-md:mt-3"
           >
             {count.gloss}
           </p>
@@ -49,7 +42,7 @@ export function CountCard({
       <span
         data-count-stamp
         aria-hidden="true"
-        className="relative mt-6 inline-flex w-fit items-center justify-center"
+        className="relative mt-6 inline-flex w-fit items-center justify-center max-md:mt-5"
       >
         <svg
           viewBox="0 0 168 56"
