@@ -110,9 +110,11 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           });
       };
 
-      // pin + snap для counts; финал 05→вердикт — непрерывный «collapse» по скроллу.
-      // pct — длина пиннинга на шаг; withBlur — desktop (blur) vs mobile (без blur).
-      const build = (pct: number, withBlur: boolean) => {
+      // pin + snap. Тайминги РАЗВЕДЕНЫ:
+      //  countPct — длина пина на переключение пункта (короче = быстрее листать колесом);
+      //  finalPct — длина пина на финал-коллапс 05→вердикт (длиннее = плавный переход).
+      //  withBlur — desktop (blur) vs mobile (без blur).
+      const build = (countPct: number, finalPct: number, withBlur: boolean) => {
         gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
         gsap.set(cards[0], { autoAlpha: 1 });
 
@@ -137,10 +139,20 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         const revealed = new Set<number>();
         let current = -1;
         const lastIdx = cards.length - 1; // count 05
-        const total = cards.length + 1; // counts + verdict
-        const segs = total - 1; // число сегментов прогресса
+        const total = cards.length + 1; // snap-точек (counts + verdict)
+        const countSegs = cards.length - 1; // сегментов «пункт→пункт»
         let inFinal = false;
         let eyebrowDone = false;
+
+        // прогресс-границы каждой snap-точки: counts короче, финал длиннее
+        const totalPct = countSegs * countPct + finalPct;
+        const bounds: number[] = [];
+        let acc = 0;
+        for (let i = 0; i < total; i++) {
+          bounds.push(acc / totalPct);
+          acc += i < countSegs ? countPct : finalPct;
+        }
+        const lastBound = bounds[lastIdx]; // прогресс на count 05
 
         // дискретная дека для counts 0..lastIdx
         const show = (i: number) => {
@@ -154,6 +166,15 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             revealCount(cards[i], splits[i]?.words ?? []);
           }
           setRail(i);
+        };
+
+        // ближайший пункт по прогрессу (переключение на середине между snap-точками)
+        const nearestCount = (prog: number) => {
+          let idx = 0;
+          for (let i = 0; i < lastIdx; i++) {
+            if (prog >= (bounds[i] + bounds[i + 1]) / 2) idx = i + 1;
+          }
+          return idx;
         };
 
         // сброс «collapse» к базе обвинения (при отмотке вверх из финала)
@@ -246,22 +267,22 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         const st = ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: `+=${total * pct}%`,
+          end: `+=${totalPct}%`,
           pin: true,
           scrub: true,
           snap: {
-            snapTo: 1 / segs,
+            snapTo: bounds,
             duration: 0.3,
             ease: 'power1.inOut',
           },
           onUpdate: (self) => {
-            const pos = self.progress * segs;
-            if (pos <= lastIdx) {
+            const prog = self.progress;
+            if (prog <= lastBound) {
               if (inFinal) exitFinal();
-              show(Math.round(pos));
+              show(nearestCount(prog));
             } else {
               enterFinal();
-              collapseRender(pos - lastIdx);
+              collapseRender((prog - lastBound) / (1 - lastBound));
             }
           },
         });
@@ -274,8 +295,10 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       };
 
       const mm = gsap.matchMedia();
-      mm.add('(min-width: 1024px)', () => build(72, true));
-      mm.add('(max-width: 1023px)', () => build(52, false));
+      // desktop: пункты быстрее (58), финал-коллапс плавный (72), с blur
+      mm.add('(min-width: 1024px)', () => build(58, 72, true));
+      // mobile/планшет: короче и без blur
+      mm.add('(max-width: 1023px)', () => build(44, 52, false));
 
       return () => mm.revert();
     },
