@@ -17,7 +17,6 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
         const tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
         tl.to('[data-bars-left]', { xPercent: -110, duration: 0.9 }, 0);
         tl.to('[data-bars-right]', { xPercent: 110, duration: 0.9 }, 0);
-        tl.to('[data-lockplate]', { autoAlpha: 0, duration: 0.3 }, 0);
         tl.to('[data-daylight]', { opacity: 0.55, duration: 1.1 }, 0.1);
       };
       window.addEventListener('vb:released', release);
@@ -40,9 +39,6 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
         .forEach((b) =>
           reveal(b, { autoAlpha: 0, y: -28 }, 'top 96%', 'top 72%'),
         );
-
-      const lockplate = root.querySelector('[data-lockplate]');
-      if (lockplate) reveal(lockplate, { autoAlpha: 0, y: -10 });
 
       root
         .querySelectorAll('[data-contact-reveal]')

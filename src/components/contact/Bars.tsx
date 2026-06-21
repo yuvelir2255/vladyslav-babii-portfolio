@@ -31,13 +31,6 @@ export function Bars() {
         className="absolute inset-y-0 right-0 w-1/2"
         style={{ backgroundImage: barGrad }}
       />
-      {/* плашка-замок */}
-      <div
-        data-lockplate
-        className="absolute top-16 left-1/2 -translate-x-1/2 rounded-[3px] border border-[var(--color-line)] bg-[rgba(16,15,13,0.9)] px-3 py-1.5 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--color-orange)] uppercase"
-      >
-        ● Visiting Hours
-      </div>
     </div>
   );
 }
