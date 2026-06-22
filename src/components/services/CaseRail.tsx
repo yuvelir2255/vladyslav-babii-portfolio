@@ -34,7 +34,7 @@ export function CaseRail() {
           01 / {total}
         </span>
       </div>
-      <div className="h-[3px] w-[280px] bg-[#2a2620] max-md:w-[180px]">
+      <div className="h-[3px] w-[280px] bg-[var(--color-surface)] max-md:w-[180px]">
         <div
           data-rail-progress
           className="h-full w-full origin-left scale-x-[0.2] bg-[var(--color-orange)]"

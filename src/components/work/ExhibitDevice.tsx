@@ -40,7 +40,7 @@ export function ExhibitDevice() {
         </svg>
 
         {/* бирка chain-of-custody */}
-        <div className="absolute -top-3 left-1/2 z-20 flex -translate-x-1/2 -rotate-3 items-center gap-2 rounded-[3px] border border-[var(--color-line)] bg-[rgba(16,15,13,0.9)] px-2.5 py-1">
+        <div className="absolute -top-3 left-1/2 z-20 flex -translate-x-1/2 -rotate-3 items-center gap-2 rounded-[3px] border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] px-2.5 py-1">
           <svg aria-hidden="true" viewBox="0 0 30 12" className="h-3 w-[30px]">
             <g fill="var(--color-steel)">
               <rect x="0" y="0" width="2" height="12" />
@@ -84,7 +84,7 @@ export function ExhibitDevice() {
             <span aria-hidden="true" className="ev-scan" />
 
             {/* подпись текущего кадра */}
-            <span className="absolute bottom-2 left-2 z-10 rounded-[3px] bg-[rgba(16,15,13,0.7)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-bone)] uppercase">
+            <span className="absolute bottom-2 left-2 z-10 rounded-[3px] bg-[color-mix(in_srgb,var(--color-bg)_70%,transparent)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-bone)] uppercase">
               {shots[i].label}
             </span>
           </div>

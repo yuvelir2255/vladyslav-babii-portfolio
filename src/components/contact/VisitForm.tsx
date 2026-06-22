@@ -8,7 +8,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
 type FieldName = 'name' | 'email' | 'project';
 
 const field =
-  'mt-1 w-full rounded border border-[var(--color-line)] bg-[rgba(16,15,13,0.6)] px-3 py-2.5 text-[14px] text-[var(--color-bone)] placeholder:text-[var(--color-dim)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)] aria-[invalid=true]:border-[var(--color-orange)]';
+  'mt-1 w-full rounded border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_60%,transparent)] px-3 py-2.5 text-[14px] text-[var(--color-bone)] placeholder:text-[var(--color-dim)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)] aria-[invalid=true]:border-[var(--color-orange)]';
 const labelCls =
   'block text-[11px] tracking-[0.14em] text-[var(--color-dim)] uppercase';
 const errCls = 'mt-1 text-[12px] text-[var(--color-orange)]';
@@ -200,7 +200,7 @@ export function VisitForm() {
         type="submit"
         disabled={status === 'sending'}
         aria-busy={status === 'sending'}
-        className="min-h-[44px] rounded bg-[var(--color-orange)] px-6 py-3 text-[12px] font-bold tracking-[0.06em] text-[#160d06] uppercase transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)] disabled:opacity-60"
+        className="min-h-[44px] rounded bg-[var(--color-orange)] px-6 py-3 text-[12px] font-bold tracking-[0.06em] text-[var(--color-on-orange)] uppercase transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)] disabled:opacity-60"
       >
         {status === 'sending' ? c.sending : c.submit}
       </button>

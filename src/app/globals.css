@@ -8,6 +8,10 @@
   --color-orange: #ff5a1e;
   --color-orange-soft: color-mix(in srgb, var(--color-orange) 12%, transparent);
   --color-line: rgba(236, 231, 218, 0.12);
+  /* роль «текст на оранжевом» (контрастный тёмный) */
+  --color-on-orange: #160d06;
+  /* приподнятая бетонная поверхность (рейл прогресса, верх радиального градиента) */
+  --color-surface: #2a2620;
 
   --font-display: var(--font-anton), 'Arial Narrow', sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
@@ -149,7 +153,7 @@ html.intake-seen .preloader {
   top: -12px;
   z-index: 3;
   background: var(--color-orange);
-  color: #160d06;
+  color: var(--color-on-orange);
   font: 700 10px var(--font-mono);
   letter-spacing: 0.06em;
   padding: 5px 9px;
@@ -169,7 +173,7 @@ html.intake-seen .preloader {
   font: 18px var(--font-stencil);
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(16, 15, 13, 0.55);
+  background: color-mix(in srgb, var(--color-bg) 55%, transparent);
 }
 
 /* досье: рассекречивание (redaction) */
@@ -285,7 +289,7 @@ html.cursor-custom * {
   font: 22px var(--font-stencil);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: rgba(16, 15, 13, 0.5);
+  background: color-mix(in srgb, var(--color-bg) 50%, transparent);
 }
 
 /* активный пункт индекс-рейла секции Charges */
@@ -390,7 +394,7 @@ html.cursor-custom * {
   font: 20px var(--font-stencil);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  background: rgba(16, 15, 13, 0.5);
+  background: color-mix(in srgb, var(--color-bg) 50%, transparent);
 }
 
 /* EVID-02 «pending evidence slot» */

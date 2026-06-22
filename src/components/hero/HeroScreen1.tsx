@@ -31,7 +31,7 @@ export function HeroScreen1() {
             <a
               href={hero.cta[0].href}
               data-magnetic
-              className="group rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[#160d06] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)]"
+              className="group rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[var(--color-on-orange)] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)]"
             >
               <RollText>
                 {hero.cta[0].label}

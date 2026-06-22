@@ -109,7 +109,7 @@ export function FileNav() {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={open ? 'Close directory' : 'Open directory'}
-        className="flex min-h-[44px] items-center gap-3 rounded-full border border-[var(--color-line)] bg-[rgba(16,15,13,0.72)] px-4 py-2.5 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.14em] text-[var(--color-bone)] uppercase backdrop-blur transition-colors hover:border-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+        className="flex min-h-[44px] items-center gap-3 rounded-full border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_72%,transparent)] px-4 py-2.5 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.14em] text-[var(--color-bone)] uppercase backdrop-blur transition-colors hover:border-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
       >
         <span className="text-[var(--color-orange)]">●</span>
         <span>VB-19</span>
@@ -134,7 +134,7 @@ export function FileNav() {
       <nav
         ref={panelRef}
         aria-hidden={!open}
-        className="grain invisible absolute top-[calc(100%+8px)] left-1/2 w-[230px] -translate-x-1/2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-[rgba(16,15,13,0.92)] p-2 backdrop-blur"
+        className="grain invisible absolute top-[calc(100%+8px)] left-1/2 w-[230px] -translate-x-1/2 overflow-hidden rounded-xl border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_92%,transparent)] p-2 backdrop-blur"
       >
         <p className="px-3 py-2 text-[10px] tracking-[0.2em] text-[var(--color-dim)] uppercase">
           Cell-block directory

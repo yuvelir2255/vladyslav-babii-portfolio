@@ -29,11 +29,13 @@
   - (Отложено как opt) bloom blur max / box-shadow-ховеры — заметного джанка не выявлено, трогать не стал.
   Проверено: 75/75 тестов, build/typecheck чисто, канвас рендерится, CSS компилируется.
 
-- [ ] **P2-theme/symmetry · `/impeccable extract` → токены**
-  - `--color-on-orange (#160d06 ×3)`, `--color-surface (#2a2620 ×2)`, scrim через `color-mix(--color-bg)` (вместо rgba ×8 / 7 альф).
-  - Шкала бордер-радиусов (`3/6/8/10/14…` → `--r-sm/md/lg`).
-  - z-index — карта слоёв/переменные (`--z-chrome/cursor/overlay`).
-  - Унифицировать: flex-ratio колонок (3 разных), `max-w` Services 1200→1100, размеры штампов (18/20/22→единый), вертикальный ритм `py-24` vs `py-28`.
+- [x] **P2-theme · токены + align-fix** (выбран консервативный объём — владелец) — ✅ ИСПРАВЛЕНО.
+  - `--color-on-orange (#160d06)` + `--color-surface (#2a2620)` в `@theme` → заменены все usages (HeroScreen1, VisitForm, .evtag / ConcreteBg-градиент, CaseRail). Значения 1:1.
+  - scrim: все `rgba(16,15,13,A)` (×9: globals.css штампы, FileNav, ExhibitDevice, AudioToggle, VisitForm) → `color-mix(in srgb, var(--color-bg) A%, transparent)`. Убрана дупликация bg сырым rgb; **значения 1:1** (проверено вычисленным стилем: `srgb(16,15,13)/0.72`).
+  - **align-fix:** Services `max-w-[1200px]` → `1100px` (шапка Charges выровнена с About/Evidence/Contact).
+  - **СОЗНАТЕЛЬНО НЕ делал** (по решению владельца — feel-тюнинг не трогаем): унификация flex-пропорций колонок, размеров штампов (18/20/22), ритма py-28→py-24.
+  - **Отложено в бэклог** (pure-maintainability, value-preserving, churny): шкала бордер-радиусов в токены; z-index в CSS-переменные (сейчас числовые `z-50/60/70/100` + локальные — без магии 9999, читаемо).
+  Проверено: build/typecheck/75 тестов чисто, вычисленные цвета идентичны (0 визуальных изменений).
 
 ## P3 — полировка (`/impeccable polish`)
 
@@ -61,5 +63,5 @@
 | P1-3 | ✅ готово | feat-ветка |
 | P1-4 | ✅ готово | feat-ветка |
 | P2-perf | ✅ готово | feat-ветка |
-| P2-theme | ⬜ | — |
+| P2-theme | ✅ готово (consv) | feat-ветка |
 | P3 | ⬜ | — |

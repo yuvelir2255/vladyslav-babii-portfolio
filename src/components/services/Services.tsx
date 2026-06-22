@@ -13,7 +13,7 @@ export function Services() {
       <ChargesMotion>
         <div
           data-charges-stage
-          className="relative mx-auto flex min-h-screen w-full max-w-[1200px] flex-col justify-center py-20"
+          className="relative mx-auto flex min-h-screen w-full max-w-[1100px] flex-col justify-center py-20"
         >
           <header data-charges-header className="mb-10 max-md:mb-6">
             <p className="text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
