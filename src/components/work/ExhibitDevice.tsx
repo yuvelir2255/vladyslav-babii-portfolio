@@ -17,7 +17,7 @@ export function ExhibitDevice() {
 
   return (
     <div className="relative mx-auto w-[min(280px,72vw)]">
-      <div data-device className="relative">
+      <div data-device className="ev-device relative">
         {/* пакет для улик */}
         <svg
           aria-hidden="true"
@@ -53,27 +53,35 @@ export function ExhibitDevice() {
               <rect x="27" y="0" width="1" height="12" />
             </g>
           </svg>
-          <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-orange)] uppercase">
+          <span
+            data-ev-tag
+            className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-orange)] uppercase"
+          >
             {code}
           </span>
         </div>
 
         {/* телефон */}
-        <div className="relative rounded-[30px] border border-[var(--color-line)] bg-[#1a1815] p-[8px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
+        <div className="ev-phone relative rounded-[30px] border border-[var(--color-line)] bg-[#1a1815] p-[8px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)]">
           <div className="relative aspect-[1290/2422] overflow-hidden rounded-[22px] bg-[#0d0c0a]">
-            {shots.map((s, idx) => (
-              <Image
-                key={s.src}
-                src={s.src}
-                alt={s.alt}
-                fill
-                sizes="280px"
-                priority={idx === 0}
-                className={`object-cover transition-opacity duration-700 ${
-                  idx === i ? 'opacity-100' : 'opacity-0'
-                }`}
-              />
-            ))}
+            <div data-ev-zoom className="absolute inset-0">
+              {shots.map((s, idx) => (
+                <Image
+                  key={s.src}
+                  src={s.src}
+                  alt={s.alt}
+                  fill
+                  sizes="280px"
+                  priority={idx === 0}
+                  className={`object-cover transition-opacity duration-700 ${
+                    idx === i ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+            </div>
+
+            {/* скан-линия forensic-inspect */}
+            <span aria-hidden="true" className="ev-scan" />
 
             {/* подпись текущего кадра */}
             <span className="absolute bottom-2 left-2 z-10 rounded-[3px] bg-[rgba(16,15,13,0.7)] px-2 py-1 font-[family-name:var(--font-mono)] text-[10px] tracking-[0.14em] text-[var(--color-bone)] uppercase">
