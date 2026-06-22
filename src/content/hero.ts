@@ -1,5 +1,5 @@
 export const hero = {
-  meta: 'CASE FILE №VB-19 · KHARKIV → WARSAW · AT LARGE',
+  meta: 'CASE FILE №VB-19 · KHARKIV → WARSAW',
   name: ['Vladyslav', 'Babii'] as const,
   role: 'Telegram Mini Apps · Websites · AI Integrations',
   placard: {
