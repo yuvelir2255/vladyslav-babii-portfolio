@@ -5,8 +5,8 @@ import { gsap } from '@/lib/gsap';
 
 // фоновый трек (loop). preload="none" — грузится только по клику, не на init.
 const SRC = '/audio/breakbeat.mp3';
-// тихий фон: целевая громкость (понижено 0.4 → 0.05)
-const VOLUME = 0.05;
+// тихий фон: целевая громкость (понижено 0.4 → 0.01)
+const VOLUME = 0.01;
 
 export function AudioToggle() {
   const audioRef = useRef<HTMLAudioElement>(null);
