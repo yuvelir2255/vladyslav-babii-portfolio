@@ -10,6 +10,12 @@ export const contact = {
     sending: 'Sending…',
     success: "Released — your message is on its way. I'll reply soon.",
     error: 'Something went wrong. Email me directly: vladbabii31@gmail.com',
+    errors: {
+      name: 'Please enter your name.',
+      emailRequired: 'Please enter your email.',
+      emailInvalid: 'Please enter a valid email address.',
+      project: 'Tell me what you want built.',
+    },
   },
   channels: [
     {

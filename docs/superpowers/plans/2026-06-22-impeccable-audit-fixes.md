@@ -11,8 +11,8 @@
   Фикс: глобальная страховка `html { overflow-x: clip }` (clip не создаёт скролл-контейнер, не ломает pin/sticky, не трогает overflow-y). Проверить: 375 overflow=0, пины (Services) работают, слэмы видны, консоль чистая.
   Категория: Responsive. → поднимает Responsive 2→4.
 
-- [ ] **P1-2 · Форма без инлайн-валидации/индикаторов** — `VisitForm.tsx`.
-  Пер-полевая клиентская валидация (name/email/project), `aria-describedby` на ошибках полей, `role="alert"` на блоке ошибки (вместо `aria-live=polite`), индикатор «обязательно». Чтобы при пустом поле не улетал 422 с общим «Something went wrong».
+- [x] **P1-2 · Форма без инлайн-валидации/индикаторов** — ✅ ИСПРАВЛЕНО.
+  Валидация вынесена в чистый `src/lib/contact-validation.ts` (изоляция: клиент не тащит Telegram-send; `telegram.ts` реэкспортит). `VisitForm` теперь: пер-полевая клиентская валидация (та же `validateContact`, что на сервере), `aria-invalid` + `aria-describedby` + `role="alert"` на пер-полевых ошибках, `*`-индикатор «обязательно» (вне `<label>`, чтобы не пачкать accessible-name), фокус на первое невалидное, `aria-busy` при отправке, success → `role="status"`. Копи ошибок в `content/contact.ts` (`form.errors`). TDD: +3 теста (пустой/битый сабмит без fetch, очистка ошибки на вводе). Проверено: 74/74 тестов, build/typecheck чисто, живой eval (3 ошибки + фокус vf-name).
 
 - [ ] **P1-3 · FileNav не подсвечивает текущую секцию** — `FileNav.tsx`.
   IntersectionObserver/ScrollTrigger → `aria-current="true"` + визуальная подсветка активного пункта (scroll-spy).
@@ -42,6 +42,10 @@
 - [ ] Точки карусели различимы не только цветом (размер/обводка активной).
 - [ ] About `inmate-build.webp` → `priority` (LCP при заходе с якоря).
 
+## Замечено по ходу (добавить в P3/бэклог)
+
+- [ ] Console `[error]`: «Encountered a script tag while rendering React component» — inline `<script>` в `layout.tsx` (intake-detection через `dangerouslySetInnerHTML`). Пред-существующее, на прод не влияет (SSR-скрипт исполняется до гидрации), но шумит в консоли preview. Рассмотреть `next/script` strategy=beforeInteractive или вынести в отдельный механизм.
+
 ## Систeмное (фон)
 
 - «Система на 80%» — много раскладочных констант магией → закрывает P2-extract.
@@ -52,7 +56,7 @@
 | Блок | Статус | Коммит |
 | --- | --- | --- |
 | P1-1 | ✅ готово | feat-ветка |
-| P1-2 | ⬜ | — |
+| P1-2 | ✅ готово | feat-ветка |
 | P1-3 | ⬜ | — |
 | P1-4 | ⬜ | — |
 | P2-perf | ⬜ | — |

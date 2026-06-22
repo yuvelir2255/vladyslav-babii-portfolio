@@ -1,38 +1,18 @@
 /**
- * Contact-form helpers + Telegram Bot API send. Secrets are read from env on the
- * server only (never shipped to the client).
+ * Telegram Bot API send + message builder. Secrets are read from env on the
+ * server only (never shipped to the client). Validation lives in
+ * contact-validation.ts (pure, client-safe) and is re-exported here for the API
+ * route and existing tests.
  */
 
-export interface ContactInput {
-  name: string;
-  email: string;
-  project: string;
-  /** Honeypot — real users leave this empty. */
-  company?: string;
-}
+import type { ContactInput } from './contact-validation';
 
-export type ContactErrors = Partial<
-  Record<'name' | 'email' | 'project', string>
->;
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-export function validateContact(input: Partial<ContactInput>): {
-  ok: boolean;
-  errors: ContactErrors;
-} {
-  const errors: ContactErrors = {};
-  if (!input.name?.trim()) errors.name = 'required';
-  if (!input.email?.trim()) errors.email = 'required';
-  else if (!EMAIL_RE.test(input.email.trim())) errors.email = 'invalid';
-  if (!input.project?.trim()) errors.project = 'required';
-  return { ok: Object.keys(errors).length === 0, errors };
-}
-
-/** True when the honeypot field is filled (i.e. a bot). */
-export function isSpam(input: Partial<ContactInput>): boolean {
-  return Boolean(input.company && input.company.trim().length > 0);
-}
+export type {
+  ContactInput,
+  ContactErrors,
+  ContactField,
+} from './contact-validation';
+export { validateContact, isSpam } from './contact-validation';
 
 export function buildTelegramMessage(input: ContactInput): string {
   return [
