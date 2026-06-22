@@ -1,7 +1,7 @@
 export const hero = {
   meta: 'CASE FILE №VB-19 · KHARKIV → WARSAW · AT LARGE',
   name: ['Vladyslav', 'Babii'] as const,
-  role: 'Telegram Mini Apps · Websites · AI Products',
+  role: 'Telegram Mini Apps · Websites · AI Integrations',
   placard: {
     dept: 'Dept. of Shipping',
     number: 'VB-19',
@@ -21,11 +21,9 @@ export const hero = {
   ],
   manifest: [
     { t: "I don't write demos. I build products that " },
-    { t: 'escape the lab', o: true },
+    { t: 'break out of the cell', o: true },
     { t: ' and take ' },
     { t: 'real orders', o: true },
-    { t: '. Whatever I start — I ' },
-    { t: 'break out', o: true },
-    { t: ' with it finished.' },
+    { t: '.' },
   ],
 } as const;

@@ -1,7 +1,8 @@
 import { evidence } from '@/content/evidence';
 import { ExhibitDevice } from './ExhibitDevice';
 import { EvidenceMarkers } from './EvidenceMarkers';
-import { ChainOfCustody } from './ChainOfCustody';
+import { ExhibitLinks } from './ExhibitLinks';
+import { PendingExhibit } from './PendingExhibit';
 import { EvidenceMotion } from './EvidenceMotion';
 
 export function Evidence() {
@@ -61,10 +62,12 @@ export function Evidence() {
               <p className="mt-5 text-[12px] tracking-[0.04em] text-[var(--color-dim)]">
                 {exhibit.tags.join(' · ')}
               </p>
+
+              <ExhibitLinks />
             </div>
           </div>
 
-          <ChainOfCustody />
+          <PendingExhibit />
         </div>
       </EvidenceMotion>
     </section>

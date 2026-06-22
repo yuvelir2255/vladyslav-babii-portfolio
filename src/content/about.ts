@@ -10,24 +10,25 @@ export const about = {
   redacted: [
     {
       k: 'Prior record',
-      v: "Ran my own projects before writing a line of code — shipped, didn't just plan.",
+      v: 'Ran real businesses before writing a single line of code. Learned to ship by shipping.',
     },
     {
       k: 'Charges / M.O.',
-      v: 'Designs, builds and ships real products — not demos. A real business takes orders through what he made.',
+      v: 'Designs, builds, and ships — not demos. A live jewelry business runs on the Mini App he built.',
     },
   ],
   disposition:
-    'Reads a build like an owner: from the first pixel to the bottom line. Whatever he starts, he finishes.',
+    'Treats every build like his own product: from the first pixel to final deploy. ',
   status: 'At large',
   tools: [
     'React',
     'TypeScript',
     'Next.js',
+    'Vite',
     'GSAP',
     'WebGL',
     'Supabase',
     'OpenAI',
-    'Telegram',
+    'Telegram Bot API',
   ],
 } as const;

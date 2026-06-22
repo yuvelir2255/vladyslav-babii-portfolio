@@ -282,6 +282,69 @@ html.intake-seen .preloader {
   color: var(--color-orange);
 }
 
+/* секция Charges: карта-обвинение «charge sheet» */
+.charge-card {
+  width: 560px;
+  height: 60vh;
+  min-height: 420px;
+  max-height: 580px;
+  border: 1px solid var(--color-line);
+  border-radius: 14px;
+  background: rgba(20, 18, 16, 0.5);
+  overflow: hidden;
+}
+@media (max-width: 1023px) {
+  .charge-card {
+    width: 82vw;
+    max-width: 460px;
+    height: 56vh;
+    min-height: 380px;
+  }
+}
+.charge-corner {
+  position: absolute;
+  z-index: 2;
+  width: 13px;
+  height: 13px;
+  border-color: var(--color-steel);
+  opacity: 0.45;
+  pointer-events: none;
+}
+.charge-corner--tl {
+  top: 9px;
+  left: 9px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.charge-corner--tr {
+  top: 9px;
+  right: 9px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+.charge-corner--bl {
+  bottom: 9px;
+  left: 9px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+.charge-corner--br {
+  bottom: 9px;
+  right: 9px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+.charge-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 3px,
+    rgba(255, 255, 255, 0.014) 3px 4px
+  );
+}
+
 /* авторская подпись (Contact): мягкая feathered-маска появления имени.
    --reveal 0→1 анимируется в ReleaseMotion (scroll-scrub); 18% мягкий край
    даёт «проявление чернил» без жёсткой кромки. По умолчанию 1 — если JS не
@@ -317,4 +380,60 @@ html.intake-seen .preloader {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   background: rgba(16, 15, 13, 0.5);
+}
+
+/* EVID-02 «pending evidence slot» */
+.stamp-pending {
+  flex: none;
+  transform: rotate(7deg);
+  border: 3px dashed var(--color-steel);
+  color: var(--color-steel);
+  border-radius: 6px;
+  padding: 5px 16px;
+  font: 20px var(--font-stencil);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+/* пульсирующий статус-индикатор */
+.pending-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--color-orange);
+  animation: pending-pulse 1.8s ease-in-out infinite;
+}
+@keyframes pending-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--color-orange-soft);
+  }
+  50% {
+    opacity: 0.35;
+    box-shadow: 0 0 0 5px transparent;
+  }
+}
+/* мягкий скан-луч «в обработке» по карте слота */
+.pending-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    color-mix(in srgb, var(--color-orange) 9%, transparent) 50%,
+    transparent 58%
+  );
+  background-size: 220% 100%;
+  mix-blend-mode: screen;
+  animation: pending-sweep 3.6s linear infinite;
+}
+@keyframes pending-sweep {
+  from {
+    background-position: 130% 0;
+  }
+  to {
+    background-position: -130% 0;
+  }
 }

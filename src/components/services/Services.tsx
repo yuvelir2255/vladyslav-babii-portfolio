@@ -6,9 +6,15 @@ import { ChargesMotion } from './ChargesMotion';
 
 export function Services() {
   return (
-    <section id="services" className="relative min-h-screen px-14 max-md:px-6">
+    <section
+      id="services"
+      className="relative min-h-screen overflow-hidden px-14 max-md:px-6"
+    >
       <ChargesMotion>
-        <div className="mx-auto flex min-h-screen w-full max-w-[1100px] flex-col justify-center py-20">
+        <div
+          data-charges-stage
+          className="relative mx-auto flex min-h-screen w-full max-w-[1200px] flex-col justify-center py-20"
+        >
           <header data-charges-header className="mb-10 max-md:mb-6">
             <p className="text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">
               <span aria-hidden="true" className="mr-2">
@@ -21,15 +27,20 @@ export function Services() {
             </h2>
           </header>
 
-          <div className="relative h-[58vh] min-h-[440px]">
-            <ol data-charges-list>
+          {/* горизонтальная лента карточек (двигается по скроллу) */}
+          <div data-track-viewport className="relative">
+            <ol
+              data-charges-track
+              className="flex items-stretch gap-8 will-change-transform max-md:gap-5"
+            >
               {services.counts.map((c) => (
                 <CountCard key={c.n} count={c} total={services.counts.length} />
               ))}
             </ol>
-            <Verdict />
-            <CaseRail />
           </div>
+
+          <Verdict />
+          <CaseRail />
         </div>
       </ChargesMotion>
     </section>

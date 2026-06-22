@@ -14,8 +14,11 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const section = root.closest('section');
       if (!section) return;
 
+      const track = root.querySelector<HTMLElement>('[data-charges-track]');
+      const viewport = root.querySelector<HTMLElement>('[data-track-viewport]');
       const cards = gsap.utils.toArray<HTMLElement>('[data-count]', root);
-      if (!cards.length) return;
+      if (!track || !viewport || !cards.length) return;
+
       const railItems = gsap.utils.toArray<HTMLElement>(
         '[data-rail-item]',
         root,
@@ -23,17 +26,15 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const tally = root.querySelector<HTMLElement>('[data-rail-tally]');
       const railCount = root.querySelector<HTMLElement>('[data-rail-count]');
       const progress = root.querySelector<HTMLElement>('[data-rail-progress]');
-      const verdict = root.querySelector<HTMLElement>('[data-verdict]');
       const rail = root.querySelector<HTMLElement>('[data-rail]');
-      const chargesHeader = root.querySelector<HTMLElement>(
-        '[data-charges-header]',
-      );
+      const header = root.querySelector<HTMLElement>('[data-charges-header]');
+      const verdict = root.querySelector<HTMLElement>('[data-verdict]');
       const glow = root.querySelector<HTMLElement>('[data-verdict-glow]');
       const eyebrow = root.querySelector<HTMLElement>('[data-verdict-eyebrow]');
       const headline = root.querySelector<HTMLElement>(
         '[data-verdict-headline]',
       );
-      // оригинальный текст номеров (для повторного scramble без «залипания» на огрызке)
+
       const numText = new Map<HTMLElement, string>();
       cards.forEach((c) => {
         const n = c.querySelector<HTMLElement>('[data-count-num]');
@@ -44,9 +45,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       const easeIO = (t: number) =>
         t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-      // слэм одного пункта — повторно-безопасный (играет КАЖДЫЙ раз при активации).
-      // Перед проигрышем сбрасываем элементы в финал и чистим твины → нет «залипания»
-      // полупрозрачности при скролле туда-обратно.
+      // повторно-безопасный слэм пункта (играет при КАЖДОЙ активации, вниз/вверх)
       const revealCount = (card: HTMLElement, words: Element[]) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
         const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
@@ -54,7 +53,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         const stampDraw = card.querySelector<SVGElement>('[data-stamp-draw]');
         const original = numText.get(card) ?? num?.textContent ?? '';
 
-        // стоп прошлых твинов + сброс в финальное состояние (replay-safe)
         gsap.killTweensOf(
           [num, gloss, stamp, stampDraw, ...words].filter(Boolean) as Element[],
         );
@@ -74,10 +72,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             num,
             {
               duration: 0.5,
-              scrambleText: {
-                text: original,
-                chars: '0123456789',
-              },
+              scrambleText: { text: original, chars: '0123456789' },
             },
             0,
           );
@@ -104,7 +99,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
             },
             0.35,
           );
-        // микро-тряска сцены на удар штампа
         tl.add(
           () =>
             gsap.fromTo(
@@ -121,7 +115,6 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         railItems.forEach((it, i) =>
           it.classList.toggle('is-active', i === active),
         );
-        // «Guilty ×N» = число пунктов, дошедших до активного включительно
         if (tally) tally.textContent = `Guilty ×${active + 1}`;
         if (railCount)
           railCount.textContent = `${pad(active + 1)} / ${pad(cards.length)}`;
@@ -133,94 +126,75 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           });
       };
 
-      // pin + snap. Тайминги РАЗВЕДЕНЫ:
-      //  countPct — длина пина на переключение пункта (короче = быстрее листать колесом);
-      //  finalPct — длина пина на финал-коллапс 05→вердикт (длиннее = плавный переход).
-      //  withBlur — desktop (blur) vs mobile (без blur).
-      const build = (countPct: number, finalPct: number, withBlur: boolean) => {
-        gsap.set(cards, { position: 'absolute', inset: 0, autoAlpha: 0 });
-        gsap.set(cards[0], { autoAlpha: 1 });
+      const build = (perCard: number, finalPct: number, withBlur: boolean) => {
+        const N = cards.length;
+        const lastIdx = N - 1;
 
-        // сплитим заголовки counts один раз на контекст
         const splits = cards.map((c) => {
           const charge = c.querySelector<HTMLElement>('[data-count-charge]');
           return charge ? new SplitText(charge, { type: 'words' }) : null;
         });
-
-        // вердикт: per-line маска заголовка + стартовые скрытые состояния
         const vSplit = headline
           ? new SplitText(headline, { type: 'lines', mask: 'lines' })
           : null;
         const vLines = vSplit?.lines ?? [];
-        if (verdict)
-          gsap.set(verdict, { position: 'absolute', inset: 0, autoAlpha: 0 });
+
+        // вердикт — оверлей (центрирование в самом Verdict), скрыт до финала
+        if (verdict) gsap.set(verdict, { autoAlpha: 0 });
         gsap.set(vLines, { yPercent: 100 });
         if (glow) gsap.set(glow, { autoAlpha: 0 });
-        if (rail) gsap.set(rail, { autoAlpha: 1 });
+
+        // раскладка трека (измеряется + переизмеряется на resize)
+        let step = 0;
+        let startX = 0;
+        const measure = () => {
+          const cardW = cards[0].offsetWidth;
+          const styles = getComputedStyle(track);
+          const gap = parseFloat(styles.columnGap || styles.gap || '0') || 0;
+          step = cardW + gap;
+          startX = (viewport.clientWidth - cardW) / 2; // x, центрирующий card[0]
+        };
+
+        // фокус: активная карта крупнее/ярче, соседние мельче/тусклее
+        const focus = (f: number) => {
+          cards.forEach((c, j) => {
+            const d = Math.abs(j - f);
+            gsap.set(c, {
+              transformOrigin: 'center',
+              scale: 1 - 0.08 * Math.min(d, 1),
+              autoAlpha: 1 - 0.6 * Math.min(d, 1.5),
+            });
+          });
+        };
 
         let current = -1;
-        const lastIdx = cards.length - 1; // count 05
-        const total = cards.length + 1; // snap-точек (counts + verdict)
-        const countSegs = cards.length - 1; // сегментов «пункт→пункт»
         let inFinal = false;
         let eyebrowDone = false;
 
-        // прогресс-границы каждой snap-точки: counts короче, финал длиннее
-        const totalPct = countSegs * countPct + finalPct;
-        const bounds: number[] = [];
-        let acc = 0;
-        for (let i = 0; i < total; i++) {
-          bounds.push(acc / totalPct);
-          acc += i < countSegs ? countPct : finalPct;
-        }
-        const lastBound = bounds[lastIdx]; // прогресс на count 05
+        const totalPct = (N - 1) * perCard + finalPct;
+        const horizFrac = ((N - 1) * perCard) / totalPct;
 
-        // дискретная дека для counts 0..lastIdx
-        const show = (i: number) => {
-          if (i === current) return;
-          current = i;
-          cards.forEach((c, idx) =>
-            gsap.to(c, { autoAlpha: idx === i ? 1 : 0, duration: 0.25 }),
-          );
-          // повтор анимации при каждой активации пункта (и вниз, и вверх)
-          revealCount(cards[i], splits[i]?.words ?? []);
-          setRail(i);
+        const showActive = (active: number) => {
+          if (active === current) return;
+          current = active;
+          revealCount(cards[active], splits[active]?.words ?? []);
+          setRail(active);
         };
 
-        // ближайший пункт по прогрессу (переключение на середине между snap-точками)
-        const nearestCount = (prog: number) => {
-          let idx = 0;
-          for (let i = 0; i < lastIdx; i++) {
-            if (prog >= (bounds[i] + bounds[i + 1]) / 2) idx = i + 1;
-          }
-          return idx;
-        };
-
-        // сброс «collapse» к базе обвинения (при отмотке вверх из финала)
         const collapseReset = () => {
-          gsap.set(cards[lastIdx], { scale: 1, filter: 'blur(0px)' });
-          if (rail) gsap.set(rail, { x: 0, yPercent: -50, autoAlpha: 1 });
-          if (chargesHeader) gsap.set(chargesHeader, { y: 0, autoAlpha: 1 });
+          gsap.set(track, { scale: 1, autoAlpha: 1, filter: 'blur(0px)' });
+          if (rail) gsap.set(rail, { autoAlpha: 1, y: 0 });
+          if (header) gsap.set(header, { autoAlpha: 1, y: 0 });
           if (verdict) gsap.set(verdict, { autoAlpha: 0 });
           if (glow) gsap.set(glow, { autoAlpha: 0 });
           gsap.set(vLines, { yPercent: 100 });
         };
 
-        // вход в финальный сегмент: count 05 — единственный активный, разовый scramble айброва
         const enterFinal = () => {
           if (inFinal) return;
           inFinal = true;
-          current = lastIdx;
-          gsap.killTweensOf(
-            [cards[lastIdx], rail, chargesHeader, verdict, glow].filter(
-              Boolean,
-            ) as Element[],
-          );
-          cards.forEach((c, idx) =>
-            gsap.set(c, { autoAlpha: idx === lastIdx ? 1 : 0 }),
-          );
-          // count 05 уже проигран через show() перед входом в финал — тут не повторяем
-          setRail(lastIdx);
+          focus(lastIdx);
+          showActive(lastIdx);
           if (!eyebrowDone && eyebrow) {
             eyebrowDone = true;
             gsap.to(eyebrow, {
@@ -241,31 +215,30 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           current = -1;
         };
 
-        // непрерывный рендер коллапса по sub-прогрессу p ∈ [0..1]
+        // bloom вердикта: лента отъезжает+блюрится, хедлайн собирается построчно
         const collapseRender = (raw: number) => {
           const p = clamp01(raw);
-          const out = clamp01(p / 0.6); // окно ухода обвинения
-          const sc = 1 - 0.16 * easeIO(clamp01(p / 0.9));
-          gsap.set(cards[lastIdx], {
+          const out = clamp01(p / 0.45);
+          const sc = 1 - 0.18 * easeIO(clamp01(p / 0.7));
+          gsap.set(track, {
             transformOrigin: '50% 50%',
             scale: sc,
             autoAlpha: 1 - out,
             filter: withBlur
-              ? `blur(${(6 * clamp01(p / 0.7)).toFixed(2)}px)`
+              ? `blur(${(8 * clamp01(p / 0.7)).toFixed(2)}px)`
               : 'blur(0px)',
           });
           if (rail)
             gsap.set(rail, {
-              x: -34 * easeIO(clamp01(p / 0.6)),
-              yPercent: -50,
-              autoAlpha: 1 - clamp01(p / 0.5),
+              y: 22 * easeIO(clamp01(p / 0.45)),
+              autoAlpha: 1 - clamp01(p / 0.4),
             });
-          if (chargesHeader)
-            gsap.set(chargesHeader, {
-              y: -24 * easeIO(clamp01(p / 0.6)),
-              autoAlpha: 1 - clamp01(p / 0.5),
+          if (header)
+            gsap.set(header, {
+              y: -24 * easeIO(clamp01(p / 0.45)),
+              autoAlpha: 1 - clamp01(p / 0.4),
             });
-          const vp = clamp01((p - 0.4) / 0.6); // окно сборки вердикта
+          const vp = clamp01((p - 0.28) / 0.5);
           const evp = easeIO(vp);
           if (verdict) gsap.set(verdict, { autoAlpha: vp });
           if (glow)
@@ -285,24 +258,30 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           start: 'top top',
           end: `+=${totalPct}%`,
           pin: true,
-          scrub: true,
-          snap: {
-            snapTo: bounds,
-            duration: 0.3,
-            ease: 'power1.inOut',
-          },
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+          onRefresh: measure,
           onUpdate: (self) => {
             const prog = self.progress;
-            if (prog <= lastBound) {
+            if (prog <= horizFrac) {
               if (inFinal) exitFinal();
-              show(nearestCount(prog));
+              const f = horizFrac > 0 ? (prog / horizFrac) * lastIdx : 0;
+              gsap.set(track, { x: startX - f * step });
+              focus(f);
+              showActive(Math.round(f));
             } else {
+              gsap.set(track, { x: startX - lastIdx * step });
               enterFinal();
-              collapseRender((prog - lastBound) / (1 - lastBound));
+              collapseRender((prog - horizFrac) / (1 - horizFrac));
             }
           },
         });
-        show(0);
+
+        measure();
+        gsap.set(track, { x: startX });
+        focus(0);
+        showActive(0);
+
         return () => {
           st.kill();
           splits.forEach((s) => s?.revert());
@@ -311,10 +290,10 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       };
 
       const mm = gsap.matchMedia();
-      // desktop: пункты быстрее (58), финал-коллапс плавный (72), с blur
-      mm.add('(min-width: 1024px)', () => build(58, 72, true));
-      // mobile/планшет: короче и без blur
-      mm.add('(max-width: 1023px)', () => build(44, 52, false));
+      // desktop: длиннее ход + blur на финале
+      mm.add('(min-width: 1024px)', () => build(55, 85, true));
+      // mobile/планшет: короче, без blur
+      mm.add('(max-width: 1023px)', () => build(46, 64, false));
 
       return () => mm.revert();
     },
