@@ -1,4 +1,5 @@
 import { evidence } from '@/content/evidence';
+import { RollText } from '@/components/ui/RollText';
 
 export function ChainOfCustody() {
   const { exhibit, pending } = evidence;
@@ -14,10 +15,12 @@ export function ChainOfCustody() {
               href={l.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[44px] items-center gap-2 text-[14px] tracking-[0.02em] text-[var(--color-bone)] underline-offset-4 transition-colors hover:text-[var(--color-orange)] hover:underline focus-visible:text-[var(--color-orange)] focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+              className="group inline-flex min-h-[44px] items-center text-[14px] tracking-[0.02em] text-[var(--color-bone)] transition-colors hover:text-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
             >
-              {l.label}
-              <span aria-hidden="true">↗</span>
+              <RollText>
+                {l.label}
+                <span aria-hidden="true">↗</span>
+              </RollText>
             </a>
           </li>
         ))}

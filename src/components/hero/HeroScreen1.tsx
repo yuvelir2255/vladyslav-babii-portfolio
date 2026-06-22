@@ -2,6 +2,7 @@ import { hero } from '@/content/hero';
 import { Ticker } from './Ticker';
 import { BookingPhoto } from './BookingPhoto';
 import { HeroNameMotion } from './HeroNameMotion';
+import { RollText } from '@/components/ui/RollText';
 
 export function HeroScreen1() {
   return (
@@ -30,19 +31,24 @@ export function HeroScreen1() {
             <a
               href={hero.cta[0].href}
               data-magnetic
-              className="rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[#160d06] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)]"
+              className="group rounded bg-[var(--color-orange)] px-[1.4rem] py-[0.9rem] text-[12px] font-bold tracking-[0.05em] text-[#160d06] uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-bone)]"
             >
-              {hero.cta[0].label} ↗
+              <RollText>
+                {hero.cta[0].label}
+                <span aria-hidden="true">↗</span>
+              </RollText>
             </a>
             <a
               href={hero.cta[1].href}
               data-magnetic
-              className="rounded border border-[var(--color-line)] px-[1.4rem] py-[0.9rem] text-[12px] font-medium tracking-[0.05em] uppercase hover:border-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+              className="group rounded border border-[var(--color-line)] px-[1.4rem] py-[0.9rem] text-[12px] font-medium tracking-[0.05em] uppercase hover:border-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
             >
-              {hero.cta[1].label}{' '}
-              <span className="text-[var(--color-dim)]">
-                · {hero.cta[1].sub}
-              </span>
+              <RollText>
+                {hero.cta[1].label}
+                <span className="text-[var(--color-dim)]">
+                  · {hero.cta[1].sub}
+                </span>
+              </RollText>
             </a>
           </div>
         </HeroNameMotion>

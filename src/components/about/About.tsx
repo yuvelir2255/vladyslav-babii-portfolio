@@ -101,7 +101,7 @@ export function About() {
               </span>
               <p
                 data-disposition
-                className="mt-1 max-w-[48ch] text-[15px] leading-[1.6] text-[var(--color-steel)]"
+                className="mt-1 max-w-[48ch] text-[15px] leading-[1.6] text-[var(--color-bone)]"
               >
                 {about.disposition}
                 <span className="ml-2 inline-block rounded border border-[var(--color-orange)] px-2 py-[2px] align-middle text-[10px] tracking-[0.08em] text-[var(--color-orange)] uppercase">
@@ -114,7 +114,7 @@ export function About() {
               <span className="block text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
                 Tools / known associates
               </span>
-              <p className="mt-1 text-[12px] tracking-[0.04em] text-[var(--color-steel)]">
+              <p className="mt-1 text-[12px] tracking-[0.04em] text-[var(--color-bone)]">
                 {about.tools.join(' · ')}
               </p>
             </div>

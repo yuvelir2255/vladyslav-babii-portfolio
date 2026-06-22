@@ -12,11 +12,18 @@ export function Cursor() {
     const el = dot.current;
     if (!el) return;
 
-    const xTo = gsap.quickTo(el, 'x', { duration: 0.25, ease: 'power3' });
-    const yTo = gsap.quickTo(el, 'y', { duration: 0.25, ease: 'power3' });
+    gsap.set(el, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+    const setX = gsap.quickSetter(el, 'x', 'px');
+    const setY = gsap.quickSetter(el, 'y', 'px');
+
+    let visible = false;
     const move = (e: MouseEvent) => {
-      xTo(e.clientX);
-      yTo(e.clientY);
+      setX(e.clientX);
+      setY(e.clientY);
+      if (!visible) {
+        visible = true;
+        gsap.to(el, { autoAlpha: 1, duration: 0.3 });
+      }
     };
     window.addEventListener('mousemove', move);
 
@@ -49,15 +56,5 @@ export function Cursor() {
     };
   }, []);
 
-  return (
-    <div
-      ref={dot}
-      aria-hidden="true"
-      className="pointer-events-none fixed top-0 left-0 z-[60] -mt-5 -ml-5 h-10 w-10 rounded-full mix-blend-screen"
-      style={{
-        background:
-          'radial-gradient(circle, color-mix(in srgb, var(--color-orange) 55%, transparent), transparent 70%)',
-      }}
-    />
-  );
+  return <div ref={dot} aria-hidden="true" className="cursor-core" />;
 }

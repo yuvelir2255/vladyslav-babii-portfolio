@@ -187,9 +187,77 @@ html.intake-seen .preloader {
   transform: scaleX(0);
   pointer-events: none;
 }
+/* намёк «нажми, чтобы рассекретить» — поверх бара, гаснет при открытии */
+.redaction-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding-left: 2px;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+[data-redacted][data-open='true'] .redaction-hint {
+  opacity: 0;
+}
 [data-redacted]:focus-visible {
   outline: 2px solid var(--color-orange);
   outline-offset: 3px;
+}
+
+/* кастомный курсор: круг, приклеенный к острию (без шлейфа) */
+.cursor-core {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  pointer-events: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    var(--color-orange),
+    color-mix(in srgb, var(--color-orange) 50%, transparent) 65%,
+    transparent 78%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  will-change: transform;
+}
+
+/* hover-roll для ссылок/кнопок: текст уезжает вверх, снизу выкатывается дубль.
+   Триггер — :hover/:focus-visible родителя с классом `group`. */
+.roll {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.roll__line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  transition: transform 0.5s cubic-bezier(0.66, 0, 0.34, 1);
+}
+.roll__line--clone {
+  position: absolute;
+  inset: 0;
+  transform: translateY(100%);
+}
+.group:hover .roll__line,
+.group:focus-visible .roll__line {
+  transform: translateY(-100%);
+}
+.group:hover .roll__line--clone,
+.group:focus-visible .roll__line--clone {
+  transform: translateY(0);
 }
 
 /* штамп Declassified в углу карты дела */
