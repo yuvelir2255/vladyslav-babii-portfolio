@@ -21,7 +21,7 @@ export function Verdict() {
       </p>
       <h3
         data-verdict-headline
-        className="mt-4 font-[family-name:var(--font-display)] text-[clamp(44px,9vw,120px)] leading-[0.9] text-[var(--color-orange)] uppercase"
+        className="mt-4 font-[family-name:var(--font-display)] text-[clamp(44px,9vw,120px)] leading-[1.06] text-[var(--color-orange)] uppercase"
       >
         {v.headline}
       </h3>
