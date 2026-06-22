@@ -1,9 +1,12 @@
 'use client';
 
 import { useRef, useState } from 'react';
+import { gsap } from '@/lib/gsap';
 
 // фоновый трек (loop). preload="none" — грузится только по клику, не на init.
 const SRC = '/audio/breakbeat.mp3';
+// тихий фон: целевая громкость (понижено 0.4 → 0.05)
+const VOLUME = 0.05;
 
 export function AudioToggle() {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -12,14 +15,22 @@ export function AudioToggle() {
   const toggle = async () => {
     const el = audioRef.current;
     if (!el) return;
+    gsap.killTweensOf(el);
     if (on) {
-      el.pause();
+      // плавно приглушаем и ставим на паузу
+      gsap.to(el, {
+        volume: 0,
+        duration: 0.4,
+        onComplete: () => el.pause(),
+      });
       setOn(false);
       return;
     }
     try {
-      el.volume = 0.4;
+      el.volume = 0;
       await el.play();
+      // мягкий fade-in до тихой громкости — без резкого старта
+      gsap.to(el, { volume: VOLUME, duration: 0.9, ease: 'power1.out' });
       setOn(true);
     } catch {
       // файла ещё нет (404) или автоплей заблокирован — тихо остаёмся off
