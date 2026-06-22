@@ -35,79 +35,68 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
         '[data-verdict-headline]',
       );
 
-      const numText = new Map<HTMLElement, string>();
-      cards.forEach((c) => {
-        const n = c.querySelector<HTMLElement>('[data-count-num]');
-        if (n) numText.set(c, n.textContent || '');
-      });
       const pad = (n: number) => String(n).padStart(2, '0');
       const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
       const easeIO = (t: number) =>
         t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 
-      // повторно-безопасный слэм пункта (играет при КАЖДОЙ активации, вниз/вверх)
+      // плавное появление пункта (играет при КАЖДОЙ активации, вниз/вверх).
+      // fromTo + immediateRender — replay-safe: повторный заход заново проигрывает
+      // мягкий ревил без вспышки финального состояния.
       const revealCount = (card: HTMLElement, words: Element[]) => {
         const num = card.querySelector<HTMLElement>('[data-count-num]');
         const gloss = card.querySelector<HTMLElement>('[data-count-gloss]');
         const stamp = card.querySelector<HTMLElement>('[data-count-stamp]');
         const stampDraw = card.querySelector<SVGElement>('[data-stamp-draw]');
-        const original = numText.get(card) ?? num?.textContent ?? '';
 
         gsap.killTweensOf(
           [num, gloss, stamp, stampDraw, ...words].filter(Boolean) as Element[],
         );
-        if (num) {
-          num.textContent = original;
-          gsap.set(num, { autoAlpha: 1 });
-        }
-        if (words.length) gsap.set(words, { autoAlpha: 1, y: 0 });
-        if (gloss) gsap.set(gloss, { autoAlpha: 1, y: 0 });
-        if (stampDraw) gsap.set(stampDraw, { drawSVG: '100%' });
-        if (stamp) gsap.set(stamp, { autoAlpha: 1, scale: 1, rotate: 0 });
 
-        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        if (num) {
-          tl.fromTo(num, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0);
-          tl.to(
+        // очень мягкое, пологое появление (sine.out — без рывка на входе/выходе)
+        const tl = gsap.timeline({ defaults: { ease: 'sine.out' } });
+        if (num)
+          tl.fromTo(
             num,
-            {
-              duration: 0.5,
-              scrambleText: { text: original, chars: '0123456789' },
-            },
+            { autoAlpha: 0, yPercent: 10 },
+            { autoAlpha: 1, yPercent: 0, duration: 1.2 },
             0,
           );
-        }
         if (words.length)
-          tl.from(
+          tl.fromTo(
             words,
-            { autoAlpha: 0, y: 24, stagger: 0.06, duration: 0.5 },
-            0.1,
+            { autoAlpha: 0, y: 12 },
+            { autoAlpha: 1, y: 0, stagger: 0.12, duration: 1.2 },
+            0.12,
           );
-        if (gloss) tl.from(gloss, { autoAlpha: 0, y: 14, duration: 0.5 }, 0.25);
+        if (gloss)
+          tl.fromTo(
+            gloss,
+            { autoAlpha: 0, y: 10 },
+            { autoAlpha: 1, y: 0, duration: 1.2 },
+            0.34,
+          );
         if (stampDraw)
-          tl.from(stampDraw, { drawSVG: '0%', duration: 0.4 }, 0.35);
-        if (stamp)
-          tl.from(
-            stamp,
-            {
-              autoAlpha: 0,
-              scale: 1.8,
-              rotate: -16,
-              transformOrigin: 'center',
-              duration: 0.45,
-              ease: 'back.out(1.7)',
-            },
-            0.35,
+          tl.fromTo(
+            stampDraw,
+            { drawSVG: '0%' },
+            { drawSVG: '100%', duration: 0.7, ease: 'power1.inOut' },
+            0.5,
           );
-        tl.add(
-          () =>
-            gsap.fromTo(
-              section,
-              { x: -4 },
-              { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.45)' },
-            ),
-          0.4,
-        );
+        if (stamp)
+          tl.fromTo(
+            stamp,
+            { autoAlpha: 0, scale: 1.3, rotate: -8 },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              rotate: 0,
+              transformOrigin: 'center',
+              duration: 0.7,
+              ease: 'back.out(1.2)',
+            },
+            0.5,
+          );
         return tl;
       };
 
@@ -238,7 +227,7 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
               y: -24 * easeIO(clamp01(p / 0.45)),
               autoAlpha: 1 - clamp01(p / 0.4),
             });
-          const vp = clamp01((p - 0.28) / 0.5);
+          const vp = clamp01((p - 0.3) / 0.62);
           const evp = easeIO(vp);
           if (verdict) gsap.set(verdict, { autoAlpha: vp });
           if (glow)
@@ -290,10 +279,10 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
       };
 
       const mm = gsap.matchMedia();
-      // desktop: длиннее ход + blur на финале
-      mm.add('(min-width: 1024px)', () => build(55, 85, true));
+      // desktop: длиннее ход + blur на финале (финал короче — без мёртвого хвоста)
+      mm.add('(min-width: 1024px)', () => build(55, 60, true));
       // mobile/планшет: короче, без blur
-      mm.add('(max-width: 1023px)', () => build(46, 64, false));
+      mm.add('(max-width: 1023px)', () => build(46, 50, false));
 
       return () => mm.revert();
     },
