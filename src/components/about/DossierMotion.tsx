@@ -41,7 +41,9 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
       const tiles = root.querySelector('[data-lower-tiles]');
       if (tiles) reveal(tiles, { autoAlpha: 0, y: 32 });
 
-      // возраст 0 → 19 — считается по мере прокрутки
+      // возраст 0 → 19 — разовый отсчёт при доскролле (one-shot, не scrub:
+      // иначе при медленном скролле залипает на промежуточном «AGE 3»);
+      // реверс при возврате — как штамп DECLASSIFIED ниже.
       const ageEl = root.querySelector<HTMLElement>('[data-age]');
       if (ageEl) {
         const counter = { v: 0 };
@@ -51,13 +53,13 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
         gsap.to(counter, {
           v: 19,
           snap: { v: 1 },
-          ease: 'none',
+          duration: 1.1,
+          ease: 'power1.out',
           onUpdate: setAge,
           scrollTrigger: {
             trigger: ageEl,
-            start: 'top 90%',
-            end: 'top 60%',
-            scrub: 0.6,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
           },
         });
       }
