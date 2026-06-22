@@ -14,6 +14,7 @@ const SECTIONS = [
 
 export function FileNav() {
   const [open, setOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState('#yard');
   const root = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const tlRef = useRef<ReturnType<typeof gsap.timeline> | null>(null);
@@ -61,6 +62,29 @@ export function FileNav() {
     if (open) tl.play();
     else tl.reverse();
   }, [open]);
+
+  // scroll-spy: активная секция = та, что пересекает центр вьюпорта.
+  // Тонкий центр-бэнд через rootMargin; работает и в пинах (секция держится
+  // в центре весь пин). jsdom не знает IntersectionObserver — guard.
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const els = SECTIONS.map((s) =>
+      document.getElementById(s.href.slice(1)),
+    ).filter((el): el is HTMLElement => el !== null);
+    if (!els.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        const hit = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (hit) setActiveHref(`#${hit.target.id}`);
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.5, 1] },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   // Esc + клик-вне закрывают
   useEffect(() => {
@@ -115,20 +139,42 @@ export function FileNav() {
         <p className="px-3 py-2 text-[10px] tracking-[0.2em] text-[var(--color-dim)] uppercase">
           Cell-block directory
         </p>
-        {SECTIONS.map((s) => (
-          <a
-            key={s.code}
-            data-row
-            href={s.href}
-            onClick={() => setOpen(false)}
-            className="group flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] text-[var(--color-steel)] uppercase transition-colors hover:bg-[var(--color-orange-soft)] hover:text-[var(--color-bone)] focus-visible:bg-[var(--color-orange-soft)] focus-visible:text-[var(--color-bone)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-orange)]"
-          >
-            <span className="text-[11px] text-[var(--color-dim)] group-hover:text-[var(--color-orange)]">
-              {s.code}
-            </span>
-            <span>{s.label}</span>
-          </a>
-        ))}
+        {SECTIONS.map((s) => {
+          const isActive = activeHref === s.href;
+          return (
+            <a
+              key={s.code}
+              data-row
+              href={s.href}
+              aria-current={isActive ? 'true' : undefined}
+              onClick={() => setOpen(false)}
+              className={`group flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] tracking-[0.06em] uppercase transition-colors hover:bg-[var(--color-orange-soft)] hover:text-[var(--color-bone)] focus-visible:bg-[var(--color-orange-soft)] focus-visible:text-[var(--color-bone)] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[var(--color-orange)] ${
+                isActive
+                  ? 'bg-[var(--color-orange-soft)] text-[var(--color-bone)]'
+                  : 'text-[var(--color-steel)]'
+              }`}
+            >
+              <span
+                className={`text-[11px] group-hover:text-[var(--color-orange)] ${
+                  isActive
+                    ? 'text-[var(--color-orange)]'
+                    : 'text-[var(--color-dim)]'
+                }`}
+              >
+                {s.code}
+              </span>
+              <span>{s.label}</span>
+              {isActive && (
+                <span
+                  aria-hidden="true"
+                  className="ml-auto text-[var(--color-orange)]"
+                >
+                  ●
+                </span>
+              )}
+            </a>
+          );
+        })}
       </nav>
     </div>
   );

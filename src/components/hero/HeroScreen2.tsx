@@ -12,7 +12,7 @@ export function HeroScreen2() {
             </span>
             On the record / statement 01
           </p>
-          <p
+          <h2
             data-manifest
             className="m-0 font-[family-name:var(--font-display)] text-[clamp(30px,4.4vw,58px)] leading-[1.18] uppercase"
           >
@@ -26,7 +26,7 @@ export function HeroScreen2() {
                 {seg.t}
               </span>
             ))}
-          </p>
+          </h2>
         </div>
       </ManifestMotion>
     </section>

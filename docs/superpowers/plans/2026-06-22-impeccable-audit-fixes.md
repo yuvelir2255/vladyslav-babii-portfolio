@@ -14,11 +14,11 @@
 - [x] **P1-2 · Форма без инлайн-валидации/индикаторов** — ✅ ИСПРАВЛЕНО.
   Валидация вынесена в чистый `src/lib/contact-validation.ts` (изоляция: клиент не тащит Telegram-send; `telegram.ts` реэкспортит). `VisitForm` теперь: пер-полевая клиентская валидация (та же `validateContact`, что на сервере), `aria-invalid` + `aria-describedby` + `role="alert"` на пер-полевых ошибках, `*`-индикатор «обязательно» (вне `<label>`, чтобы не пачкать accessible-name), фокус на первое невалидное, `aria-busy` при отправке, success → `role="status"`. Копи ошибок в `content/contact.ts` (`form.errors`). TDD: +3 теста (пустой/битый сабмит без fetch, очистка ошибки на вводе). Проверено: 74/74 тестов, build/typecheck чисто, живой eval (3 ошибки + фокус vf-name).
 
-- [ ] **P1-3 · FileNav не подсвечивает текущую секцию** — `FileNav.tsx`.
-  IntersectionObserver/ScrollTrigger → `aria-current="true"` + визуальная подсветка активного пункта (scroll-spy).
+- [x] **P1-3 · FileNav не подсвечивает текущую секцию** — ✅ ИСПРАВЛЕНО.
+  IntersectionObserver (центр-бэнд `rootMargin -45%`) → активный пункт получает `aria-current="true"` + подсветка (bg-orange-soft, оранжевый код, `●`). jsdom-guard на IO. TDD: тест с мок-IO (пересечение work → aria-current на Evidence). NB: IO в preview-окружении (headless) колбэки не шлёт — проверено юнит-тестом, не браузером.
 
-- [ ] **P1-4 · Hero-screen2 — безымянная секция без заголовка** — `HeroScreen2.tsx:6,15`.
-  Дать `<section aria-label="…">` или сделать манифест `<h2>` (визуально без изменений).
+- [x] **P1-4 · Hero-screen2 — безымянная секция без заголовка** — ✅ ИСПРАВЛЕНО.
+  Манифест `<p data-manifest>` → `<h2 data-manifest>` (визуально идентично, закрывает дыру в outline; паттерн как Services/Evidence — заявление = h2). Иерархия h1(имя)→h2(манифест)→h2(секции) без пропусков.
 
 ## P2 — следующий проход
 
@@ -57,8 +57,8 @@
 | --- | --- | --- |
 | P1-1 | ✅ готово | feat-ветка |
 | P1-2 | ✅ готово | feat-ветка |
-| P1-3 | ⬜ | — |
-| P1-4 | ⬜ | — |
+| P1-3 | ✅ готово | feat-ветка |
+| P1-4 | ✅ готово | feat-ветка |
 | P2-perf | ⬜ | — |
 | P2-theme | ⬜ | — |
 | P3 | ⬜ | — |
