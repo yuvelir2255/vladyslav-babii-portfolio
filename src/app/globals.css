@@ -18,6 +18,11 @@
 html {
   color-scheme: dark;
   background: var(--color-bg);
+  /* страховка от горизонтального скролла: decor с отрицательным офсетом и
+     начальные состояния слэм-штампов (scale>1, opacity:0) не должны давать
+     H-скролл на узких экранах. clip (не hidden) не создаёт скролл-контейнер,
+     не ломает position:sticky / ScrollTrigger-пины и не трогает overflow-y. */
+  overflow-x: clip;
 }
 
 body {
