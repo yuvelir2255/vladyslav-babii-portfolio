@@ -1,4 +1,5 @@
 import { contact } from '@/content/contact';
+import { RollText } from '@/components/ui/RollText';
 
 export function ContactChannels() {
   return (
@@ -18,10 +19,12 @@ export function ContactChannels() {
               {...(ch.external
                 ? { target: '_blank', rel: 'noopener noreferrer' }
                 : {})}
-              className="inline-flex min-h-[44px] items-center gap-1 text-[14px] tracking-[0.01em] text-[var(--color-bone)] underline-offset-4 transition-colors hover:text-[var(--color-orange)] hover:underline focus-visible:text-[var(--color-orange)] focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+              className="group inline-flex min-h-[44px] items-center text-[14px] tracking-[0.01em] text-[var(--color-bone)] transition-colors hover:text-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
             >
-              {ch.value}
-              {ch.external && <span aria-hidden="true">↗</span>}
+              <RollText>
+                {ch.value}
+                {ch.external && <span aria-hidden="true">↗</span>}
+              </RollText>
             </a>
           </li>
         ))}
