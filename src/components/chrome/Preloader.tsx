@@ -100,8 +100,8 @@ export function Preloader() {
         </div>
         <div className="my-6 h-3 overflow-hidden rounded-sm border border-[var(--color-line)]">
           <div
-            className="h-full bg-[var(--color-orange)]"
-            style={{ width: `${pct}%` }}
+            className="h-full origin-left bg-[var(--color-orange)]"
+            style={{ transform: `scaleX(${pct / 100})` }}
           />
         </div>
         <div className="text-[12px] leading-[1.85] text-[var(--color-steel)]">

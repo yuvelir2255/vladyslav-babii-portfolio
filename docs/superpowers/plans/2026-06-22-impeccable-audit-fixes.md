@@ -22,11 +22,12 @@
 
 ## P2 — следующий проход
 
-- [ ] **P2-perf · `/impeccable optimize`**
-  - `will-change: transform` → внутрь `:hover` (`globals.css` `.ev-frame > img` :461, `[data-ev-zoom]` :600).
-  - Шейдер: пауза RAF при `document.hidden` (`ShaderBg.tsx`).
-  - Прелоадер: прогресс через `transform: scaleX` вместо `width`+setState (`Preloader.tsx:104`).
-  - (Опц.) bloom blur — снизить max / промоут слоя под `filter`; box-shadow-ховеры — оценить джанк на слабом GPU.
+- [x] **P2-perf · `/impeccable optimize`** — ✅ ИСПРАВЛЕНО.
+  - `will-change: transform` снят с базовых `.ev-frame > img` и `[data-ev-zoom]`, перенесён внутрь `:hover` — не держим ~6 композитных слоёв в покое (память/GPU).
+  - Шейдер (`ShaderBg.tsx`): `visibilitychange` → останавливает RAF при скрытой вкладке, возобновляет при возврате (cleanup снимает listener).
+  - Прелоадер (`Preloader.tsx`): бар `width:%` → `transform: scaleX()` + `origin-left` (композитится, без layout-thrash). Счётчик-число остаётся на `setState` — это намеренно живой каунтер (60/с на 2.6с, разово за сессию, на статичном экране).
+  - (Отложено как opt) bloom blur max / box-shadow-ховеры — заметного джанка не выявлено, трогать не стал.
+  Проверено: 75/75 тестов, build/typecheck чисто, канвас рендерится, CSS компилируется.
 
 - [ ] **P2-theme/symmetry · `/impeccable extract` → токены**
   - `--color-on-orange (#160d06 ×3)`, `--color-surface (#2a2620 ×2)`, scrim через `color-mix(--color-bg)` (вместо rgba ×8 / 7 альф).
@@ -59,6 +60,6 @@
 | P1-2 | ✅ готово | feat-ветка |
 | P1-3 | ✅ готово | feat-ветка |
 | P1-4 | ✅ готово | feat-ветка |
-| P2-perf | ⬜ | — |
+| P2-perf | ✅ готово | feat-ветка |
 | P2-theme | ⬜ | — |
 | P3 | ⬜ | — |

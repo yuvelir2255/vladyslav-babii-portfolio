@@ -112,8 +112,19 @@ export function ShaderBg() {
     };
     raf = requestAnimationFrame(loop);
 
+    // скрытая вкладка — останавливаем рендер-цикл (не греем GPU/батарею в фоне)
+    const onVisibility = () => {
+      cancelAnimationFrame(raf);
+      if (!document.hidden) {
+        last = -Infinity;
+        raf = requestAnimationFrame(loop);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
     return () => {
       cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouse);
       gl.canvas.remove();
