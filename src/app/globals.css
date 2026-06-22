@@ -210,6 +210,12 @@ html.intake-seen .preloader {
   outline-offset: 3px;
 }
 
+/* кастомный курсор активен → системный прячем (только desktop, класс ставит JS) */
+html.cursor-custom,
+html.cursor-custom * {
+  cursor: none;
+}
+
 /* кастомный курсор: круг, приклеенный к острию (без шлейфа) */
 .cursor-core {
   position: fixed;

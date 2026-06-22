@@ -12,6 +12,9 @@ export function Cursor() {
     const el = dot.current;
     if (!el) return;
 
+    // системный курсор скрываем только когда кастомный реально активен (desktop)
+    document.documentElement.classList.add('cursor-custom');
+
     gsap.set(el, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
     const setX = gsap.quickSetter(el, 'x', 'px');
     const setY = gsap.quickSetter(el, 'y', 'px');
@@ -51,6 +54,7 @@ export function Cursor() {
     });
 
     return () => {
+      document.documentElement.classList.remove('cursor-custom');
       window.removeEventListener('mousemove', move);
       cleaners.forEach((c) => c());
     };
