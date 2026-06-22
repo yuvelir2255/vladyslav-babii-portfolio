@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, SplitText, ScrollTrigger } from '@/lib/gsap';
+import { gsap, SplitText } from '@/lib/gsap';
 
 export function ManifestMotion({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -37,10 +37,11 @@ export function ManifestMotion({ children }: { children: React.ReactNode }) {
       };
 
       const mm = gsap.matchMedia();
-      // десктоп: пин покороче + текст быстрее догоняет скролл (scrub 0.6 = отзывчивее)
-      mm.add('(min-width: 1024px)', () => build('+=250%', 0.6));
+      // длина пина пропорциональна числу слов манифеста (текст короче → листать меньше).
+      // десктоп: ~10%/слово, scrub 0.6 (отзывчивее)
+      mm.add('(min-width: 1024px)', () => build('+=170%', 0.6));
       // мобайл/планшет: короче (тач уже даёт плавный «тяжёлый» скролл)
-      mm.add('(max-width: 1023px)', () => build('+=130%', 0.6));
+      mm.add('(max-width: 1023px)', () => build('+=90%', 0.6));
 
       return () => {
         mm.revert();
