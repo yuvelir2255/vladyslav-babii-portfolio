@@ -2,6 +2,7 @@ import { contact } from '@/content/contact';
 import { Bars } from './Bars';
 import { VisitForm } from './VisitForm';
 import { ContactChannels } from './ContactChannels';
+import { AuthorSignature } from './AuthorSignature';
 import { ReleaseMotion } from './ReleaseMotion';
 
 export function Contact() {
@@ -37,12 +38,7 @@ export function Contact() {
             </div>
           </div>
 
-          <p
-            data-contact-reveal
-            className="mt-16 text-[13px] tracking-[0.2em] text-[var(--color-dim)] uppercase max-md:mt-12"
-          >
-            {contact.signature}
-          </p>
+          <AuthorSignature />
         </div>
       </ReleaseMotion>
     </section>

@@ -214,6 +214,26 @@ html.intake-seen .preloader {
   color: var(--color-orange);
 }
 
+/* авторская подпись (Contact): мягкая feathered-маска появления имени.
+   --reveal 0→1 анимируется в ReleaseMotion (scroll-scrub); 18% мягкий край
+   даёт «проявление чернил» без жёсткой кромки. По умолчанию 1 — если JS не
+   сработал, имя полностью видно. */
+.sign-name {
+  --reveal: 1;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 calc(var(--reveal) * 118% - 18%),
+    transparent calc(var(--reveal) * 118%)
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 calc(var(--reveal) * 118% - 18%),
+    transparent calc(var(--reveal) * 118%)
+  );
+}
+
 /* штамп ADMITTED в секции Evidence (мирроринг .stamp-declassified) */
 .stamp-admitted {
   position: absolute;

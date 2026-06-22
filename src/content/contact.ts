@@ -44,5 +44,8 @@ export const contact = {
     },
   ],
   location: 'Warsaw, PL',
-  signature: 'Ready when it matters.',
+  author: {
+    name: 'Vladyslav Babii',
+    caption: 'Signed · release authorized · 21 · 06 · 2026',
+  },
 } as const;

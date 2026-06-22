@@ -13,12 +13,11 @@ describe('Contact', () => {
       /visiting hours are open/i,
     );
   });
-  it('форма, кнопка submit и подпись в DOM (фолбэк)', () => {
+  it('форма и кнопка submit в DOM (фолбэк)', () => {
     const { container } = render(<Contact />);
     expect(screen.getByLabelText('Name')).toBeInTheDocument();
     const submit = container.querySelector('button[type="submit"]');
     expect(submit?.textContent).toMatch(/send message/i);
-    expect(screen.getByText(/ready when it matters/i)).toBeInTheDocument();
   });
   it('directory-ссылка на Telegram в DOM', () => {
     const { container } = render(<Contact />);
@@ -27,5 +26,11 @@ describe('Contact', () => {
     );
     expect(tg).toBeTruthy();
     expect(tg).toHaveAttribute('href', 'https://t.me/BabiiVladyslav');
+  });
+  it('авторская подпись с полным именем в DOM (финал)', () => {
+    const { container } = render(<Contact />);
+    // именно блок подписи, а не ссылка LinkedIn с тем же значением
+    const sign = container.querySelector('[data-sign-name]');
+    expect(sign?.textContent).toBe('Vladyslav Babii');
   });
 });

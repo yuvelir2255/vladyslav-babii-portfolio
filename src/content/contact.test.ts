@@ -5,7 +5,7 @@ describe('contact content', () => {
   it('эйдброу/заголовок/подпись на месте', () => {
     expect(contact.eyebrow).toMatch(/visiting hours/i);
     expect(contact.heading.length).toBeGreaterThan(0);
-    expect(contact.signature).toMatch(/ready when it matters/i);
+    expect(contact.author.name).toMatch(/Vladyslav Babii/);
   });
   it('форма: 3 поля + success/error копи', () => {
     expect(contact.form.name.label).toBe('Name');
