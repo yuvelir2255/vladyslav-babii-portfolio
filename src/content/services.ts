@@ -5,19 +5,21 @@ export const services = {
     {
       n: '01',
       charge: 'Unlawful web construction',
-      gloss: 'Fast, distinctive sites — motion that earns attention.',
+      gloss: "Handcrafted sites with animation that doesn't let go.",
       plea: 'Guilty',
     },
     {
       n: '02',
       charge: 'Operating products inside Telegram',
-      gloss: 'Full products that live inside the chat.',
+      gloss:
+        'Full e-commerce Mini Apps built to live and take orders inside Telegram.',
       plea: 'Guilty',
     },
     {
       n: '03',
       charge: 'Deployment of autonomous AI',
-      gloss: 'Tools that ship and take real orders.',
+      gloss:
+        'AI pipelines wired into real products. Fail-closed — no response means nothing gets published.',
       plea: 'Guilty',
     },
     {
@@ -29,7 +31,7 @@ export const services = {
     {
       n: '05',
       charge: 'Designing what he builds',
-      gloss: 'End to end — from the first pixel to the bottom line.',
+      gloss: 'Full ownership — design, code, and deploy. No handoffs. No gaps.',
       plea: 'Guilty',
     },
   ],
@@ -37,6 +39,7 @@ export const services = {
     eyebrow: 'The court finds the defendant',
     headline: 'Guilty on all five counts',
     sentenceLabel: 'Sentence',
-    sentence: 'Sentenced to keep shipping products that take real orders.',
+    sentence:
+      'Sentenced to keep shipping. No parole until the product is live.',
   },
 } as const;

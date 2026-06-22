@@ -6,14 +6,33 @@ export const evidence = {
     status: 'Admitted · Live',
     title: 'Dream Gold — Telegram Mini App',
     summary:
-      'A production storefront living inside Telegram — used daily by a real jewelry atelier to take orders.',
+      'A production e-commerce Mini App inside Telegram — built solo, shipped end-to-end, taking real orders for a jewelry atelier.',
     markers: [
-      { n: '1', title: 'AI product cards', note: 'GPT-4o-mini vision' },
-      { n: '2', title: 'On-screen ring sizer', note: 'px → mm' },
-      { n: '3', title: 'HMAC-signed orders', note: 'Tamper-proof orders' },
+      {
+        n: '1',
+        title: 'AI product cards',
+        note: 'Owner forwards a post — AI writes the card',
+      },
+      {
+        n: '2',
+        title: 'On-screen ring sizer',
+        note: 'Calibrated to exact iPhone model',
+      },
+      {
+        n: '3',
+        title: 'HMAC-signed orders',
+        note: 'Server-verified, never trusted from client',
+      },
     ],
     facts: ['Trilingual', 'Light + dark', '~77 KB'],
-    tags: ['Telegram Mini App', 'React', 'TypeScript', 'OpenAI', 'Supabase'],
+    tags: [
+      'Telegram Mini App',
+      'React',
+      'TypeScript',
+      'Vite',
+      'OpenAI',
+      'Supabase',
+    ],
     shots: [
       {
         src: '/media/dream-gold/shop.png',
