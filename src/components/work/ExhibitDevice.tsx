@@ -128,10 +128,10 @@ export function ExhibitDevice() {
             className="inline-flex h-[44px] w-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]"
           >
             <span
-              className={`block h-2 w-2 rounded-full transition-colors ${
+              className={`block h-2 rounded-full transition-all ${
                 idx === i
-                  ? 'bg-[var(--color-orange)]'
-                  : 'bg-[var(--color-line)]'
+                  ? 'w-4 bg-[var(--color-orange)]'
+                  : 'w-2 bg-[var(--color-line)]'
               }`}
             />
           </button>

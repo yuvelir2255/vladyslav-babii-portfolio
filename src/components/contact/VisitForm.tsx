@@ -208,7 +208,7 @@ export function VisitForm() {
         <p
           data-form-error
           role="alert"
-          className="text-[13px] text-[var(--color-orange)]"
+          className="text-[13px] break-words text-[var(--color-orange)]"
         >
           {c.error}
         </p>

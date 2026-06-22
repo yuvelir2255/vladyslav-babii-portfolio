@@ -18,7 +18,7 @@ export const about = {
     },
   ],
   disposition:
-    'Treats every build like his own product: from the first pixel to final deploy. ',
+    'Treats every build like his own product: from the first pixel to final deploy.',
   status: 'At large',
   tools: [
     'React',

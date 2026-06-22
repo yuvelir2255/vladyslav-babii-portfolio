@@ -24,7 +24,7 @@ export const services = {
     },
     {
       n: '04',
-      charge: 'Elimination of manual labour',
+      charge: 'Elimination of manual labor',
       gloss: 'Deletes the busywork — automation that runs itself.',
       plea: 'Guilty',
     },

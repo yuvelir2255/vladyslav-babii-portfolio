@@ -37,13 +37,14 @@
   - **Отложено в бэклог** (pure-maintainability, value-preserving, churny): шкала бордер-радиусов в токены; z-index в CSS-переменные (сейчас числовые `z-50/60/70/100` + локальные — без магии 9999, читаемо).
   Проверено: build/typecheck/75 тестов чисто, вычисленные цвета идентичны (0 визуальных изменений).
 
-## P3 — полировка (`/impeccable polish`)
+## P3 — полировка (`/impeccable polish`) — ✅ ГОТОВО
 
-- [ ] `text-wrap: balance` на заголовках (Verdict/CountCard/Contact), `pretty` на прозе.
-- [ ] Трейлинг-пробел `about.ts:21`.
-- [ ] Копирайт: «At large» vs «Held at Warsaw» (решение владельца); BrE `labour`→`labor`; тон count 05; `break-words` на email в ошибке.
-- [ ] Точки карусели различимы не только цветом (размер/обводка активной).
-- [ ] About `inmate-build.webp` → `priority` (LCP при заходе с якоря).
+- [x] `text-wrap: pretty` на всю прозу (`globals.css p`, безопасно — не трогает SplitText) + `text-balance` на Contact `<h2>` (обычный, не split). Заголовки на SplitText (Verdict/CountCard/hero/манифест) НЕ трогал — balance мог бы вмешаться в хореографию.
+- [x] Трейлинг-пробел `about.ts` disposition убран.
+- [x] BrE `labour` → `labor` (`services.ts`, консистентно с `en_US`).
+- [x] `break-words` на блоке ошибки формы (длинный email не ломает раскладку).
+- [x] Точки карусели: активная — оранжевый **пилюль** `w-4` vs `w-2` (различима не только цветом).
+- **СОЗНАТЕЛЬНО НЕ трогал:** «At large» vs «Held at Warsaw» и тон count 05 — намеренный авторский нарратив (не баг). About `inmate-build` `priority` — пропущено: прелоад below-fold картинки конкурирует с hero-LCP (компромисс, не чистый выигрыш).
 
 ## Замечено по ходу (добавить в P3/бэклог)
 
@@ -64,4 +65,4 @@
 | P1-4 | ✅ готово | feat-ветка |
 | P2-perf | ✅ готово | feat-ветка |
 | P2-theme | ✅ готово (consv) | feat-ветка |
-| P3 | ⬜ | — |
+| P3 | ✅ готово | feat-ветка |

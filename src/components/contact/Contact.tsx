@@ -21,7 +21,7 @@ export function Contact() {
               </span>
               {contact.eyebrow}
             </p>
-            <h2 className="mt-4 max-w-[20ch] font-[family-name:var(--font-display)] text-[clamp(32px,6vw,72px)] leading-[1.02] tracking-[0.01em] text-[var(--color-bone)] uppercase">
+            <h2 className="mt-4 max-w-[20ch] font-[family-name:var(--font-display)] text-[clamp(32px,6vw,72px)] leading-[1.02] tracking-[0.01em] text-balance text-[var(--color-bone)] uppercase">
               {contact.heading}
             </h2>
             <p className="mt-5 max-w-[52ch] text-[15px] leading-[1.6] text-[var(--color-steel)]">

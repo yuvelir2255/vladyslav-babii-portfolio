@@ -36,6 +36,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* мягкий перенос прозы — меньше «сирот» в конце абзацев (безопасно: не меняет
+   число строк, не влияет на SplitText-заголовки) */
+p {
+  text-wrap: pretty;
+}
+
 /* зерно бетона (overlay) */
 .grain::before {
   content: '';
