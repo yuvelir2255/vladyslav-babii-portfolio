@@ -21,7 +21,7 @@ describe('Evidence', () => {
       title?.getAttribute('aria-label') ?? title?.textContent ?? '';
     expect(titleText).toMatch(/Dream Gold/);
     expect(
-      screen.getByText(/used daily by a real jewelry atelier/i),
+      screen.getByText(/taking real orders for a jewelry atelier/i),
     ).toBeInTheDocument();
   });
   it('содержит живую ссылку на экспонат (anchor в DOM)', () => {

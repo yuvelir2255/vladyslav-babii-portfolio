@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { ChainOfCustody } from './ChainOfCustody';
+import { ExhibitLinks } from './ExhibitLinks';
 
-describe('ChainOfCustody', () => {
+describe('ExhibitLinks', () => {
   it('даёт живые внешние ссылки на экспонат и веб-демо', () => {
-    render(<ChainOfCustody />);
+    render(<ExhibitLinks />);
     const open = screen.getByRole('link', { name: /open exhibit/i });
     expect(open).toHaveAttribute(
       'href',
@@ -16,10 +16,5 @@ describe('ChainOfCustody', () => {
       'href',
       'https://dreamgold-jewelry.vercel.app',
     );
-  });
-  it('показывает EVID-02 как coming soon', () => {
-    render(<ChainOfCustody />);
-    expect(screen.getByText(/EVID-02/)).toBeInTheDocument();
-    expect(screen.getByText(/Coming soon/i)).toBeInTheDocument();
   });
 });
