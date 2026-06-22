@@ -17,18 +17,28 @@ export function About() {
         >
           <div className="flex flex-[0.8] flex-col gap-5 max-lg:w-full max-lg:max-w-[440px] max-lg:self-center">
             <div data-mugshot className="relative">
-              <span className="evtag">№VB-19</span>
-              <Image
-                src="/media/booking/inmate-build.webp"
-                alt="Vladyslav Babii building on a laptop inside a concrete cell, orange jumpsuit, code on the screens"
-                width={960}
-                height={1192}
-                sizes="(max-width: 1024px) 80vw, 360px"
-                className="block h-auto w-full rounded-[10px] border border-[var(--color-line)] grayscale-[0.15]"
-              />
+              <span data-ev-tag className="evtag">
+                №VB-19
+              </span>
+              <div className="ev-frame rounded-[10px] border border-[var(--color-line)]">
+                <Image
+                  src="/media/booking/inmate-build.webp"
+                  alt="Vladyslav Babii building on a laptop inside a concrete cell, orange jumpsuit, code on the screens"
+                  width={960}
+                  height={1192}
+                  sizes="(max-width: 1024px) 80vw, 360px"
+                  data-ev-desat
+                  className="block h-auto w-full grayscale-[0.15]"
+                />
+                <span aria-hidden="true" className="ev-scan" />
+                <span aria-hidden="true" className="ev-corner ev-corner--tl" />
+                <span aria-hidden="true" className="ev-corner ev-corner--tr" />
+                <span aria-hidden="true" className="ev-corner ev-corner--bl" />
+                <span aria-hidden="true" className="ev-corner ev-corner--br" />
+              </div>
             </div>
             <div data-lower-tiles className="flex items-stretch gap-4">
-              <div className="relative flex-1 overflow-hidden rounded-[8px] border border-[var(--color-line)]">
+              <div className="ev-frame ev-frame--soft relative flex-1 overflow-hidden rounded-[8px] border border-[var(--color-line)]">
                 <Image
                   src="/media/booking/inmate-detail.webp"
                   alt=""
@@ -38,9 +48,14 @@ export function About() {
                   sizes="180px"
                   className="block h-auto w-full grayscale"
                 />
-                <span className="absolute bottom-1 left-2 text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
+                <span className="absolute bottom-1 left-2 z-[3] text-[9px] tracking-[0.13em] text-[var(--color-dim)] uppercase">
                   Profile
                 </span>
+                <span aria-hidden="true" className="ev-scan" />
+                <span aria-hidden="true" className="ev-corner ev-corner--tl" />
+                <span aria-hidden="true" className="ev-corner ev-corner--tr" />
+                <span aria-hidden="true" className="ev-corner ev-corner--bl" />
+                <span aria-hidden="true" className="ev-corner ev-corner--br" />
               </div>
               <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-[8px] border border-[var(--color-line)] p-3">
                 <Fingerprint className="h-20 w-auto" />
