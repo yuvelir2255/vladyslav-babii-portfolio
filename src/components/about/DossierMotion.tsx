@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, ScrollTrigger } from '@/lib/gsap';
+import { gsap } from '@/lib/gsap';
 
 export function DossierMotion({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -78,40 +78,8 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
         });
       }
 
-      // рассекречивание грифов — разовый «щелчок», когда доскроллил до них
-      // (scramble нельзя скрабить — выглядит сломано)
-      const redactedEls = Array.from(
-        root.querySelectorAll<HTMLElement>('[data-redacted-value]'),
-      );
-      const originals = redactedEls.map((el) => el.textContent ?? '');
-      const firstRedacted = root.querySelector('[data-redacted]');
-      if (firstRedacted && redactedEls.length) {
-        let declassified = false;
-        ScrollTrigger.create({
-          trigger: firstRedacted,
-          start: 'top 80%',
-          onEnter: () => {
-            if (declassified) return;
-            declassified = true;
-            root
-              .querySelectorAll<HTMLElement>('[data-redacted]')
-              .forEach((b) => {
-                b.dataset.open = 'true';
-                b.setAttribute('aria-expanded', 'true');
-              });
-            redactedEls.forEach((el, i) => {
-              gsap.to(el, {
-                duration: 0.7,
-                scrambleText: {
-                  text: originals[i],
-                  chars: 'upperAndLowerCase',
-                  revealDelay: 0.15,
-                },
-              });
-            });
-          },
-        });
-      }
+      // грифы рассекречиваются по клику (см. RedactedField) — авто-открытие убрано,
+      // иначе фишку никто не замечает.
 
       // штамп DECLASSIFIED — разовый слэм, когда доскроллил (реверс при возврате)
       const stamp = root.querySelector('[data-stamp]');

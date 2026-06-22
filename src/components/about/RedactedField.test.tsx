@@ -11,6 +11,10 @@ describe('RedactedField', () => {
     expect(btn).toHaveAttribute('aria-expanded', 'false');
     expect(screen.getByText('secret intel')).toBeInTheDocument();
   });
+  it('показывает намёк-подпись пока засекречено', () => {
+    render(<RedactedField label="Prior record" value="secret intel" />);
+    expect(screen.getByText(/declassify/i)).toBeInTheDocument();
+  });
   it('клик рассекречивает и засекречивает обратно', () => {
     render(<RedactedField label="Prior record" value="secret intel" />);
     const btn = screen.getByRole('button', {
