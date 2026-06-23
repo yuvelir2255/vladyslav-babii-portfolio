@@ -9,6 +9,28 @@ export function HeroScreen1() {
     <section id="yard" className="relative flex min-h-[100svh] flex-col pt-16">
       <Ticker />
       <div className="relative z-[2] flex flex-1 items-center gap-12 px-14 py-8 max-lg:flex-col max-lg:gap-8 max-lg:px-6">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-2 hidden -translate-y-1/2 rotate-180 font-[family-name:var(--font-mono)] text-[11px] tracking-[0.3em] text-[var(--color-dim)] uppercase [writing-mode:vertical-rl] lg:block"
+        >
+          {hero.sideLabel}
+        </span>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-2 left-2 hidden h-4 w-4 border-t-2 border-l-2 border-[var(--color-orange)] lg:block"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute top-2 right-2 hidden h-4 w-4 border-t-2 border-r-2 border-[var(--color-orange)] lg:block"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-2 left-2 hidden h-4 w-4 border-b-2 border-l-2 border-[var(--color-orange)] lg:block"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute right-2 bottom-2 hidden h-4 w-4 border-r-2 border-b-2 border-[var(--color-orange)] lg:block"
+        />
         <HeroNameMotion className="flex-[1.1]">
           <p className="text-[12px] tracking-[0.1em] text-[var(--color-orange)] uppercase">
             {hero.meta}
@@ -27,6 +49,18 @@ export function HeroScreen1() {
           <p className="text-[13px] leading-[1.7] font-semibold tracking-[0.06em] uppercase">
             {hero.role}
           </p>
+          <dl className="mt-7 hidden gap-x-8 gap-y-1 border-t border-[var(--color-line)] pt-4 lg:flex">
+            {hero.rapSheet.map((row, i) => (
+              <div key={row.label} className={i === 2 ? 'hidden xl:block' : ''}>
+                <dt className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] text-[var(--color-dim)] uppercase">
+                  {row.label}
+                </dt>
+                <dd className="mt-1 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--color-bone)] uppercase">
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <a
               href={hero.cta[0].href}
