@@ -4,10 +4,16 @@
   --color-bg: #100f0d;
   --color-bone: #ece7da;
   --color-steel: #9c968a;
-  --color-dim: #827c70;
+  /* dim осветлён #827c70 → #918a7c: ожившой фон (тёплое свечение + прутья)
+     локально поднимает яркость под мелкими подписями; новый ~5.6:1 даёт запас
+     над AA на тёплых зонах (Contact/Charges/hero), оставаясь ниже steel (6.5:1)
+     — иерархия лейбл<тело сохраняется */
+  --color-dim: #918a7c;
   --color-orange: #ff5a1e;
   --color-orange-soft: color-mix(in srgb, var(--color-orange) 12%, transparent);
-  --color-line: rgba(236, 231, 218, 0.12);
+  /* line уплотнён 0.12 → 0.18: на ожившей бетонной фактуре кромки карт/инпутов/
+     чипов/хром-чипов с 12% почти исчезали */
+  --color-line: rgba(236, 231, 218, 0.18);
   /* роль «текст на оранжевом» (контрастный тёмный) */
   --color-on-orange: #160d06;
   /* приподнятая бетонная поверхность (рейл прогресса, верх радиального градиента) */
@@ -121,6 +127,15 @@ html.intake-lock body {
   overscroll-behavior: none;
 }
 
+/* прелоадер использует те же статичные слои фона, что и сайт (.mood-steel /
+   .bars / .bg-vignette читают эти vars; шейдер НЕ грузим — перф старта). Steel-
+   моод (как hero), прутья чуть тише, виньетка как у hero. */
+.preloader {
+  --m-steel: 1;
+  --bar-opacity: 0.5;
+  --vig: 0.5;
+}
+
 /* booking-табличка — текст прямо на доске мугшота (без подложки), значения от руки */
 .placard {
   position: absolute;
@@ -203,11 +218,23 @@ html.intake-lock body {
   display: inline-block;
   min-width: 60%;
 }
+/* редакшн-полоса — графит в палитре (не чистый чёрный, не выбивается из
+   бетона/стали): тёмный графит + лёгкая вертикальная ребристость + хайрлайн
+   сверху и тень снизу → читается как физическая «цензура» дела */
 .redaction-bar {
   position: absolute;
   inset: 0;
   transform-origin: right;
-  background: repeating-linear-gradient(90deg, #000 0 10px, #0c0b0a 10px 12px);
+  border-radius: 2px;
+  background-color: color-mix(in srgb, var(--color-surface) 62%, #000 38%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 9px,
+    color-mix(in srgb, #000 45%, transparent) 9px 11px
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(236, 231, 218, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45);
   transition:
     opacity 0.35s ease,
     transform 0.35s ease;
@@ -251,7 +278,9 @@ html.cursor-custom * {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 60;
+  /* курсор всегда поверх хрома (FileNav 50, аудио 70) — оранжевый круг должен
+     быть НАД иконками, не под ними; ниже прелоадера (100) */
+  z-index: 90;
   pointer-events: none;
   width: 16px;
   height: 16px;
@@ -341,7 +370,10 @@ html.cursor-custom * {
   max-height: 580px;
   border: 1px solid var(--color-line);
   border-radius: 14px;
-  background: rgba(20, 18, 16, 0.5);
+  /* плотнее 0.5 → 0.82: на живом фоне прутья/тёплое свечение просвечивали сквозь
+     полупрозрачную карту и карта теряла границу панели; 0.82 возвращает плотную
+     поверхность, лёгкая прозрачность связи с фоном остаётся */
+  background: rgba(22, 20, 17, 0.82);
   overflow: hidden;
 }
 @media (max-width: 1023px) {
@@ -465,27 +497,71 @@ html.cursor-custom * {
     box-shadow: 0 0 0 5px transparent;
   }
 }
-/* мягкий скан-луч «в обработке» по карте слота */
+/* скан-луч «в обработке» по карте слота (заметнее на живом фоне) */
+/* луч-свип через transform translateX (а НЕ background-position в %): даёт
+   одинаковый полный проход каждый цикл; старый %-position при background-size
+   220% делал первый цикл «до середины» (до 1-го кадра фон стоял в дефолте) */
 .pending-scan {
   position: absolute;
-  inset: 0;
+  top: -12%;
+  bottom: -12%;
+  left: 0;
+  width: 38%;
   pointer-events: none;
   background: linear-gradient(
-    105deg,
-    transparent 42%,
-    color-mix(in srgb, var(--color-orange) 9%, transparent) 50%,
-    transparent 58%
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-orange) 18%, transparent),
+    transparent
   );
-  background-size: 220% 100%;
   mix-blend-mode: screen;
+  transform: skewX(-10deg) translateX(-140%);
   animation: pending-sweep 3.6s linear infinite;
+}
+
+/* угловые риски слота (forensic-рамка «зарезервировано под улику») */
+.pending-corner {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border-color: color-mix(in srgb, var(--color-steel) 70%, transparent);
+  pointer-events: none;
+  transition: border-color 0.4s ease;
+}
+.pending-slot:hover .pending-corner {
+  border-color: var(--color-orange);
+}
+.pending-corner--tl {
+  top: 10px;
+  left: 10px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.pending-corner--tr {
+  top: 10px;
+  right: 10px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+.pending-corner--bl {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+.pending-corner--br {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
 }
 @keyframes pending-sweep {
   from {
-    background-position: 130% 0;
+    transform: skewX(-10deg) translateX(-140%);
   }
   to {
-    background-position: -130% 0;
+    transform: skewX(-10deg) translateX(330%);
   }
 }
 
@@ -656,6 +732,17 @@ html.cursor-custom * {
   .ev-device:hover [data-bag-draw] {
     stroke: var(--color-orange);
     stroke-opacity: 0.7;
+  }
+
+  /* hero booking-фото: фото и текст доски в одном слое [data-hero-zoom]
+     наезжают идентично (тот же центр, тот же scale 1.08, что было у фото) —
+     текст остаётся приклеенным к чёрной доске */
+  [data-hero-zoom] {
+    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ev-frame:hover [data-hero-zoom] {
+    transform: scale(1.08);
+    will-change: transform;
   }
 }
 

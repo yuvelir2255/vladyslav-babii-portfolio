@@ -86,14 +86,21 @@ export function Preloader() {
   return (
     <div
       ref={root}
-      className="preloader grain fixed inset-0 z-[100] flex min-h-screen touch-none items-center justify-center overscroll-none bg-[var(--color-bg)]"
+      className="preloader fixed inset-0 z-[100] flex min-h-screen touch-none items-center justify-center overscroll-none bg-[radial-gradient(90%_70%_at_50%_-10%,var(--color-surface)_0%,var(--color-bg)_60%)]"
       role="status"
       aria-label="Processing intake, please wait"
     >
+      {/* фон в стиле сайта: статичные слои ConcreteBg без WebGL-шейдера
+         (бетон-градиент на root + dome + steel-моод + прутья + виньетка + grain) */}
       <div
-        className="bars pointer-events-none absolute inset-0"
+        className="grain pointer-events-none absolute inset-0 z-0"
         aria-hidden="true"
-      />
+      >
+        <div className="bg-dome" />
+        <div className="mood-steel" />
+        <div className="bars absolute inset-0" />
+        <div className="bg-vignette" />
+      </div>
       <div className="relative z-[2] w-[min(620px,86%)]" aria-hidden="true">
         <p className="mb-5 text-[12px] tracking-[0.32em] text-[var(--color-orange)] uppercase">
           Processing inmate

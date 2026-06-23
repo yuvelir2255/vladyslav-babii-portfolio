@@ -46,7 +46,7 @@ export function AudioToggle() {
         onClick={toggle}
         aria-label={on ? 'Mute ambience' : 'Play ambience'}
         aria-pressed={on}
-        className="fixed right-5 bottom-5 z-[70] flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_72%,transparent)] text-[var(--color-steel)] backdrop-blur transition-colors hover:border-[var(--color-orange)] hover:text-[var(--color-bone)] focus-visible:text-[var(--color-bone)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
+        className="fixed right-5 bottom-5 z-[70] flex h-11 w-11 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--color-steel)_28%,transparent)] bg-[color-mix(in_srgb,var(--color-surface)_88%,transparent)] text-[var(--color-bone)] shadow-[0_6px_20px_-8px_rgba(0,0,0,0.6)] backdrop-blur transition-colors hover:border-[var(--color-orange)] hover:text-[var(--color-orange)] focus-visible:border-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)]"
       >
         <svg
           width="18"
