@@ -104,6 +104,12 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
         });
       }
 
+      // текстовые блоки колонки EVID-01 (код-строка, summary, теги) — чтобы
+      // карточка появлялась связно, как заголовок над ними, а не статикой
+      root
+        .querySelectorAll('[data-ev-reveal]')
+        .forEach((el) => reveal(el, { autoAlpha: 0, y: 18 }));
+
       // факты
       root
         .querySelectorAll('[data-fact]')

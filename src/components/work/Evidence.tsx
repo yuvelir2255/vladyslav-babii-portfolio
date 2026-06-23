@@ -32,7 +32,10 @@ export function Evidence() {
             </div>
 
             <div className="flex-[1.1] max-lg:w-full">
-              <p className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.2em] text-[var(--color-dim)] uppercase">
+              <p
+                data-ev-reveal
+                className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.2em] text-[var(--color-dim)] uppercase"
+              >
                 {exhibit.code} · {exhibit.status}
               </p>
               <h3
@@ -41,7 +44,10 @@ export function Evidence() {
               >
                 {exhibit.title}
               </h3>
-              <p className="mt-4 max-w-[46ch] text-[15px] leading-[1.6] text-[var(--color-steel)]">
+              <p
+                data-ev-reveal
+                className="mt-4 max-w-[46ch] text-[15px] leading-[1.6] text-[var(--color-steel)]"
+              >
                 {exhibit.summary}
               </p>
 
@@ -59,7 +65,10 @@ export function Evidence() {
                 ))}
               </ul>
 
-              <p className="mt-5 text-[12px] tracking-[0.04em] text-[var(--color-dim)]">
+              <p
+                data-ev-reveal
+                className="mt-5 text-[12px] tracking-[0.04em] text-[var(--color-dim)]"
+              >
                 {exhibit.tags.join(' · ')}
               </p>
 
