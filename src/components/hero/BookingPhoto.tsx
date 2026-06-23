@@ -3,7 +3,7 @@ import { Placard } from './Placard';
 
 export function BookingPhoto() {
   return (
-    <div className="relative w-[clamp(300px,38vw,480px)]">
+    <div className="[container-type:inline-size] relative w-[clamp(300px,38vw,480px)]">
       <span data-ev-tag className="evtag">
         EXHIBIT A
       </span>
