@@ -86,7 +86,7 @@ export function Preloader() {
   return (
     <div
       ref={root}
-      className="preloader grain fixed inset-0 z-[100] flex touch-none items-center justify-center overscroll-none bg-[var(--color-bg)]"
+      className="preloader grain fixed inset-0 z-[100] flex min-h-screen touch-none items-center justify-center overscroll-none bg-[var(--color-bg)]"
       role="status"
       aria-label="Processing intake, please wait"
     >

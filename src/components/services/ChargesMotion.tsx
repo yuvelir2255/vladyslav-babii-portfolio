@@ -53,28 +53,31 @@ export function ChargesMotion({ children }: { children: React.ReactNode }) {
           [num, gloss, stamp, stampDraw, ...words].filter(Boolean) as Element[],
         );
 
-        // очень мягкое, пологое появление (sine.out — без рывка на входе/выходе)
-        const tl = gsap.timeline({ defaults: { ease: 'sine.out' } });
+        // «проявка»: текст проступает из размытия в резкость (blur→sharp) + fade,
+        // без вертикальных прыжков/подъёмов — чтобы не мельтешило поверх едущей
+        // вбок ленты. Заголовок — слово-за-словом, но мягко (только blur+opacity,
+        // малый stagger). Консистентно с подписью внизу Contact.
+        const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
         if (num)
           tl.fromTo(
             num,
-            { autoAlpha: 0, yPercent: 10 },
-            { autoAlpha: 1, yPercent: 0, duration: 1.2 },
+            { autoAlpha: 0, filter: 'blur(16px)' },
+            { autoAlpha: 1, filter: 'blur(0px)', duration: 1.1 },
             0,
           );
         if (words.length)
           tl.fromTo(
             words,
-            { autoAlpha: 0, y: 12 },
-            { autoAlpha: 1, y: 0, stagger: 0.12, duration: 1.2 },
-            0.12,
+            { autoAlpha: 0, filter: 'blur(12px)' },
+            { autoAlpha: 1, filter: 'blur(0px)', stagger: 0.06, duration: 0.9 },
+            0.1,
           );
         if (gloss)
           tl.fromTo(
             gloss,
-            { autoAlpha: 0, y: 10 },
-            { autoAlpha: 1, y: 0, duration: 1.2 },
-            0.34,
+            { autoAlpha: 0, filter: 'blur(8px)' },
+            { autoAlpha: 1, filter: 'blur(0px)', duration: 1 },
+            0.28,
           );
         if (stampDraw)
           tl.fromTo(
