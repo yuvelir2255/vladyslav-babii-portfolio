@@ -22,4 +22,8 @@ describe('HeroScreen1', () => {
     expect(screen.getByText(/builds, ships, escapes/i)).toBeInTheDocument();
     expect(screen.getByText(/threat level/i)).toBeInTheDocument();
   });
+  it('рендерит вертикальный лейбл-декор', () => {
+    render(<HeroScreen1 />);
+    expect(screen.getByText(/do not distribute/i)).toBeInTheDocument();
+  });
 });
