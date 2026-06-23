@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { moodForSection, BG_SECTION_IDS } from './bgMood';
+import { moodForSection, BG_SECTION_IDS } from './moods';
 
 describe('moodForSection', () => {
   it('about — темнее (vig и прутья плотнее)', () => {

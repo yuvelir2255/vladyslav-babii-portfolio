@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { ScrollTrigger } from '@/lib/gsap';
-import { BG_SECTION_IDS, moodForSection } from './bgMood';
+import { BG_SECTION_IDS, moodForSection } from './moods';
 
 export function BgMood() {
   useEffect(() => {
