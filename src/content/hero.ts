@@ -26,4 +26,10 @@ export const hero = {
     { t: 'real orders', o: true },
     { t: '.' },
   ],
+  sideLabel: 'Confidential · Do not distribute',
+  rapSheet: [
+    { label: 'Disposition', value: 'Unrepentant' },
+    { label: 'M.O.', value: 'Builds, ships, escapes' },
+    { label: 'Threat level', value: 'High' },
+  ],
 } as const;

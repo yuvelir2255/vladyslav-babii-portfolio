@@ -16,4 +16,12 @@ describe('hero content', () => {
     expect(hero.ticker.length).toBeGreaterThanOrEqual(4);
     expect(hero.cta).toHaveLength(2);
   });
+  it('содержит вертикальный лейбл и рап-шит из 3 полей', () => {
+    expect(hero.sideLabel).toMatch(/confidential/i);
+    expect(hero.rapSheet).toHaveLength(3);
+    hero.rapSheet.forEach((row) => {
+      expect(row.label.length).toBeGreaterThan(0);
+      expect(row.value.length).toBeGreaterThan(0);
+    });
+  });
 });
