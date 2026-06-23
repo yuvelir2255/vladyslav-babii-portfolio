@@ -12,13 +12,22 @@ afterEach(() => {
 
 describe('FileNav', () => {
   it('переключает директорию и содержит секции', async () => {
-    render(<FileNav />);
+    const { container } = render(<FileNav />);
     const btn = screen.getByRole('button', { name: /directory/i });
     expect(btn).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(btn);
     expect(btn).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByText('Evidence')).toBeInTheDocument();
-    expect(screen.getByText('Visiting Hours')).toBeInTheDocument();
+    // label обёрнут в RollText (видимый текст + aria-hidden клон) → ищем ссылки по
+    // href, а не наивным getByText (нашёл бы дубль из-за клона). Видимый текст —
+    // в .roll__line (не в клоне), его и проверяем.
+    const evid = container.querySelector('a[href="#work"]');
+    const visit = container.querySelector('a[href="#contact"]');
+    expect(
+      evid?.querySelector('.roll__line:not(.roll__line--clone)'),
+    ).toHaveTextContent('Evidence');
+    expect(
+      visit?.querySelector('.roll__line:not(.roll__line--clone)'),
+    ).toHaveTextContent('Visiting Hours');
   });
 
   it('scroll-spy: помечает активную секцию aria-current при пересечении', () => {

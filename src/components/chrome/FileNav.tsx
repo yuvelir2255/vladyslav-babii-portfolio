@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from '@/lib/gsap';
+import { RollText } from '@/components/ui/RollText';
 
 const SECTIONS = [
   { code: '00', label: 'The Yard', href: '#yard' },
@@ -163,7 +164,7 @@ export function FileNav() {
               >
                 {s.code}
               </span>
-              <span>{s.label}</span>
+              <RollText>{s.label}</RollText>
               {isActive && (
                 <span
                   aria-hidden="true"
