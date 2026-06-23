@@ -1,5 +1,5 @@
 import { contact } from '@/content/contact';
-import { Bars } from './Bars';
+import { ReleaseGlow } from './ReleaseGlow';
 import { VisitForm } from './VisitForm';
 import { ContactChannels } from './ContactChannels';
 import { AuthorSignature } from './AuthorSignature';
@@ -12,7 +12,7 @@ export function Contact() {
       className="relative overflow-hidden px-14 py-28 max-md:px-6 max-md:py-20"
     >
       <ReleaseMotion>
-        <Bars />
+        <ReleaseGlow />
         <div className="relative z-10 mx-auto w-full max-w-[1100px]">
           <header data-contact-reveal className="mb-12 max-md:mb-8">
             <p className="text-[12px] tracking-[0.2em] text-[var(--color-orange)] uppercase">

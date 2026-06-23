@@ -12,16 +12,18 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
       const root = ref.current;
       if (!root) return;
 
-      // СТАДИЯ 2 — освобождение (по событию vb:released из VisitForm; не по скроллу)
+      // ОТПРАВКА ФОРМЫ — вспышка дневного света (по событию vb:released из
+      // VisitForm). «Дверь камеры» убрана; остаётся тёплый bloom — «выход на свет».
       const release = () => {
-        const tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
-        tl.to('[data-bars-left]', { xPercent: -110, duration: 0.9 }, 0);
-        tl.to('[data-bars-right]', { xPercent: 110, duration: 0.9 }, 0);
-        tl.to('[data-daylight]', { opacity: 0.55, duration: 1.1 }, 0.1);
+        gsap.to('[data-daylight]', {
+          opacity: 1,
+          duration: 1.1,
+          ease: 'power2.out',
+        });
       };
       window.addEventListener('vb:released', release);
 
-      // СТАДИЯ 1 — скраб-ревил: прутья «садятся» и контент проявляется по скроллу
+      // скраб-ревил контента секции по скроллу
       const reveal = (
         el: Element,
         vars: gsap.TweenVars,
@@ -33,12 +35,6 @@ export function ReleaseMotion({ children }: { children: React.ReactNode }) {
           ease: 'none',
           scrollTrigger: { trigger: el, start, end, scrub: 0.6 },
         });
-
-      root
-        .querySelectorAll('[data-bars-left], [data-bars-right]')
-        .forEach((b) =>
-          reveal(b, { autoAlpha: 0, y: -28 }, 'top 96%', 'top 72%'),
-        );
 
       root
         .querySelectorAll('[data-contact-reveal]')

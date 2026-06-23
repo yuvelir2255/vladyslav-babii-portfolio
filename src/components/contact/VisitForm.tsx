@@ -81,12 +81,12 @@ export function VisitForm() {
       <div
         data-form-success
         role="status"
-        className="rounded border border-[var(--color-orange)] bg-[var(--color-orange-soft)] px-5 py-6"
+        className="release-card relative overflow-hidden rounded border border-[var(--color-orange)] bg-[var(--color-orange-soft)] px-6 py-10 text-center"
       >
-        <p className="font-[family-name:var(--font-stencil)] text-[20px] tracking-[0.06em] text-[var(--color-orange)] uppercase">
-          Released
-        </p>
-        <p className="mt-2 text-[14px] leading-[1.6] text-[var(--color-bone)]">
+        <span data-release-stamp className="release-stamp">
+          Release authorized
+        </span>
+        <p className="mt-5 text-[14px] leading-[1.6] text-[var(--color-bone)]">
           {c.success}
         </p>
       </div>

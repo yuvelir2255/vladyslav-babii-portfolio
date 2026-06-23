@@ -30,7 +30,8 @@ html {
 }
 
 body {
-  background: var(--color-bg);
+  /* фон НЕ задаём: он на html (канвас). Непрозрачный body перекрывал бы
+     #concrete-bg (fixed, -z-10) — слой фона тогда не виден вовсе. */
   color: var(--color-bone);
   font-family: var(--font-mono);
   -webkit-font-smoothing: antialiased;
@@ -61,11 +62,14 @@ p {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: var(--bar-opacity, 0.7);
+  transition: opacity 0.8s ease;
   background: repeating-linear-gradient(
     90deg,
-    transparent 0 78px,
-    rgba(0, 0, 0, 0.4) 78px 82px
+    transparent 0 70px,
+    rgba(236, 231, 218, 0.08) 70px 71px,
+    rgba(0, 0, 0, 0.5) 71px 77px,
+    rgba(236, 231, 218, 0.03) 77px 78px
   );
   -webkit-mask: linear-gradient(
     90deg,
@@ -653,4 +657,108 @@ html.cursor-custom * {
     stroke: var(--color-orange);
     stroke-opacity: 0.7;
   }
+}
+
+/* ── фон: дотюн (A) + посекционные мооды (C) ── */
+#concrete-bg {
+  --m-steel: 1;
+  --m-warm: 0;
+  --m-day: 0;
+  --bar-opacity: 0.45;
+  --vig: 0.5;
+}
+.bg-dome,
+.mood-steel,
+.mood-warm,
+.mood-day,
+.bg-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.bg-dome {
+  z-index: 1;
+  background: radial-gradient(
+    95% 70% at 50% -8%,
+    rgba(74, 76, 84, 0.4),
+    transparent 62%
+  );
+}
+.mood-steel,
+.mood-warm,
+.mood-day {
+  z-index: 1;
+  transition: opacity 0.8s ease;
+}
+.mood-steel {
+  background: radial-gradient(
+    150% 100% at 50% 0%,
+    rgba(105, 145, 195, 0.16),
+    transparent 78%
+  );
+  opacity: var(--m-steel);
+}
+.mood-warm {
+  background: radial-gradient(
+    130% 100% at 50% 35%,
+    rgba(255, 90, 30, 0.12),
+    transparent 82%
+  );
+  opacity: var(--m-warm);
+}
+.mood-day {
+  background: radial-gradient(
+    160% 115% at 50% 115%,
+    rgba(255, 185, 120, 0.22),
+    transparent 80%
+  );
+  opacity: var(--m-day);
+}
+.bg-vignette {
+  z-index: 3;
+  box-shadow: inset 0 0 140px 40px
+    color-mix(in srgb, #000 calc(var(--vig) * 100%), transparent);
+  transition: box-shadow 0.8s ease;
+}
+
+/* Contact — эффект отправки: карточка проявляется из размытия, штамп «слэмит» */
+@keyframes release-card-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+.release-card {
+  animation: release-card-in 0.55s ease both;
+}
+@keyframes release-stamp-slam {
+  0% {
+    opacity: 0;
+    transform: rotate(-3deg) scale(1.9);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+.release-stamp {
+  display: inline-block;
+  border: 3px solid var(--color-orange);
+  color: var(--color-orange);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font: 24px var(--font-stencil);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  animation: release-stamp-slam 0.5s 0.15s cubic-bezier(0.2, 0.9, 0.25, 1) both;
 }
