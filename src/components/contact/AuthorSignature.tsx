@@ -30,7 +30,7 @@ export function AuthorSignature() {
       </svg>
       <p
         data-sign-cap
-        className="mt-7 text-[12px] tracking-[0.2em] text-[var(--color-dim)] uppercase"
+        className="mt-7 text-[12px] tracking-[0.2em] text-[var(--color-steel)] uppercase"
       >
         {caption}
       </p>

@@ -8,7 +8,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
 type FieldName = 'name' | 'email' | 'project';
 
 const field =
-  'mt-1 min-h-[44px] w-full rounded border border-[var(--color-line)] bg-[color-mix(in_srgb,var(--color-bg)_60%,transparent)] px-3 py-2.5 text-[14px] text-[var(--color-bone)] placeholder:text-[var(--color-dim)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)] aria-[invalid=true]:border-[var(--color-orange)]';
+  'mt-1 min-h-[44px] w-full rounded border border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] bg-[color-mix(in_srgb,var(--color-bg)_60%,transparent)] px-3 py-2.5 text-[14px] text-[var(--color-bone)] placeholder:text-[var(--color-dim)] focus-visible:border-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-orange)] aria-[invalid=true]:border-[var(--color-orange)]';
 const labelCls =
   'block text-[11px] tracking-[0.14em] text-[var(--color-dim)] uppercase';
 const errCls = 'mt-1 text-[12px] text-[var(--color-orange)]';
