@@ -298,6 +298,21 @@ html.cursor-custom * {
   background: color-mix(in srgb, var(--color-bg) 50%, transparent);
 }
 
+/* мобайл: одноколоночный folder забит текстом до низа — absolute-штамп
+   (bottom 5%) ложился на disposition/tools, а места под текстом нет.
+   Выводим штамп из absolute в поток: встаёт под контентом, выровнен вправо,
+   folder растёт — перекрытий нет. Наклон (rotate) сохраняется. */
+@media (max-width: 767px) {
+  .stamp-declassified {
+    position: static;
+    align-self: flex-end;
+    right: auto;
+    bottom: auto;
+    font-size: 18px;
+    padding: 5px 13px;
+  }
+}
+
 /* активный пункт индекс-рейла секции Charges */
 [data-rail-item].is-active {
   color: var(--color-orange);

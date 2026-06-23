@@ -13,7 +13,7 @@ export function ExhibitDevice() {
   const next = () => setI((p) => (p + 1) % len);
 
   const arrowCls =
-    'inline-flex h-[44px] w-[44px] items-center justify-center text-[var(--color-steel)] transition-colors hover:text-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]';
+    'inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center text-[var(--color-steel)] transition-colors hover:text-[var(--color-orange)] focus-visible:text-[var(--color-orange)] focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]';
 
   return (
     <div className="relative mx-auto w-[min(280px,72vw)]">
@@ -125,7 +125,7 @@ export function ExhibitDevice() {
             aria-label={`Show ${s.label}`}
             aria-current={idx === i ? 'true' : undefined}
             onClick={() => setI(idx)}
-            className="inline-flex h-[44px] w-[44px] items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]"
+            className="inline-flex h-[44px] w-[44px] shrink-0 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-[-6px] focus-visible:outline-[var(--color-orange)]"
           >
             <span
               className={`block h-2 rounded-full transition-all ${

@@ -115,23 +115,26 @@ export function EvidenceMotion({ children }: { children: React.ReactNode }) {
         .querySelectorAll('[data-fact]')
         .forEach((f) => reveal(f, { autoAlpha: 0, y: 14 }));
 
-      // штамп ADMITTED + микро-тряска — разовый щелчок при доскролле
+      // штамп ADMITTED + микро-тряска — разовый щелчок при доскролле.
+      // На мобайле смягчаем штамп (мягкий ease без отскока) и отключаем
+      // тряску секции — на телефоне резкий слэм + сдвиг всей секции дёргает.
       const admitted = root.querySelector('[data-admitted]');
       if (admitted) {
+        const soft = window.matchMedia('(max-width: 767px)').matches;
         gsap.from('[data-admitted]', {
           autoAlpha: 0,
-          scale: 1.8,
-          rotate: -20,
+          scale: soft ? 1.25 : 1.8,
+          rotate: soft ? -12 : -20,
           transformOrigin: 'center',
-          duration: 0.5,
-          ease: 'back.out(1.7)',
+          duration: soft ? 0.7 : 0.5,
+          ease: soft ? 'power3.out' : 'back.out(1.7)',
           scrollTrigger: {
             trigger: admitted,
             start: 'top 84%',
             toggleActions: 'play none none reverse',
           },
         });
-        if (section) {
+        if (section && !soft) {
           ScrollTrigger.create({
             trigger: admitted,
             start: 'top 84%',

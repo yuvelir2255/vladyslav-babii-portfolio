@@ -83,15 +83,18 @@ export function DossierMotion({ children }: { children: React.ReactNode }) {
       // грифы рассекречиваются по клику (см. RedactedField) — авто-открытие убрано,
       // иначе фишку никто не замечает.
 
-      // штамп DECLASSIFIED — разовый слэм, когда доскроллил (реверс при возврате)
+      // штамп DECLASSIFIED — разовый слэм, когда доскроллил (реверс при возврате).
+      // На мобайле смягчаем: меньше оверштут/наклон, мягкий ease без отскока —
+      // на телефоне резкий «слэм» читается дёрганым (desktop-концепт сохранён).
       const stamp = root.querySelector('[data-stamp]');
       if (stamp) {
+        const soft = window.matchMedia('(max-width: 767px)').matches;
         gsap.from('[data-stamp]', {
           autoAlpha: 0,
-          scale: 1.8,
-          rotate: -24,
-          duration: 0.5,
-          ease: 'back.out(1.7)',
+          scale: soft ? 1.25 : 1.8,
+          rotate: soft ? -12 : -24,
+          duration: soft ? 0.7 : 0.5,
+          ease: soft ? 'power3.out' : 'back.out(1.7)',
           scrollTrigger: {
             trigger: stamp,
             start: 'top 82%',
