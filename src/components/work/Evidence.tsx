@@ -26,12 +26,12 @@ export function Evidence() {
             </h2>
           </header>
 
-          <div className="flex items-start gap-12 max-lg:flex-col max-lg:items-center max-lg:gap-10">
+          <div className="ev-exhibit flex items-start gap-12 max-lg:flex-col max-lg:items-center max-lg:gap-10">
             <div className="flex-[0.9] max-lg:w-full">
               <ExhibitDevice />
             </div>
 
-            <div className="flex-[1.1] max-lg:w-full">
+            <div data-ev-zoom-text className="flex-[1.1] max-lg:w-full">
               <p
                 data-ev-reveal
                 className="font-[family-name:var(--font-mono)] text-[11px] tracking-[0.2em] text-[var(--color-dim)] uppercase"
