@@ -35,6 +35,10 @@ export function Preloader() {
     lenis?.stop();
     lenis?.scrollTo(0, { immediate: true });
     window.scrollTo(0, 0);
+    // На телефоне Lenis не управляет нативным тач-скроллом (syncTouch off),
+    // поэтому lenis.stop() не держит — лочим скролл документа на время intake
+    // (overflow:hidden на html + touch-action:none на самом прелоадере ниже).
+    document.documentElement.classList.add('intake-lock');
 
     // контент за прелоадером недоступен с клавиатуры/SR, пока идёт intake
     const content = document.getElementById('app-content');
@@ -58,6 +62,7 @@ export function Preloader() {
             } catch {
               /* приватный режим — просто покажем intake снова в след. раз */
             }
+            document.documentElement.classList.remove('intake-lock');
             if (content) content.inert = false;
             lenis?.start();
             setDone(true);
@@ -68,6 +73,7 @@ export function Preloader() {
 
     return () => {
       tween.kill();
+      document.documentElement.classList.remove('intake-lock');
       if (content) content.inert = false;
       lenis?.start(); // страховка: не оставить скролл заблокированным
     };
@@ -80,7 +86,7 @@ export function Preloader() {
   return (
     <div
       ref={root}
-      className="preloader grain fixed inset-0 z-[100] flex items-center justify-center bg-[var(--color-bg)]"
+      className="preloader grain fixed inset-0 z-[100] flex touch-none items-center justify-center overscroll-none bg-[var(--color-bg)]"
       role="status"
       aria-label="Processing intake, please wait"
     >

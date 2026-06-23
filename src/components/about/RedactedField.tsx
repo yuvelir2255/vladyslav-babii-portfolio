@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { gsap } from '@/lib/gsap';
+import { gsap, SplitText } from '@/lib/gsap';
 
 export function RedactedField({
   label,
@@ -20,20 +20,38 @@ export function RedactedField({
     el.dataset.open = String(!open);
     el.setAttribute('aria-expanded', String(!open));
 
-    // первый раз раскрыли — «рассекречивание» с разовым scramble
+    // первый раз раскрыли — «рассекречивание»
     if (!open && !revealedOnce.current) {
       revealedOnce.current = true;
       const valueEl = el.querySelector<HTMLElement>('[data-redacted-value]');
       if (valueEl) {
+        const mobile = window.matchMedia('(max-width: 767px)').matches;
         try {
-          gsap.to(valueEl, {
-            duration: 0.7,
-            scrambleText: {
-              text: value,
-              chars: 'upperAndLowerCase',
-              revealDelay: 0.15,
-            },
-          });
+          if (mobile) {
+            // на телефоне scramble дёргает верстку: перетасовка символов
+            // пропорционального шрифта меняет перенос строк → прыгает высота.
+            // Мягкое появление слово-за-словом — текст на финальных позициях,
+            // меняется только прозрачность, layout стабилен.
+            const split = new SplitText(valueEl, { type: 'words' });
+            gsap.from(split.words, {
+              autoAlpha: 0,
+              y: 6,
+              duration: 0.5,
+              stagger: 0.045,
+              ease: 'power2.out',
+              onComplete: () => split.revert(),
+            });
+          } else {
+            // десктоп — фирменный scramble «рассекречивания»
+            gsap.to(valueEl, {
+              duration: 0.7,
+              scrambleText: {
+                text: value,
+                chars: 'upperAndLowerCase',
+                revealDelay: 0.15,
+              },
+            });
+          }
         } catch {
           // моушн — прогрессивное улучшение; текст уже в DOM
         }

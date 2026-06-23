@@ -109,6 +109,14 @@ html.intake-seen .preloader {
   display: none;
 }
 
+/* intake идёт — лочим скролл (на телефоне Lenis.stop() не держит нативный
+   тач; основной блок — touch-action:none на .preloader, здесь — страховка) */
+html.intake-lock,
+html.intake-lock body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 /* booking-табличка — текст прямо на доске мугшота (без подложки), значения от руки */
 .placard {
   position: absolute;

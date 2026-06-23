@@ -52,6 +52,8 @@ export const contact = {
   location: 'Warsaw, PL',
   author: {
     name: 'Vladyslav Babii',
-    caption: 'Signed · release authorized · 21 · 06 · 2026',
+    // дата с неразрывными пробелами ( ) — чтобы «21 · 06 · 2026» не
+    // разрывалось переносом строки на узком мобайле (была «… · 21» / «· 06 …»)
+    caption: 'Signed · release authorized · 21 · 06 · 2026',
   },
 } as const;

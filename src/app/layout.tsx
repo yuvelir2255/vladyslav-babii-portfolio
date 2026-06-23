@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import {
   Anton,
   JetBrains_Mono,
@@ -53,6 +53,15 @@ export const metadata: Metadata = {
     title: 'Vladyslav Babii — Case File',
     description: SITE_DESCRIPTION,
   },
+};
+
+export const viewport: Viewport = {
+  // тёмная адресная строка/UI на мобайле (вместо серой) — цельно с фоном
+  themeColor: '#100f0d',
+  width: 'device-width',
+  initialScale: 1,
+  // контент/фон заходят под safe-area (notch/home-indicator) — без серой кромки
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
