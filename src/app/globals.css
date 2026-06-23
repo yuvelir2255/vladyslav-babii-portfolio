@@ -66,8 +66,10 @@ p {
   transition: opacity 0.8s ease;
   background: repeating-linear-gradient(
     90deg,
-    transparent 0 75px,
-    rgba(236, 231, 218, 0.09) 75px 77px
+    transparent 0 70px,
+    rgba(236, 231, 218, 0.08) 70px 71px,
+    rgba(0, 0, 0, 0.5) 71px 77px,
+    rgba(236, 231, 218, 0.03) 77px 78px
   );
   -webkit-mask: linear-gradient(
     90deg,
