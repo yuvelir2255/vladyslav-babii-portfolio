@@ -218,11 +218,23 @@ html.intake-lock body {
   display: inline-block;
   min-width: 60%;
 }
+/* редакшн-полоса — графит в палитре (не чистый чёрный, не выбивается из
+   бетона/стали): тёмный графит + лёгкая вертикальная ребристость + хайрлайн
+   сверху и тень снизу → читается как физическая «цензура» дела */
 .redaction-bar {
   position: absolute;
   inset: 0;
   transform-origin: right;
-  background: repeating-linear-gradient(90deg, #000 0 10px, #0c0b0a 10px 12px);
+  border-radius: 2px;
+  background-color: color-mix(in srgb, var(--color-surface) 62%, #000 38%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 9px,
+    color-mix(in srgb, #000 45%, transparent) 9px 11px
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(236, 231, 218, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45);
   transition:
     opacity 0.35s ease,
     transform 0.35s ease;
@@ -266,7 +278,9 @@ html.cursor-custom * {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 60;
+  /* курсор всегда поверх хрома (FileNav 50, аудио 70) — оранжевый круг должен
+     быть НАД иконками, не под ними; ниже прелоадера (100) */
+  z-index: 90;
   pointer-events: none;
   width: 16px;
   height: 16px;
@@ -483,20 +497,58 @@ html.cursor-custom * {
     box-shadow: 0 0 0 5px transparent;
   }
 }
-/* мягкий скан-луч «в обработке» по карте слота */
+/* скан-луч «в обработке» по карте слота (заметнее на живом фоне) */
 .pending-scan {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
     105deg,
-    transparent 42%,
-    color-mix(in srgb, var(--color-orange) 9%, transparent) 50%,
-    transparent 58%
+    transparent 40%,
+    color-mix(in srgb, var(--color-orange) 18%, transparent) 50%,
+    transparent 60%
   );
   background-size: 220% 100%;
   mix-blend-mode: screen;
   animation: pending-sweep 3.6s linear infinite;
+}
+
+/* угловые риски слота (forensic-рамка «зарезервировано под улику») */
+.pending-corner {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border-color: color-mix(in srgb, var(--color-steel) 70%, transparent);
+  pointer-events: none;
+  transition: border-color 0.4s ease;
+}
+.pending-slot:hover .pending-corner {
+  border-color: var(--color-orange);
+}
+.pending-corner--tl {
+  top: 10px;
+  left: 10px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.pending-corner--tr {
+  top: 10px;
+  right: 10px;
+  border-top: 2px solid;
+  border-right: 2px solid;
+}
+.pending-corner--bl {
+  bottom: 10px;
+  left: 10px;
+  border-bottom: 2px solid;
+  border-left: 2px solid;
+}
+.pending-corner--br {
+  bottom: 10px;
+  right: 10px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
 }
 @keyframes pending-sweep {
   from {
@@ -674,6 +726,18 @@ html.cursor-custom * {
   .ev-device:hover [data-bag-draw] {
     stroke: var(--color-orange);
     stroke-opacity: 0.7;
+  }
+
+  /* синхрон с зумом устройства: при ховере по устройству текст-колонка
+     наезжает тем же движением (от левого края, чуть мягче 1.06 фото — крупный
+     заголовок не должен ползти к краю экрана). :has() — без JS */
+  [data-ev-zoom-text] {
+    transform-origin: left center;
+    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .ev-exhibit:has(.ev-device:hover) [data-ev-zoom-text] {
+    transform: scale(1.04);
+    will-change: transform;
   }
 }
 
