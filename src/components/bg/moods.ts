@@ -44,7 +44,7 @@ export const SECTION_MOODS: Record<string, BgMood> = {
     '--m-steel': '0',
     '--m-warm': '0',
     '--m-day': '1',
-    '--bar-opacity': '0.12',
+    '--bar-opacity': '0',
     '--vig': '0.3',
   },
 };

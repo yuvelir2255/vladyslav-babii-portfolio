@@ -14,7 +14,7 @@ describe('moodForSection', () => {
   it('contact — дневной свет + прутья растворяются', () => {
     expect(moodForSection('contact')['--m-day']).toBe('1');
     expect(moodForSection('contact')['--m-steel']).toBe('0');
-    expect(moodForSection('contact')['--bar-opacity']).toBe('0.12');
+    expect(moodForSection('contact')['--bar-opacity']).toBe('0');
   });
   it('неизвестный id → дефолт (yard)', () => {
     expect(moodForSection('zzz')).toEqual(moodForSection('yard'));
