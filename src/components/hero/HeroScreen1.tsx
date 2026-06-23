@@ -27,6 +27,18 @@ export function HeroScreen1() {
           <p className="text-[13px] leading-[1.7] font-semibold tracking-[0.06em] uppercase">
             {hero.role}
           </p>
+          <dl className="mt-7 hidden gap-x-8 gap-y-1 border-t border-[var(--color-line)] pt-4 lg:flex">
+            {hero.rapSheet.map((row, i) => (
+              <div key={row.label} className={i === 2 ? 'hidden xl:block' : ''}>
+                <dt className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.12em] text-[var(--color-dim)] uppercase">
+                  {row.label}
+                </dt>
+                <dd className="mt-1 font-[family-name:var(--font-mono)] text-[12px] tracking-[0.04em] text-[var(--color-bone)] uppercase">
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <a
               href={hero.cta[0].href}

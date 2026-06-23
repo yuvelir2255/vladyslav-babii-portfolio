@@ -16,4 +16,10 @@ describe('HeroScreen1', () => {
       screen.getByRole('link', { name: /make contact/i }),
     ).toBeInTheDocument();
   });
+  it('рендерит значения рап-шита', () => {
+    render(<HeroScreen1 />);
+    expect(screen.getByText(/unrepentant/i)).toBeInTheDocument();
+    expect(screen.getByText(/builds, ships, escapes/i)).toBeInTheDocument();
+    expect(screen.getByText(/threat level/i)).toBeInTheDocument();
+  });
 });
