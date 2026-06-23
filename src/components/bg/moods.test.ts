@@ -4,7 +4,7 @@ import { moodForSection, BG_SECTION_IDS } from './moods';
 describe('moodForSection', () => {
   it('about — темнее (vig и прутья плотнее)', () => {
     expect(moodForSection('about')['--vig']).toBe('0.6');
-    expect(moodForSection('about')['--bar-opacity']).toBe('0.6');
+    expect(moodForSection('about')['--bar-opacity']).toBe('0.7');
   });
   it('services — тёплый оранж-свелл', () => {
     expect(moodForSection('services')['--m-warm']).toBe('1');
