@@ -498,18 +498,24 @@ html.cursor-custom * {
   }
 }
 /* скан-луч «в обработке» по карте слота (заметнее на живом фоне) */
+/* луч-свип через transform translateX (а НЕ background-position в %): даёт
+   одинаковый полный проход каждый цикл; старый %-position при background-size
+   220% делал первый цикл «до середины» (до 1-го кадра фон стоял в дефолте) */
 .pending-scan {
   position: absolute;
-  inset: 0;
+  top: -12%;
+  bottom: -12%;
+  left: 0;
+  width: 38%;
   pointer-events: none;
   background: linear-gradient(
-    105deg,
-    transparent 40%,
-    color-mix(in srgb, var(--color-orange) 18%, transparent) 50%,
-    transparent 60%
+    to right,
+    transparent,
+    color-mix(in srgb, var(--color-orange) 18%, transparent),
+    transparent
   );
-  background-size: 220% 100%;
   mix-blend-mode: screen;
+  transform: skewX(-10deg) translateX(-140%);
   animation: pending-sweep 3.6s linear infinite;
 }
 
@@ -552,10 +558,10 @@ html.cursor-custom * {
 }
 @keyframes pending-sweep {
   from {
-    background-position: 130% 0;
+    transform: skewX(-10deg) translateX(-140%);
   }
   to {
-    background-position: -130% 0;
+    transform: skewX(-10deg) translateX(330%);
   }
 }
 
