@@ -38,11 +38,11 @@ const fragment = /* glsl */ `
     vec2 uv = vUv;
     vec2 p = uv * vec2(uRes.x / uRes.y, 1.0);
     float c = fbm(p * 3.0 + uTime * 0.02);
-    vec3 base = mix(vec3(0.072, 0.067, 0.058), vec3(0.20, 0.185, 0.16), c);
+    vec3 base = mix(vec3(0.066, 0.066, 0.07), vec3(0.165, 0.165, 0.175), c);
 
     // тёплый прожектор у курсора
     float d = distance(uv, uMouse);
-    base += vec3(1.0, 0.35, 0.12) * smoothstep(0.5, 0.0, d) * 0.30;
+    base += vec3(1.0, 0.45, 0.18) * smoothstep(0.45, 0.0, d) * 0.12;
 
     // лёгкие сканлайны
     base += sin(uv.y * uRes.y * 1.2 + uTime * 2.0) * 0.012;
