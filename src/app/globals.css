@@ -720,3 +720,45 @@ html.cursor-custom * {
     color-mix(in srgb, #000 calc(var(--vig) * 100%), transparent);
   transition: box-shadow 0.8s ease;
 }
+
+/* Contact — эффект отправки: карточка проявляется из размытия, штамп «слэмит» */
+@keyframes release-card-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+}
+.release-card {
+  animation: release-card-in 0.55s ease both;
+}
+@keyframes release-stamp-slam {
+  0% {
+    opacity: 0;
+    transform: rotate(-3deg) scale(1.9);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+.release-stamp {
+  display: inline-block;
+  border: 3px solid var(--color-orange);
+  color: var(--color-orange);
+  border-radius: 6px;
+  padding: 6px 16px;
+  font: 24px var(--font-stencil);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+  animation: release-stamp-slam 0.5s 0.15s cubic-bezier(0.2, 0.9, 0.25, 1) both;
+}
