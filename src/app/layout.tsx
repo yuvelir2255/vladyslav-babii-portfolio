@@ -31,7 +31,7 @@ const marker = Permanent_Marker({
 });
 
 const SITE_DESCRIPTION =
-  'I build products people use — Telegram Mini Apps, websites and AI tools that ship and take real orders.';
+  'I build products people use — Telegram Mini Apps, websites and AI integrations that ship and take real orders.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(

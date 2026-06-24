@@ -3,10 +3,10 @@ export const evidence = {
   intro: 'The people submit the following evidence:',
   exhibit: {
     code: 'EVID-01',
-    status: 'Admitted · Live',
+    status: 'Admitted · Shipped',
     title: 'Dream Gold — Telegram Mini App',
     summary:
-      'A production e-commerce Mini App inside Telegram — built solo, shipped end-to-end, taking real orders for a jewelry atelier.',
+      'A production e-commerce Mini App inside Telegram — built solo, shipped end-to-end, ready to take real orders for a jewelry atelier.',
     markers: [
       {
         n: '1',

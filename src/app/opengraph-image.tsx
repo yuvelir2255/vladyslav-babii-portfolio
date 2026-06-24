@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 export const alt =
-  'Case File VB-19 — Vladyslav Babii. Telegram Mini Apps, websites and AI products.';
+  'Case File VB-19 — Vladyslav Babii. Telegram Mini Apps, websites and AI integrations.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -197,7 +197,7 @@ export default async function OpengraphImage() {
               letterSpacing: 1,
             }}
           >
-            Telegram Mini Apps · Websites · AI Products
+            Telegram Mini Apps · Websites · AI Integrations
           </div>
         </div>
       </div>

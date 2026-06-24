@@ -10,11 +10,11 @@ export const about = {
   redacted: [
     {
       k: 'Prior record',
-      v: 'Ran real businesses before writing a single line of code. Learned to ship by shipping.',
+      v: 'Ran real ventures before writing a single line of code. Learned to ship by shipping.',
     },
     {
       k: 'Charges / M.O.',
-      v: 'Designs, builds, and ships — not demos. A live jewelry business runs on the Mini App he built.',
+      v: 'Designs, builds, and ships — not demos. Built the production Mini App a real jewelry atelier will run on.',
     },
   ],
   disposition:
