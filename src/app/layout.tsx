@@ -31,7 +31,7 @@ const marker = Permanent_Marker({
 });
 
 const SITE_DESCRIPTION =
-  'I build products people use — Telegram Mini Apps, websites and AI integrations that ship and take real orders.';
+  'Building Telegram Mini Apps, websites and AI integrations — shipped to production and taking real orders.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -43,14 +43,14 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   openGraph: {
     type: 'website',
-    title: 'Vladyslav Babii — Case File',
+    title: 'Developer Portfolio',
     description: SITE_DESCRIPTION,
     siteName: 'Vladyslav Babii',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vladyslav Babii — Case File',
+    title: 'Developer Portfolio',
     description: SITE_DESCRIPTION,
   },
 };
