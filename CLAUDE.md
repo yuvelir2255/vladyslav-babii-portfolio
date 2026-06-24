@@ -13,7 +13,7 @@
 **ПРОД (`main`) = полный нарратив сайта ЗАВЕРШЁН:** hero → About «The Inmate» → Services «Charges» → Work «Evidence» → Contact «Visiting Hours». Прод-URL: **https://portfolio-vladyslav-s-projects9.vercel.app**.
 
 - **ФИНАЛИЗИРОВАН под публикацию (2026-06-24, прод `cbcef88`):** все тексты сверены с базой владельца `~/Desktop/baza-obo-mne.md` (термин `AI Integrations`, честный статус Dream Gold), share-мета превью = `Developer Portfolio`, README актуален, готовность проверена (375/768/1280 без гориз. скролла, build чистый, 84 теста). **Открыто на владельце:** проверить живую доставку формы в Telegram (env на Vercel). Двуязычие EN/UK — разведано, EN-only остаётся (детали в истории внизу).
-- **Опционально на будущее:** Soul ID лица при 3–5 фото (заменить `public/media/booking/mugshot.webp`). Когда Dream Gold реально запустится у мамы — поднять `Shipped`→`Live` / «ready to take»→«taking real orders». **SEO-перенос (sitemap/robots) ОТМЕНЁН владельцем — не делать.**
+- **Опционально на будущее:** когда Dream Gold реально запустится у мамы — поднять `Shipped`→`Live` / «ready to take»→«taking real orders». **SEO-перенос (sitemap/robots) ОТМЕНЁН владельцем — не делать.**
 - Любые правки — на feature-ветке от свежего `main`, конвейер **план → TDD → impeccable** (см. «Правила»).
 
 ## Стек
@@ -57,8 +57,8 @@ Next.js 16 (App Router, RSC, route handlers) · React 19 · TS strict · **Tailw
 - **`prefers-reduced-motion` НАМЕРЕННО не уважаем** (решение владельца — движение всегда вкл). Прочую a11y держим.
 - **a11y-контраст (закрыто):** все токены на bg проходят AA — bone 15.5:1, steel 6.5:1, orange 6.1:1, **dim `#918a7c` ~5.6:1** (поднят с `#827c70`/4.62:1 — на живом фоне тёплые зоны Contact/Charges/hero высветляли мелкие подписи под порог), **`--color-line` 0.18** (было 0.12 — кромки карт/инпутов/чипов/хрома терялись на бетонной фактуре). Есть `--color-orange-soft` (orange@12%) для hover/focus-подложек.
 - **Токены (`@theme` в globals.css):** bg/bone/steel/dim/orange/orange-soft/line + **`--color-on-orange` (#160d06, текст на оранжевом)** + **`--color-surface` (#2a2620, приподнятый бетон)**. Тёмные подложки-scrim — через `color-mix(in srgb, var(--color-bg) N%, transparent)` (не сырой `rgba(16,15,13,…)`). **Отложено в бэклог:** шкала бордер-радиусов в токены, z-index в CSS-переменные (сейчас числовые `z-50/60/70/100`, без магии 9999).
-- **Мугшот:** `public/media/booking/mugshot.webp` (исходники в `assets/`, gitignored). Лицо — пока image-to-image (Higgsfield Nano Banana Pro); апгрейд на **Soul ID ждёт 3–5 фото** — потом просто заменить файл.
-- **Higgsfield CLI** установлен и авторизован (Soul, звук). **Перед каждой генерацией показывать стоимость в кредитах и ждать «ок».**
+- **Мугшот:** `public/media/booking/mugshot.webp` (исходники в `assets/`, gitignored). Лицо — image-to-image (Higgsfield Nano Banana Pro); чтобы обновить — просто заменить файл.
+- **Higgsfield CLI** установлен и авторизован (генерация картинок/звук). **Перед каждой генерацией показывать стоимость в кредитах и ждать «ок».**
 
 ### Тесты (NB)
 
